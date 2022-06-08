@@ -1,0 +1,119 @@
+import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { ERole, EStatus } from 'types'
+import { TLimit, TTableOrder } from 'types/ITable'
+import { IUser, IUsersCollectionResponse } from 'types/IUser'
+
+import { IUsersState } from './types'
+
+export const usersAdapter = createEntityAdapter<IUser>()
+
+const slice = createSlice({
+    name: 'users',
+    initialState: usersAdapter.getInitialState<IUsersState>({
+        ids: [],
+        entities: {},
+        status: EStatus.INITIAL,
+        total_count: 0,
+        old_total_count: 0,
+        order: {
+            row: 'createdAt',
+            order: 'desc',
+        },
+        pagination: {
+            limit: 10,
+            page: 1,
+            total_pages: 0,
+        },
+        modal: {
+            isOpen: false,
+            activeId: '',
+        },
+        form: {
+            status: EStatus.INITIAL,
+            data: {
+                id: '',
+                active: false,
+                role: ERole.GUEST,
+                gender: 'male',
+                name: '',
+                address: '',
+                fid: '',
+                university: '',
+                birthday: '',
+                hobby: '',
+                about: '',
+                place_id: '',
+                first_date: '',
+                position: 'seller',
+                rate: 0,
+                phone: '',
+                email: '',
+                blocked: false,
+                createdAt: '',
+            },
+        },
+    }),
+    reducers: {
+        cleanUsers(state) {
+            usersAdapter.setAll(state, [])
+            state.pagination.total_pages = 1
+            state.total_count = 0
+        },
+        loadUsers(state) {
+            state.status = EStatus.PENDING
+        },
+        usersLoaded(state, action: PayloadAction<IUsersCollectionResponse>) {
+            usersAdapter.setAll(state, action.payload.data)
+            state.pagination.total_pages = action.payload.meta.totalPages
+            state.total_count = action.payload.meta.total
+            state.status = EStatus.FINISHED
+        },
+        loadUser(state, action: PayloadAction<string>) {
+            state.status = EStatus.PENDING
+        },
+        userLoaded(state, action: PayloadAction<IUser>) {
+            state.status = EStatus.FINISHED
+            usersAdapter.setOne(state, action.payload)
+            state.form.data = action.payload
+        },
+        setOrder(state, action: PayloadAction<TTableOrder>) {
+            state.order = action.payload
+        },
+        setLimit(state, action: PayloadAction<TLimit>) {
+            state.pagination.page = 1
+            state.pagination.limit = action.payload
+        },
+        setPage(state, action: PayloadAction<number>) {
+            state.pagination.page = action.payload
+        },
+        activeUser(state, action: PayloadAction<string>) {
+            state.form.status = EStatus.PENDING
+        },
+        updateUser(state, action: PayloadAction<IUser>) {
+            state.form.status = EStatus.PENDING
+        },
+        userUpdated(state, action: PayloadAction<IUser>) {
+            state.form.status = EStatus.FINISHED
+            usersAdapter.setOne(state, action.payload)
+        },
+        setForm(state, action: PayloadAction<IUser>) {
+            state.form.status = EStatus.INITIAL
+            state.form.data = action.payload
+        },
+
+        setActiveId(state, action: PayloadAction<string>) {
+            state.modal.activeId = action.payload
+        },
+        showModal(state) {
+            state.modal.isOpen = true
+        },
+        hideModal(state) {
+            state.modal.isOpen = false
+        },
+        statusError(state) {
+            state.status = EStatus.ERROR
+        },
+    },
+})
+
+export const { actions: usersActions, reducer: usersReducer } = slice
