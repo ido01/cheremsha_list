@@ -46,7 +46,6 @@ export const LeftMenu: React.FC = () => {
             icon: <GroupIcon />,
             title: 'Сотрудники',
             path: '/users',
-            isAdmin: true,
         },
     ]
 
@@ -95,7 +94,7 @@ export const LeftMenu: React.FC = () => {
                 <MenuItem
                     item={{
                         icon: <AvatarImage name={profile.name} image={profile.avatar?.url} size={'24px'} />,
-                        title: profile.name,
+                        title: `${profile.last_name} ${profile.name}`,
                         path: '/profile',
                     }}
                     isLage={isLage}

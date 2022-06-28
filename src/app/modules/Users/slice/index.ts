@@ -3,7 +3,7 @@ import { ERole, EStatus } from 'types'
 import { TLimit, TTableOrder } from 'types/ITable'
 import { IUser, IUsersCollectionResponse } from 'types/IUser'
 
-import { IUsersState } from './types'
+import { IUserFilter, IUsersState } from './types'
 
 export const usersAdapter = createEntityAdapter<IUser>()
 
@@ -24,6 +24,11 @@ const slice = createSlice({
             page: 1,
             total_pages: 0,
         },
+        filter: {
+            position: '',
+            place_id: '',
+            status: 'all',
+        },
         modal: {
             isOpen: false,
             activeId: '',
@@ -36,6 +41,7 @@ const slice = createSlice({
                 role: ERole.GUEST,
                 gender: 'male',
                 name: '',
+                last_name: '',
                 address: '',
                 fid: '',
                 university: '',
@@ -59,6 +65,9 @@ const slice = createSlice({
             state.pagination.total_pages = 1
             state.total_count = 0
         },
+        setFilter(state, action: PayloadAction<IUserFilter>) {
+            state.filter = action.payload
+        },
         loadUsers(state) {
             state.status = EStatus.PENDING
         },
@@ -70,6 +79,7 @@ const slice = createSlice({
         },
         loadUser(state, action: PayloadAction<string>) {
             state.status = EStatus.PENDING
+            action.payload
         },
         userLoaded(state, action: PayloadAction<IUser>) {
             state.status = EStatus.FINISHED
@@ -88,9 +98,11 @@ const slice = createSlice({
         },
         activeUser(state, action: PayloadAction<string>) {
             state.form.status = EStatus.PENDING
+            action.payload
         },
         updateUser(state, action: PayloadAction<IUser>) {
             state.form.status = EStatus.PENDING
+            action.payload
         },
         userUpdated(state, action: PayloadAction<IUser>) {
             state.form.status = EStatus.FINISHED

@@ -6,12 +6,14 @@ import { IUser, IUserItemResponse, IUsersCollectionResponse } from 'types/IUser'
 import { request } from 'utils/request'
 
 import { usersActions } from '.'
-import { selectOrder, selectPagination, selectUserById } from './selectors'
+import { selectFilter, selectOrder, selectPagination, selectUserById } from './selectors'
+import { IUserFilter } from './types'
 
 export function* loadUsers() {
     try {
         const pagination: TTablePagination = yield select(selectPagination)
         const order: TTableOrder = yield select(selectOrder)
+        const filter: IUserFilter = yield select(selectFilter)
 
         const response: IUsersCollectionResponse = yield call(request, `users`, {
             params: {
@@ -19,6 +21,9 @@ export function* loadUsers() {
                 limit: pagination.limit,
                 order: order.order,
                 orderRow: order.row,
+                status: filter.status,
+                place_id: filter.place_id,
+                position: filter.position,
             },
         })
 

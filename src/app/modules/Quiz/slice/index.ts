@@ -1,22 +1,16 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { EState, EStatus, EType } from 'types'
-import { IDocument, IDocumentsResponse } from 'types/IDocument'
+import { EState, EStatus } from 'types'
 import { IDocumentStateRequest } from 'types/IDocumentState'
-import { IFile } from 'types/IFile'
+import { IQuiz, IQuizResponse } from 'types/IQuiz'
 import { TTableOrder } from 'types/ITable'
 
-import { IDocumentsState } from './types'
+import { IQuizState } from './types'
 
-export const documentsAdapter = createEntityAdapter<IDocument>()
-
-interface IImageResponse {
-    index: number
-    file: IFile
-}
+export const quizAdapter = createEntityAdapter<IQuiz>()
 
 const slice = createSlice({
-    name: 'documents',
-    initialState: documentsAdapter.getInitialState<IDocumentsState>({
+    name: 'quiz',
+    initialState: quizAdapter.getInitialState<IQuizState>({
         ids: [],
         entities: {},
         status: EStatus.INITIAL,
@@ -33,11 +27,11 @@ const slice = createSlice({
             open: false,
             data: {
                 id: '',
-                type: 'document',
+                type: 'quiz',
                 path: 'faq',
                 parentId: '',
                 name: '',
-                info: [],
+                questions: [],
                 state: {
                     id: '',
                     state: EState.INITIAL,
@@ -50,64 +44,41 @@ const slice = createSlice({
         },
     }),
     reducers: {
-        loadDocuments(state, action: PayloadAction<EType>) {
+        loadDQuiz(state) {
             state.status = EStatus.PENDING
-            action.payload
         },
-        documentsLoaded(state, action: PayloadAction<IDocumentsResponse>) {
-            documentsAdapter.setAll(state, action.payload.data)
+        quizLoaded(state, action: PayloadAction<IQuizResponse>) {
+            quizAdapter.setAll(state, action.payload.data)
             state.status = EStatus.FINISHED
         },
-        openEditModal(state, action: PayloadAction<IDocument>) {
+        openEditModal(state, action: PayloadAction<IQuiz>) {
             state.form.status = EStatus.INITIAL
             state.form.open = true
             state.form.data = action.payload
-        },
-        updateInfo(state, action: PayloadAction<IImageResponse>) {
-            state.form.data.info = state.form.data.info.map((info, index) => {
-                if (index !== action.payload.index) return info
-                return {
-                    ...info,
-                    fid: action.payload.file.id,
-                    image: action.payload.file,
-                }
-            })
-        },
-        moveUpInfo(state, action: PayloadAction<number>) {
-            ;[state.form.data.info[action.payload], state.form.data.info[action.payload - 1]] = [
-                state.form.data.info[action.payload - 1],
-                state.form.data.info[action.payload],
-            ]
-        },
-        moveDownInfo(state, action: PayloadAction<number>) {
-            ;[state.form.data.info[action.payload], state.form.data.info[action.payload + 1]] = [
-                state.form.data.info[action.payload + 1],
-                state.form.data.info[action.payload],
-            ]
         },
         hideEditModal(state) {
             state.form.open = false
             state.form.data.parentId = ''
         },
-        createDocument(state, action: PayloadAction<IDocument>) {
+        createQuiz(state, action: PayloadAction<IQuiz>) {
             state.form.status = EStatus.PENDING
             state.form.data = action.payload
         },
-        updateDocument(state, action: PayloadAction<IDocument>) {
+        updateQuiz(state, action: PayloadAction<IQuiz>) {
             state.form.status = EStatus.PENDING
             state.form.data = action.payload
         },
-        documentSave(state, action: PayloadAction<IDocument>) {
+        quizSave(state, action: PayloadAction<IQuiz>) {
             state.form.status = EStatus.FINISHED
             state.form.open = false
-            documentsAdapter.setOne(state, action.payload)
+            quizAdapter.setOne(state, action.payload)
         },
-        deleteDocument(state, action: PayloadAction<string>) {
+        deleteQuiz(state, action: PayloadAction<string>) {
             state
             action.payload
         },
-        documentDeleted(state, action: PayloadAction<string>) {
-            documentsAdapter.removeOne(state, action.payload)
+        quizDeleted(state, action: PayloadAction<string>) {
+            quizAdapter.removeOne(state, action.payload)
         },
         setOrder(state, action: PayloadAction<TTableOrder>) {
             state.order = action.payload
@@ -132,4 +103,4 @@ const slice = createSlice({
     },
 })
 
-export const { actions: documentsActions, reducer: documentsReducer } = slice
+export const { actions: quizActions, reducer: quizReducer } = slice

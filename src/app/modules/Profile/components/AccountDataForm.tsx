@@ -100,7 +100,19 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                     <TextField
                         fullWidth
                         variant="outlined"
-                        label="ФИО"
+                        label="Фамилия"
+                        name="last_name"
+                        value={formik.values.last_name || ''}
+                        error={!!formik.errors.last_name}
+                        onChange={formik.handleChange}
+                    />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Имя"
                         name="name"
                         value={formik.values.name || ''}
                         error={!!formik.errors.name}

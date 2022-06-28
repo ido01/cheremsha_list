@@ -3,7 +3,7 @@ import { Box, IconButton, Typography } from '@mui/material'
 import { fileActions } from 'app/modules/File/slice'
 import { selectOpen } from 'app/modules/File/slice/selectors'
 import { FileUploadForm } from 'app/modules/File/templates/FileUploadForm'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { profileActions } from '../slice'

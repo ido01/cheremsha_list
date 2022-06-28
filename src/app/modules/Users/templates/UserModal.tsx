@@ -18,7 +18,7 @@ import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { ERole, EState, EStatus } from 'types'
+import { ERole, EStatus } from 'types'
 import { convertGenderName, convertPlaceName, convertPositionName, convertRoleName } from 'utils/convertUtils'
 
 import { usersActions } from '../slice'
@@ -69,16 +69,16 @@ export const UserModal: React.FC = () => {
         setOpenDelete(false)
     }
 
-    const handleSetComplete = () => {
-        // if (document) {
-        //     dispatch(
-        //         usersActions.setComplete({
-        //             did: document.id,
-        //             id: document.state.id,
-        //         })
-        //     )
-        // }
-    }
+    // const handleSetComplete = () => {
+    //     if (document) {
+    //         dispatch(
+    //             usersActions.setComplete({
+    //                 did: document.id,
+    //                 id: document.state.id,
+    //             })
+    //         )
+    //     }
+    // }
 
     return (
         <>
@@ -86,11 +86,15 @@ export const UserModal: React.FC = () => {
                 open={isOpen}
                 title={
                     <Box display={'flex'} alignItems={'center'}>
-                        <Avatar src={user?.avatar?.url || ''} alt={user?.name} sx={{ width: 42, height: 42, mr: 1 }}>
-                            {!!user && !!user.name && `${user.name?.[0]}`}
+                        <Avatar
+                            src={user?.avatar?.url || ''}
+                            alt={`${user?.last_name} ${user?.name}`}
+                            sx={{ width: 42, height: 42, mr: 1 }}
+                        >
+                            {`${user?.last_name[0]} ${user?.name[0]}`}
                         </Avatar>
 
-                        {user?.name || ''}
+                        {`${user?.last_name} ${user?.name}`}
                     </Box>
                 }
                 handleClose={handleClose}
@@ -113,7 +117,7 @@ export const UserModal: React.FC = () => {
                             <Grid item xs={6}>
                                 <LabelText
                                     label="Статус"
-                                    text={
+                                    node={
                                         <Typography
                                             variant="body1"
                                             sx={(theme) => ({
@@ -131,13 +135,35 @@ export const UserModal: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={6}>
-                                <LabelText label="Email" text={user?.email || ''} />
+                                <LabelText
+                                    label="Email"
+                                    node={
+                                        user?.email ? (
+                                            <Typography variant="body1">
+                                                <a href={`mailto:${user.email}`}>{user.email}</a>
+                                            </Typography>
+                                        ) : (
+                                            ''
+                                        )
+                                    }
+                                />
                             </Grid>
 
                             {!!user?.active && (
                                 <>
                                     <Grid item xs={6}>
-                                        <LabelText label="Телефон" text={user?.phone || ''} />
+                                        <LabelText
+                                            label="Телефон"
+                                            node={
+                                                user?.phone ? (
+                                                    <Typography variant="body1">
+                                                        <a href={`tel:${user.phone}`}>{user.phone}</a>
+                                                    </Typography>
+                                                ) : (
+                                                    ''
+                                                )
+                                            }
+                                        />
                                     </Grid>
 
                                     <Grid item xs={6}>

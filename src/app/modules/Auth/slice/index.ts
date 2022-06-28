@@ -18,6 +18,7 @@ const initialState: IAuthState = {
         signup: {
             status: EStatus.INITIAL,
             data: {
+                last_name: '',
                 name: '',
                 email: '',
                 password: '',
@@ -34,13 +35,16 @@ const slice = createSlice({
             state.status = EStatus.INITIAL
         },
         activeLogin(state, action: PayloadAction<IActiveToken>) {
-            //
+            state
+            action.payload
         },
         signIn(state, action: PayloadAction<ISignin>) {
             state.status = EStatus.PENDING
+            action.payload
         },
         signUp(state, action: PayloadAction<ISignup>) {
             state.forms.signup.status = EStatus.PENDING
+            action.payload
         },
         signUpFinished(state) {
             state.forms.signup.status = EStatus.FINISHED
@@ -58,6 +62,7 @@ const slice = createSlice({
             state.token = ''
         },
         logouted(state) {
+            state
             localStorage.removeItem('corp_token')
         },
         statusError(state) {

@@ -68,7 +68,36 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
         )
     }
 
-    const handleAddDocument = () => {
+    const handleAddEvent = () => {
+        if (type === 'quiz') {
+            addQuiz()
+        } else {
+            addDocument()
+        }
+    }
+
+    const addQuiz = () => {
+        dispatch(
+            documentsActions.openEditModal({
+                id: '',
+                type: 'document',
+                path: type,
+                name: '',
+                parentId: id || '0',
+                info: [],
+                state: {
+                    id: '',
+                    state: EState.INITIAL,
+                    uid: '',
+                    createdAt: '',
+                    updatedAt: '',
+                },
+                createdAt: '',
+            })
+        )
+    }
+
+    const addDocument = () => {
         dispatch(
             documentsActions.openEditModal({
                 id: '',
@@ -125,7 +154,7 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
                         </ListItemButton>
                     </ListItem>
 
-                    <ListItem disablePadding onClick={handleAddDocument}>
+                    <ListItem disablePadding onClick={handleAddEvent}>
                         <ListItemButton>
                             <ListItemIcon>
                                 <AddCircleIcon />
@@ -137,7 +166,9 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
                                         ? 'Добавить гайд'
                                         : type === 'school'
                                         ? 'Добавить обучение'
-                                        : 'Добавить мотивацию'
+                                        : type === 'motivation'
+                                        ? 'Добавить мотивацию'
+                                        : 'Добавить тестирование'
                                 }
                             />
                         </ListItemButton>

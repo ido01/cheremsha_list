@@ -4,6 +4,7 @@ import { categoriesReducer } from 'app/modules/Categories/slice'
 import { documentsReducer } from 'app/modules/Documents/slice'
 import { fileReducer } from 'app/modules/File/slice'
 import { profileReducer } from 'app/modules/Profile/slice'
+import { quizReducer } from 'app/modules/Quiz/slice'
 import { usersReducer } from 'app/modules/Users/slice'
 import { InjectedReducersType } from 'utils/types/injector-typings'
 
@@ -15,6 +16,7 @@ export function createReducer(injectedReducers: InjectedReducersType = {}): Redu
         documents: documentsReducer,
         file: fileReducer,
         profile: profileReducer,
+        quiz: quizReducer,
         users: usersReducer,
     })
 }

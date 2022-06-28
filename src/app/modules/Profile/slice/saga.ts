@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { authActions } from 'app/modules/Auth/slice'
-import { call, put, select, takeLeading } from 'redux-saga/effects'
+import { call, put, takeLeading } from 'redux-saga/effects'
 import { IProfileResponse, IUser } from 'types/IUser'
 import { request } from 'utils/request'
 

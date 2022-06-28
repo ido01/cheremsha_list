@@ -10,6 +10,7 @@ import { FaqPages } from './FaqPages'
 import { MainPage } from './MainPage'
 import { MotivationPages } from './MotivationPages'
 import { ProfilePages } from './ProfilePages'
+import { QuizPages } from './QuizPages'
 import { SchoolPages } from './SchoolPages'
 import { UsersPages } from './UsersPages'
 
@@ -27,9 +28,8 @@ export const Pages: React.FC = () => {
                             <Route exact path={['/faq', '/faq/*']} component={FaqPages} />
                             <Route exact path={['/school', '/school/*']} component={SchoolPages} />
                             <Route exact path={['/motivation', '/motivation/*']} component={MotivationPages} />
-                            {profileRole === ERole.ADMIN && (
-                                <Route exact path={['/users', '/users/*']} component={UsersPages} />
-                            )}
+                            <Route exact path={['/quiz', '/quiz/*']} component={QuizPages} />
+                            <Route exact path={['/users', '/users/*']} component={UsersPages} />
 
                             <Route exact path={['/*']} component={MainPage} />
                         </Switch>

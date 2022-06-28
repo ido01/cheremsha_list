@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { call, put, select, takeLatest, takeLeading } from 'redux-saga/effects'
+import { call, put, takeLatest, takeLeading } from 'redux-saga/effects'
 import { EType } from 'types'
-import { ICategoriesRequest, ICategoriesResponse, ICategory, ICategoryResponse } from 'types/ICategory'
+import { ICategoriesResponse, ICategory, ICategoryResponse } from 'types/ICategory'
 import { request } from 'utils/request'
 
 import { categoriesActions } from '.'

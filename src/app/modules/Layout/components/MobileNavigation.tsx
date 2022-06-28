@@ -1,9 +1,6 @@
 import {
-    AccountCircle as AccountCircleIcon,
-    ChildCare as ChildCareIcon,
     DesignServices as DesignServicesIcon,
-    Logout as LogoutIcon,
-    Menu as MenuIcon,
+    Group as GroupIcon,
     Quiz as QuizIcon,
     School as SchoolIcon,
 } from '@mui/icons-material'
@@ -25,35 +22,41 @@ export const MobileNavigation: React.FC = () => {
 
     const menuItems: TMenuItem[] = [
         {
+            icon: <GroupIcon />,
+            title: 'Сотрудники',
+            path: '/users',
+            id: 0,
+        },
+        {
             icon: <QuizIcon />,
             title: 'Гайд',
             path: '/faq',
-            id: 0,
+            id: 1,
         },
         {
             icon: <SchoolIcon />,
             title: 'Обучение',
             path: '/school',
-            id: 1,
+            id: 2,
         },
         {
             icon: <DesignServicesIcon />,
             title: 'Тестирование',
             path: '/quiz',
-            id: 2,
+            id: 3,
         },
         {
             icon: <AvatarImage name={profile.name} image={profile.avatar?.url} size={'24px'} />,
             title: 'Профиль',
             path: '/profile',
-            id: 3,
+            id: 4,
         },
     ]
 
     useEffect(() => {
         const activeItem = menuItems.find((item) => {
-            if (item.path === '/') {
-                return url === '/' ? true : false
+            if (url === '/' && item.id === 4) {
+                return true
             }
             return item.path ? url.indexOf(item.path) !== -1 : false
         })

@@ -12,6 +12,7 @@ export interface ISignin {
 
 export interface ISignup {
     name: string
+    last_name: string
     email: string
     password: string
 }

@@ -88,7 +88,18 @@ export const Signup: React.FC = () => {
                         <TextField
                             fullWidth
                             variant="outlined"
-                            label="ФИО"
+                            label="Фамилия"
+                            name="last_name"
+                            value={formik.values.last_name || ''}
+                            error={!!formik.errors.last_name}
+                            onChange={formik.handleChange}
+                        />
+
+                        <TextField
+                            fullWidth
+                            sx={{ mt: 3 }}
+                            variant="outlined"
+                            label="Имя"
                             name="name"
                             value={formik.values.name || ''}
                             error={!!formik.errors.name}

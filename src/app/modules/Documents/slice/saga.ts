@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { categoriesActions } from 'app/modules/Categories/slice'
-import { call, put, select, takeLeading } from 'redux-saga/effects'
+import { call, put, takeLeading } from 'redux-saga/effects'
 import { EType } from 'types'
 import { IDocument, IDocumentResponse, IDocumentsResponse } from 'types/IDocument'
 import { IDocumentStateRequest } from 'types/IDocumentState'

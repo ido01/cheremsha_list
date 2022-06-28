@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom'
 
 import { authActions } from '../slice'
 import { Auth } from './Auth'
-import { SignIn } from './SignIn'
 
 export const ActiveToken: React.FC = () => {
     const dispatch = useDispatch()

@@ -19,7 +19,11 @@ export const AccountData: React.FC = () => {
 
             <Grid container rowSpacing={4} columnSpacing={2}>
                 <Grid item xs={12} md={4}>
-                    <LabelText label="ФИО" text={profile.name} />
+                    <LabelText label="Фамилия" text={profile.last_name} />
+                </Grid>
+
+                <Grid item xs={12} md={4}>
+                    <LabelText label="Имя" text={profile.name} />
                 </Grid>
 
                 <Grid item xs={12} md={4}>

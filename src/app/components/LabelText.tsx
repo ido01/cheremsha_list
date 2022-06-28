@@ -3,7 +3,8 @@ import React from 'react'
 
 interface LabelTextProps {
     label: string
-    text: string | React.ReactNode
+    text?: string
+    node?: React.ReactNode
     variant?:
         | 'h1'
         | 'h2'
@@ -23,13 +24,16 @@ interface LabelTextProps {
         | undefined
 }
 
-export const LabelText: React.FC<LabelTextProps> = ({ label, text, variant }) => (
+export const LabelText: React.FC<LabelTextProps> = ({ label, text, node, variant }) => (
     <>
         <Typography variant="body3" color="grey.600" sx={{ fontSize: '0.9rem' }}>
             {label}
         </Typography>
-        <Typography variant={variant ? variant : 'body1'} color="grey.900">
-            {text}
-        </Typography>
+        {!!text && (
+            <Typography variant={variant ? variant : 'body1'} color="grey.900">
+                {text}
+            </Typography>
+        )}
+        {!!node && node}
     </>
 )

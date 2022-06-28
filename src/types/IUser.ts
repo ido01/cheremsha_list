@@ -24,6 +24,7 @@ export interface IUser {
     role: ERole
     gender: EGender
     name: string
+    last_name: string
     address: string
     fid: string
     avatar?: IFile

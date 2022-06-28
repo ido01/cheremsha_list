@@ -8,7 +8,7 @@ interface TextAreaEditProps {
 }
 
 export const TextAreaEdit: React.FC<TextAreaEditProps> = ({ value, onChange }) => {
-    const handleEditorChange = (content: string, editor: any) => {
+    const handleEditorChange = (content: string) => {
         onChange(content)
     }
 

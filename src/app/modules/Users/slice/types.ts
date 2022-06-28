@@ -1,7 +1,15 @@
 import { EntityState } from '@reduxjs/toolkit'
-import { EStatus } from 'types'
+import { EPosition, EStatus } from 'types'
 import { TTableOrder, TTablePagination } from 'types/ITable'
 import { IUser } from 'types/IUser'
+
+export type TUserStatus = 'all' | 'new' | 'active' | 'blocked'
+
+export interface IUserFilter {
+    position: EPosition | ''
+    place_id: string
+    status: TUserStatus
+}
 
 export interface IUsersState extends EntityState<IUser> {
     status: EStatus
@@ -9,6 +17,7 @@ export interface IUsersState extends EntityState<IUser> {
     total_count: number
     old_total_count: number
     pagination: TTablePagination
+    filter: IUserFilter
     modal: {
         isOpen: boolean
         activeId: string

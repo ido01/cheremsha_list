@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'
 import { ERole, EStatus } from 'types'
-import { TTableOrder } from 'types/ITable'
 import { IProfileResponse, IUser } from 'types/IUser'
 
 import { IProfileState } from './types'
@@ -12,6 +11,7 @@ const initialProfile: IUser = {
     role: ERole.GUEST,
     gender: 'male',
     name: '',
+    last_name: '',
     address: '',
     fid: '',
     university: '',
@@ -54,9 +54,11 @@ const slice = createSlice({
         },
         updateProfile(state, action: PayloadAction<IUser>) {
             state.form.status = EStatus.PENDING
+            action.payload
         },
         updateAvatar(state, action: PayloadAction<string>) {
             state.form.status = EStatus.PENDING
+            action.payload
         },
         statusError(state) {
             state.status = EStatus.ERROR

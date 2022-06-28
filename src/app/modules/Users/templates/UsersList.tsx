@@ -10,8 +10,16 @@ import { TLimit, TTableOrder, TTableRowData } from 'types/ITable'
 import { IUser } from 'types/IUser'
 import { convertPlaceName } from 'utils/convertUtils'
 
+import { FilterForm } from '../components/FilterForm'
 import { usersActions } from '../slice'
-import { selectOrder, selectPagination, selectStatus, selectTotalCount, selectUsers } from '../slice/selectors'
+import {
+    selectFilter,
+    selectOrder,
+    selectPagination,
+    selectStatus,
+    selectTotalCount,
+    selectUsers,
+} from '../slice/selectors'
 import { UserModal } from './UserModal'
 
 export const UsersList: React.FC = () => {
@@ -22,18 +30,19 @@ export const UsersList: React.FC = () => {
     const order = useSelector(selectOrder)
     const pagination = useSelector(selectPagination)
     const count = useSelector(selectTotalCount)
+    const filter = useSelector(selectFilter)
 
     const tableRows: TTableRowData[] = [
         {
             title: 'Имя',
-            name: 'firstname',
+            name: 'name',
             xs: 5,
             element: (user: IUser) => (
                 <>
-                    <AvatarImage name={user.name} image={user.avatar?.url} size={'36px'} />
+                    <AvatarImage name={`${user.last_name} ${user.name}`} image={user.avatar?.url} size={'36px'} />
 
                     <Box ml={2}>
-                        <Typography variant="body2">{user.name}</Typography>
+                        <Typography variant="body2">{`${user.last_name} ${user.name}`}</Typography>
                     </Box>
                 </>
             ),
@@ -86,10 +95,15 @@ export const UsersList: React.FC = () => {
         },
     ]
 
+    // useEffect(() => {
+    //     dispatch(usersActions.cleanUsers())
+    //     dispatch(usersActions.loadUsers())
+    // }, [])
+
     useEffect(() => {
         dispatch(usersActions.cleanUsers())
         dispatch(usersActions.loadUsers())
-    }, [])
+    }, [filter])
 
     const handleOrderChange = (order: TTableOrder) => {
         dispatch(usersActions.setOrder(order))
@@ -115,7 +129,9 @@ export const UsersList: React.FC = () => {
         <>
             <TitleBlock title={'Сотрудники'} count={count} />
 
-            <Box mt={4} flex="1 0 100%">
+            <Box pt={4} flex="1 0 100%" sx={{ overflow: 'auto', maxHeight: { md: 'calc( 100vh - 90px )' } }}>
+                <FilterForm />
+
                 <Table
                     items={users}
                     rows={tableRows}

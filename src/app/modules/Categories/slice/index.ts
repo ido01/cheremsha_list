@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { EState, EStatus, EType } from 'types'
-import { ICategoriesRequest, ICategoriesResponse, ICategory } from 'types/ICategory'
+import { ICategoriesResponse, ICategory } from 'types/ICategory'
 import { TTableOrder } from 'types/ITable'
 
 import { ICategoriesState } from './types'
@@ -43,6 +43,7 @@ const slice = createSlice({
         },
         loadCategories(state, action: PayloadAction<EType>) {
             state.status = EStatus.PENDING
+            action.payload
         },
         categoriesLoaded(state, action: PayloadAction<ICategoriesResponse>) {
             categoriesAdapter.setAll(state, action.payload.data)
@@ -59,6 +60,7 @@ const slice = createSlice({
         },
         reloadCategory(state, action: PayloadAction<string>) {
             state.status = EStatus.PENDING
+            action.payload
         },
         categoryReloaded(state, action: PayloadAction<ICategory>) {
             state.status = EStatus.FINISHED
@@ -73,7 +75,8 @@ const slice = createSlice({
             state.form.data = action.payload
         },
         deleteCategory(state, action: PayloadAction<string>) {
-            //
+            state
+            action.payload
         },
         categorySave(state, action: PayloadAction<ICategory>) {
             state.form.status = EStatus.FINISHED

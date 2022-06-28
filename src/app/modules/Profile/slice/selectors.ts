@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { ERole, RootState } from 'types'
+import { RootState } from 'types'
 
 const selectDomain = (state: RootState) => state.profile
 

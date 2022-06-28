@@ -1,19 +1,3 @@
-const keys =
-    Object.keys ||
-    function (obj) {
-        if (obj !== Object(obj)) {
-            throw new TypeError('Invalid object')
-        }
-
-        const keys = []
-
-        for (const key in obj) {
-            keys[keys.length] = key
-        }
-
-        return keys
-    }
-
 export const getMatchedMask = (value: string, masks: string[]) => {
     const match = /[0-9]/
     const replace = '9'
