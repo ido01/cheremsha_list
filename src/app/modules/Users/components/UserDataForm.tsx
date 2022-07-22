@@ -31,6 +31,14 @@ export const UserDataForm: React.FC = () => {
             value: 'manager',
         },
         {
+            label: 'Сотрудник офиса',
+            value: 'office',
+        },
+        {
+            label: 'Сотрудник склада',
+            value: 'sklad',
+        },
+        {
             label: 'Владелец',
             value: 'owner',
         },
@@ -225,6 +233,14 @@ export const UserDataForm: React.FC = () => {
                                 {
                                     value: '38',
                                     label: 'Кашириных',
+                                },
+                                {
+                                    value: '39',
+                                    label: 'Склад',
+                                },
+                                {
+                                    value: '40',
+                                    label: 'Офис',
                                 },
                             ].map((place_id, index) => (
                                 <MenuItem key={index} value={place_id.value}>

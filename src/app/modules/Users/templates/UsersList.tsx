@@ -139,6 +139,7 @@ export const UsersList: React.FC = () => {
             <TitleBlock
                 title={'Сотрудники'}
                 count={count}
+                value={filter.query}
                 endNode={
                     isMobile ? (
                         <Button variant="text" onClick={() => setFilterOpen(true)} sx={{ textTransform: 'uppercase' }}>
@@ -148,6 +149,14 @@ export const UsersList: React.FC = () => {
                         <></>
                     )
                 }
+                onSearch={(query) => {
+                    dispatch(
+                        usersActions.setFilter({
+                            ...filter,
+                            query,
+                        })
+                    )
+                }}
             />
 
             <Box pt={4} flex="1 0 100%" sx={{ overflow: 'auto', maxHeight: { md: 'calc( 100vh - 90px )' } }}>

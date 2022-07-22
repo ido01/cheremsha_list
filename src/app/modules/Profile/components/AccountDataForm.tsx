@@ -38,6 +38,14 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                       value: 'manager',
                   },
                   {
+                      label: 'Сотрудник офиса',
+                      value: 'office',
+                  },
+                  {
+                      label: 'Сотрудник склада',
+                      value: 'sklad',
+                  },
+                  {
                       label: 'Владелец',
                       value: 'owner',
                   },
@@ -54,6 +62,14 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                   {
                       label: 'Кальянщик',
                       value: 'hookah',
+                  },
+                  {
+                      label: 'Сотрудник офиса',
+                      value: 'office',
+                  },
+                  {
+                      label: 'Сотрудник склада',
+                      value: 'sklad',
                   },
               ]
 
@@ -333,7 +349,7 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                                 },
                                 {
                                     value: '21',
-                                    label: 'ТОРГОВЫЙ',
+                                    label: 'Торговый',
                                 },
                                 {
                                     value: '22',
@@ -366,6 +382,14 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                                 {
                                     value: '38',
                                     label: 'Кашириных',
+                                },
+                                {
+                                    value: '39',
+                                    label: 'Склад',
+                                },
+                                {
+                                    value: '40',
+                                    label: 'Офис',
                                 },
                             ].map((place_id, index) => (
                                 <MenuItem key={index} value={place_id.value}>

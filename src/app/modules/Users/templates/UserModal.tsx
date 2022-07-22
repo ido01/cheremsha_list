@@ -1,7 +1,6 @@
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import {
-    Avatar,
     Box,
     Button,
     Container,
@@ -10,10 +9,12 @@ import {
     DialogTitle,
     Grid,
     IconButton,
+    Modal as ModalComponent,
     Typography,
 } from '@mui/material'
 import { LabelText } from 'app/components/LabelText'
 import { Modal } from 'app/components/Modal'
+import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,6 +30,7 @@ export const UserModal: React.FC = () => {
     const dispatch = useDispatch()
 
     const [openDelete, setOpenDelete] = useState<boolean>(false)
+    const [openPhoto, setOpenPhoto] = useState<boolean>(false)
 
     const { status } = useSelector(selectForm)
     const profileRole = useSelector(selectProfileRole)
@@ -61,12 +63,15 @@ export const UserModal: React.FC = () => {
         setOpenDelete(false)
     }
 
-    const handleDeleteDocument = () => {
-        // if (document) {
-        //     dispatch(usersActions.deleteDocument(document.id))
-        //     handleClose()
-        // }
+    const handleBanUser = () => {
+        if (user) {
+            dispatch(usersActions.banUser(user.id))
+        }
         setOpenDelete(false)
+    }
+
+    const handleOpenAvatar = () => {
+        setOpenPhoto(true)
     }
 
     // const handleSetComplete = () => {
@@ -86,15 +91,16 @@ export const UserModal: React.FC = () => {
                 open={isOpen}
                 title={
                     <Box display={'flex'} alignItems={'center'}>
-                        <Avatar
-                            src={user?.avatar?.url || ''}
-                            alt={`${user?.last_name} ${user?.name}`}
-                            sx={{ width: 42, height: 42, mr: 1 }}
-                        >
-                            {`${user?.last_name[0]} ${user?.name[0]}`}
-                        </Avatar>
+                        <AvatarImage
+                            name={`${user?.last_name} ${user?.name}`}
+                            image={user?.avatar?.url}
+                            size={'42px'}
+                            onClick={handleOpenAvatar}
+                        />
 
-                        {`${user?.last_name} ${user?.name}`}
+                        <Typography variant="h5" sx={{ ml: 1 }}>
+                            {`${user?.last_name} ${user?.name}`}
+                        </Typography>
                     </Box>
                 }
                 handleClose={handleClose}
@@ -272,11 +278,23 @@ export const UserModal: React.FC = () => {
                         Отмена
                     </Button>
 
-                    <LoadingButton onClick={handleDeleteDocument} autoFocus color="error">
+                    <LoadingButton onClick={handleBanUser} autoFocus color="error">
                         Заблокировать
                     </LoadingButton>
                 </DialogActions>
             </Dialog>
+
+            <ModalComponent
+                open={openPhoto}
+                onClose={() => setOpenPhoto(false)}
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <Box component={'img'} src={user?.avatar?.url} sx={{ maxWidth: '90%', maxHeight: '90%' }} />
+            </ModalComponent>
         </>
     )
 }

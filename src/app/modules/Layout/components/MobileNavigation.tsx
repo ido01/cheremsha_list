@@ -3,6 +3,7 @@ import {
     Group as GroupIcon,
     Quiz as QuizIcon,
     School as SchoolIcon,
+    StackedLineChart as StackedLineChartIcon,
 } from '@mui/icons-material'
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
@@ -39,11 +40,16 @@ export const MobileNavigation: React.FC = () => {
             path: '/school',
             id: 2,
         },
+        // {
+        //     icon: <DesignServicesIcon />,
+        //     title: 'Тестирование',
+        //     path: '/quiz',
+        //     id: 3,
+        // },
         {
-            icon: <DesignServicesIcon />,
-            title: 'Тестирование',
-            path: '/quiz',
-            id: 3,
+            icon: <StackedLineChartIcon />,
+            title: 'Мотивация',
+            path: '/motivation',
         },
         {
             icon: <AvatarImage name={profile.name} image={profile.avatar?.url} size={'24px'} />,

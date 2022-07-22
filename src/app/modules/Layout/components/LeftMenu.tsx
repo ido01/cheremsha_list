@@ -37,11 +37,11 @@ export const LeftMenu: React.FC = () => {
             title: 'Мотивация',
             path: '/motivation',
         },
-        {
-            icon: <DesignServicesIcon />,
-            title: 'Тестирование',
-            path: '/quiz',
-        },
+        // {
+        //     icon: <DesignServicesIcon />,
+        //     title: 'Тестирование',
+        //     path: '/quiz',
+        // },
         {
             icon: <GroupIcon />,
             title: 'Сотрудники',

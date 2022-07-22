@@ -21,6 +21,7 @@ export interface IProfileResponse {
 export interface IUser {
     id: string
     active: boolean
+    ban: boolean
     role: ERole
     gender: EGender
     name: string

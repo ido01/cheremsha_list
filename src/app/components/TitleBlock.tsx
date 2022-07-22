@@ -1,6 +1,6 @@
 import { Search as SearchIcon } from '@mui/icons-material'
 import { Box, TextField, Typography, useMediaQuery, useTheme } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 
 import Breadcrumbs, { BreadcrumbItem } from './Breadcrumbs'
 
@@ -10,9 +10,9 @@ interface TitleBlockProps {
     count?: number
     breadcrumbs?: BreadcrumbItem[]
     breadcrumbsItemsMobile?: BreadcrumbItem[]
-    search?: string
+    value?: string
     endNode?: React.ReactNode
-    handleSearchChange?: (e: any) => void
+    onSearch?: (query: string) => void
 }
 
 export const TitleBlock: React.FC<TitleBlockProps> = ({
@@ -21,12 +21,30 @@ export const TitleBlock: React.FC<TitleBlockProps> = ({
     count,
     breadcrumbs,
     breadcrumbsItemsMobile,
-    search,
+    value = '',
     endNode,
-    handleSearchChange,
+    onSearch,
 }) => {
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.between('xs', 'md'))
+
+    const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(null)
+    const [search, setSearch] = useState<string>(value)
+
+    const handleSearchChange = (e: any) => {
+        const { value } = e.target
+        setSearch(value)
+
+        if (timer) {
+            clearTimeout(timer)
+        }
+
+        setTimer(
+            setTimeout(() => {
+                onSearch?.(value)
+            }, 300)
+        )
+    }
 
     return (
         <Box position={isMobile ? 'fixed' : 'relative'} top={0} width={'100%'} zIndex={1}>

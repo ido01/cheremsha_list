@@ -8,6 +8,7 @@ import { IProfileState } from './types'
 const initialProfile: IUser = {
     id: '',
     active: false,
+    ban: false,
     role: ERole.GUEST,
     gender: 'male',
     name: '',

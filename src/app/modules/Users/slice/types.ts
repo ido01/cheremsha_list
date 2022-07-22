@@ -9,6 +9,7 @@ export interface IUserFilter {
     position: EPosition | ''
     place_id: string
     status: TUserStatus
+    query: string
 }
 
 export interface IUsersState extends EntityState<IUser> {

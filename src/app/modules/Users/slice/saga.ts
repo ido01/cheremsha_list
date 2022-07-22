@@ -24,6 +24,7 @@ export function* loadUsers() {
                 status: filter.status,
                 place_id: filter.place_id,
                 position: filter.position,
+                query: filter.query,
             },
         })
 
@@ -78,9 +79,22 @@ export function* activeUser(action: PayloadAction<string>) {
     }
 }
 
+export function* banUser(action: PayloadAction<string>) {
+    try {
+        const response: IUserItemResponse = yield call(request, `users/${action.payload}/ban`, {
+            method: 'POST',
+        })
+
+        yield put(usersActions.userUpdated(response.data))
+    } catch (error: any) {
+        yield put(usersActions.statusError())
+    }
+}
+
 export function* usersWatcher() {
     yield takeLeading(usersActions.loadUsers.type, loadUsers)
     yield takeLeading(usersActions.loadUser.type, loadUser)
     yield takeLeading(usersActions.updateUser.type, updateUser)
     yield takeLeading(usersActions.activeUser.type, activeUser)
+    yield takeLeading(usersActions.banUser.type, banUser)
 }

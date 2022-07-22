@@ -25,7 +25,7 @@ function stringAvatar(name: string, size?: string) {
             height: size || 64,
             bgcolor: stringToColor(name),
         },
-        children: `${name.split(' ')[0][0]}${name.split(' ')[1]?.[0] || ''}`,
+        children: `${name.trim().split(' ')[0][0]}${name.trim().split(' ')[1]?.[0] || ''}`,
     }
 }
 

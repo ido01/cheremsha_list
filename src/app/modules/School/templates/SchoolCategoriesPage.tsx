@@ -85,7 +85,6 @@ export const SchoolCategoriesPage: React.FC = () => {
                 title={category?.name || 'Обучение'}
                 breadcrumbs={breadcrumbsItems}
                 breadcrumbsItemsMobile={breadcrumbsItemsMobile}
-                search={search}
                 endNode={
                     profileRole === ERole.ADMIN ? (
                         <IconButton
@@ -99,7 +98,6 @@ export const SchoolCategoriesPage: React.FC = () => {
                         </IconButton>
                     ) : undefined
                 }
-                handleSearchChange={handleSearchChange}
             />
 
             <Box pt={4} flex="1 0 100%" sx={{ overflow: 'auto', maxHeight: { md: 'calc( 100vh - 90px )' } }}>

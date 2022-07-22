@@ -28,6 +28,7 @@ const slice = createSlice({
             position: '',
             place_id: '',
             status: 'all',
+            query: '',
         },
         modal: {
             isOpen: false,
@@ -38,6 +39,7 @@ const slice = createSlice({
             data: {
                 id: '',
                 active: false,
+                ban: false,
                 role: ERole.GUEST,
                 gender: 'male',
                 name: '',
@@ -98,6 +100,10 @@ const slice = createSlice({
             state.pagination.page = action.payload
         },
         activeUser(state, action: PayloadAction<string>) {
+            state.form.status = EStatus.PENDING
+            action.payload
+        },
+        banUser(state, action: PayloadAction<string>) {
             state.form.status = EStatus.PENDING
             action.payload
         },

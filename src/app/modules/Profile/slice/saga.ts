@@ -10,6 +10,9 @@ export function* loadProfile() {
     try {
         const response: IProfileResponse = yield call(request, `profile`)
 
+        if (response.profile.ban) {
+            yield put(authActions.logout())
+        }
         yield put(profileActions.profileLoaded(response))
     } catch (error: any) {
         yield put(authActions.logout())
