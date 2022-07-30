@@ -57,6 +57,7 @@ const slice = createSlice({
                 phone: '',
                 email: '',
                 blocked: false,
+                favorite: false,
                 createdAt: '',
             },
         },
@@ -131,6 +132,12 @@ const slice = createSlice({
         },
         statusError(state) {
             state.status = EStatus.ERROR
+        },
+        addFavorite(state, action: PayloadAction<string>) {
+            //
+        },
+        deleteFavorite(state, action: PayloadAction<string>) {
+            //
         },
     },
 })

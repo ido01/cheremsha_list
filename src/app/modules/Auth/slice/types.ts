@@ -17,6 +17,16 @@ export interface ISignup {
     password: string
 }
 
+export interface IRecovery {
+    email: string
+}
+
+export interface IConfirmRecovery {
+    email: string
+    code: string
+    password: string
+}
+
 export interface IAuthState {
     token: string
     auth_status: EAuthStatus
@@ -29,6 +39,14 @@ export interface IAuthState {
         signup: {
             status: EStatus
             data: ISignup
+        }
+        recovery: {
+            status: EStatus
+            data: IRecovery
+        }
+        confirm_recovery: {
+            status: EStatus
+            data: IConfirmRecovery
         }
     }
 }

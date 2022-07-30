@@ -9,28 +9,29 @@ import { EStatus } from 'types'
 import * as yup from 'yup'
 
 import { authActions } from '../slice'
-import { selectSigninForm } from '../slice/selectors'
+import { selectConfirmRecoveryForm } from '../slice/selectors'
 import { Auth } from './Auth'
 
-export const SignIn: React.FC = () => {
+export const ConfirmRecovery: React.FC = () => {
     const dispatch = useDispatch()
     const history = useHistory()
 
-    const { status, data } = useSelector(selectSigninForm)
+    const { status, data: initialValues } = useSelector(selectConfirmRecoveryForm)
 
     const validationSchema = yup.object({
         email: yup.string().required().email(),
-        password: yup.string().required(),
+        code: yup.string().required().min(4),
+        password: yup.string().required().min(4),
     })
 
     const formik = useFormik({
         validationSchema,
-        initialValues: data,
+        initialValues,
         validateOnBlur: false,
         validateOnChange: false,
         enableReinitialize: true,
         onSubmit: (values) => {
-            dispatch(authActions.signIn(values))
+            dispatch(authActions.confirmRecovery(values))
         },
     })
 
@@ -81,7 +82,18 @@ export const SignIn: React.FC = () => {
                             fullWidth
                             sx={{ mt: 3 }}
                             variant="outlined"
-                            label="Пароль"
+                            label="Код из email"
+                            name="code"
+                            value={formik.values.code || ''}
+                            error={!!formik.errors.code}
+                            onChange={formik.handleChange}
+                        />
+
+                        <TextField
+                            fullWidth
+                            sx={{ mt: 3 }}
+                            variant="outlined"
+                            label="Новый пароль"
                             name="password"
                             type={'password'}
                             value={formik.values.password || ''}
@@ -98,7 +110,7 @@ export const SignIn: React.FC = () => {
                             sx={{ mt: 3 }}
                             onClick={() => formik.handleSubmit()}
                         >
-                            Войти
+                            Сменить пароль
                         </LoadingButton>
 
                         <Box mt={1} display={'flex'} justifyContent={'space-between'}>
@@ -107,15 +119,15 @@ export const SignIn: React.FC = () => {
                                 onClick={() => history.push('/auth/recovery')}
                                 sx={{ textTransform: 'initial' }}
                             >
-                                Забыл пароль?
+                                Отправить код еще раз
                             </Button>
 
                             <Button
                                 variant="text"
-                                onClick={() => history.push('/auth/signup')}
+                                onClick={() => history.push('/auth')}
                                 sx={{ textTransform: 'initial' }}
                             >
-                                Регистрация
+                                Войти
                             </Button>
                         </Box>
                     </Box>

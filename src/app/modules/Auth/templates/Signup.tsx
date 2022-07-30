@@ -142,7 +142,11 @@ export const Signup: React.FC = () => {
                         </LoadingButton>
 
                         <Box mt={1} display={'flex'} justifyContent={'flex-end'}>
-                            <Button variant="text" onClick={() => history.push('/auth')}>
+                            <Button
+                                variant="text"
+                                onClick={() => history.push('/auth')}
+                                sx={{ textTransform: 'initial' }}
+                            >
                                 Уже есть аккаунт
                             </Button>
                         </Box>

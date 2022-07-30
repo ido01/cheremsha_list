@@ -4,7 +4,7 @@ import { call, put, takeLeading } from 'redux-saga/effects'
 import { request } from 'utils/request'
 
 import { authActions } from '.'
-import { IActiveToken, ISignin, ISignup } from './types'
+import { IActiveToken, IConfirmRecovery, IRecovery, ISignin, ISignup } from './types'
 
 interface signInResponse {
     token: string
@@ -61,6 +61,23 @@ export function* signUp(action: PayloadAction<ISignup>) {
     }
 }
 
+export function* recovery(action: PayloadAction<IRecovery>) {
+    try {
+        yield call(request, `auth/recovery`, {
+            method: 'POST',
+            data: action.payload,
+        })
+
+        yield put(authActions.recoveryFinished())
+    } catch (error: any) {
+        yield put(authActions.statusRecoveryError())
+
+        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
+            type: 'error',
+        })
+    }
+}
+
 export function* logout() {
     try {
         yield call(request, `auth/logout`, {
@@ -77,9 +94,28 @@ export function* logout() {
     }
 }
 
+export function* confirmRecovery(action: PayloadAction<IConfirmRecovery>) {
+    try {
+        const response: signInResponse = yield call(request, `auth/confirm_recovery`, {
+            method: 'POST',
+            data: action.payload,
+        })
+
+        yield put(authActions.confirmRecoveryFinished(response.token))
+    } catch (error: any) {
+        yield put(authActions.statusConfirmRecoveryError())
+
+        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
+            type: 'error',
+        })
+    }
+}
+
 export function* authWatcher() {
     yield takeLeading(authActions.activeLogin.type, activeLogin)
     yield takeLeading(authActions.signIn.type, signIn)
     yield takeLeading(authActions.signUp.type, signUp)
+    yield takeLeading(authActions.recovery.type, recovery)
+    yield takeLeading(authActions.confirmRecovery.type, confirmRecovery)
     yield takeLeading(authActions.logout.type, logout)
 }

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { EAuthStatus, EStatus } from 'types'
 
-import { IActiveToken, IAuthState, ISignin, ISignup } from './types'
+import { IActiveToken, IAuthState, IConfirmRecovery, IRecovery, ISignin, ISignup } from './types'
 
 const initialState: IAuthState = {
     status: EStatus.INITIAL,
@@ -24,6 +24,20 @@ const initialState: IAuthState = {
                 password: '',
             },
         },
+        recovery: {
+            status: EStatus.INITIAL,
+            data: {
+                email: '',
+            },
+        },
+        confirm_recovery: {
+            status: EStatus.INITIAL,
+            data: {
+                email: '',
+                code: '',
+                password: '',
+            },
+        },
     },
 }
 
@@ -42,6 +56,11 @@ const slice = createSlice({
             state.status = EStatus.PENDING
             action.payload
         },
+        logined(state, action: PayloadAction<string>) {
+            state.status = EStatus.FINISHED
+            state.auth_status = EAuthStatus.AUTHORIZED
+            localStorage.setItem('corp_token', action.payload)
+        },
         signUp(state, action: PayloadAction<ISignup>) {
             state.forms.signup.status = EStatus.PENDING
             action.payload
@@ -52,10 +71,31 @@ const slice = createSlice({
         statusSignUpError(state) {
             state.forms.signup.status = EStatus.ERROR
         },
-        logined(state, action: PayloadAction<string>) {
-            state.status = EStatus.FINISHED
+        recoveryInit(state) {
+            state.forms.recovery.status = EStatus.INITIAL
+        },
+        recovery(state, action: PayloadAction<IRecovery>) {
+            state.forms.recovery.status = EStatus.PENDING
+            state.forms.confirm_recovery.data.email = action.payload.email
+            state.forms.recovery.data.email = action.payload.email
+        },
+        recoveryFinished(state) {
+            state.forms.recovery.status = EStatus.FINISHED
+        },
+        statusRecoveryError(state) {
+            state.forms.recovery.status = EStatus.ERROR
+        },
+        confirmRecovery(state, action: PayloadAction<IConfirmRecovery>) {
+            state.forms.confirm_recovery.status = EStatus.PENDING
+            action.payload
+        },
+        confirmRecoveryFinished(state, action: PayloadAction<string>) {
+            state.forms.confirm_recovery.status = EStatus.FINISHED
             state.auth_status = EAuthStatus.AUTHORIZED
             localStorage.setItem('corp_token', action.payload)
+        },
+        statusConfirmRecoveryError(state) {
+            state.forms.confirm_recovery.status = EStatus.ERROR
         },
         logout(state) {
             state.auth_status = EAuthStatus.NOT_AUTHORIZED

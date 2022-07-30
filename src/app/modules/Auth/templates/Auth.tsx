@@ -18,9 +18,9 @@ export const Auth: React.FC<AuthProps> = ({ children }) => {
     const authStatus = useSelector(selectAuthStatus)
 
     useEffect(() => {
-        if (authStatus === EAuthStatus.NOT_AUTHORIZED && url !== '/auth' && url !== '/auth/signup') {
+        if (authStatus === EAuthStatus.NOT_AUTHORIZED && url.indexOf('/auth') !== 0) {
             history.push('/auth')
-        } else if (authStatus === EAuthStatus.AUTHORIZED && (url === '/auth' || url === '/auth/active')) {
+        } else if (authStatus === EAuthStatus.AUTHORIZED && url.indexOf('/auth') === 0) {
             history.push('/')
         }
         if (authStatus === EAuthStatus.AUTHORIZED) {

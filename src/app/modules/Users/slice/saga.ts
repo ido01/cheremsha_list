@@ -91,10 +91,36 @@ export function* banUser(action: PayloadAction<string>) {
     }
 }
 
+export function* addFavorite(action: PayloadAction<string>) {
+    try {
+        const response: IUserItemResponse = yield call(request, `users/${action.payload}/favorite`, {
+            method: 'POST',
+        })
+
+        yield put(usersActions.userUpdated(response.data))
+    } catch (error: any) {
+        yield put(usersActions.statusError())
+    }
+}
+
+export function* deleteFavorite(action: PayloadAction<string>) {
+    try {
+        const response: IUserItemResponse = yield call(request, `users/${action.payload}/favorite`, {
+            method: 'DELETE',
+        })
+
+        yield put(usersActions.userUpdated(response.data))
+    } catch (error: any) {
+        yield put(usersActions.statusError())
+    }
+}
+
 export function* usersWatcher() {
     yield takeLeading(usersActions.loadUsers.type, loadUsers)
     yield takeLeading(usersActions.loadUser.type, loadUser)
     yield takeLeading(usersActions.updateUser.type, updateUser)
     yield takeLeading(usersActions.activeUser.type, activeUser)
     yield takeLeading(usersActions.banUser.type, banUser)
+    yield takeLeading(usersActions.addFavorite.type, addFavorite)
+    yield takeLeading(usersActions.deleteFavorite.type, deleteFavorite)
 }

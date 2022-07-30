@@ -40,5 +40,6 @@ export interface IUser {
     phone: string
     email: string
     blocked: boolean
+    favorite: boolean
     createdAt: string
 }

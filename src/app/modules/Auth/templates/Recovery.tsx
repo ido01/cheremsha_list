@@ -2,37 +2,43 @@ import { LoadingButton } from '@mui/lab'
 import { Box, Button, Paper, TextField } from '@mui/material'
 import { Logo } from 'app/components/Logo/Logo'
 import { useFormik } from 'formik'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { EStatus } from 'types'
 import * as yup from 'yup'
 
 import { authActions } from '../slice'
-import { selectSigninForm } from '../slice/selectors'
+import { selectRecoveryForm } from '../slice/selectors'
 import { Auth } from './Auth'
 
-export const SignIn: React.FC = () => {
+export const Recovery: React.FC = () => {
     const dispatch = useDispatch()
     const history = useHistory()
 
-    const { status, data } = useSelector(selectSigninForm)
+    const { status, data: initialValues } = useSelector(selectRecoveryForm)
 
     const validationSchema = yup.object({
         email: yup.string().required().email(),
-        password: yup.string().required(),
     })
 
     const formik = useFormik({
         validationSchema,
-        initialValues: data,
+        initialValues,
         validateOnBlur: false,
         validateOnChange: false,
         enableReinitialize: true,
         onSubmit: (values) => {
-            dispatch(authActions.signIn(values))
+            dispatch(authActions.recovery(values))
         },
     })
+
+    useEffect(() => {
+        if (status === EStatus.FINISHED) {
+            history.push('/auth/confirm_recovery')
+            dispatch(authActions.recoveryInit())
+        }
+    }, [status])
 
     return (
         <Auth>
@@ -77,18 +83,6 @@ export const SignIn: React.FC = () => {
                             onChange={formik.handleChange}
                         />
 
-                        <TextField
-                            fullWidth
-                            sx={{ mt: 3 }}
-                            variant="outlined"
-                            label="Пароль"
-                            name="password"
-                            type={'password'}
-                            value={formik.values.password || ''}
-                            error={!!formik.errors.password}
-                            onChange={formik.handleChange}
-                        />
-
                         <LoadingButton
                             loading={status === EStatus.PENDING}
                             fullWidth
@@ -98,24 +92,24 @@ export const SignIn: React.FC = () => {
                             sx={{ mt: 3 }}
                             onClick={() => formik.handleSubmit()}
                         >
-                            Войти
+                            Отправить код восстановления
                         </LoadingButton>
 
                         <Box mt={1} display={'flex'} justifyContent={'space-between'}>
                             <Button
                                 variant="text"
-                                onClick={() => history.push('/auth/recovery')}
+                                onClick={() => history.push('/auth')}
                                 sx={{ textTransform: 'initial' }}
                             >
-                                Забыл пароль?
+                                Вспомнил пароль!
                             </Button>
 
                             <Button
                                 variant="text"
-                                onClick={() => history.push('/auth/signup')}
+                                onClick={() => history.push('/auth/confirm_recovery')}
                                 sx={{ textTransform: 'initial' }}
                             >
-                                Регистрация
+                                Уже получил код
                             </Button>
                         </Box>
                     </Box>

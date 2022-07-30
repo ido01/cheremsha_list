@@ -8,18 +8,24 @@ import {
 } from '@mui/icons-material'
 import { Box, colors, Container, Divider, IconButton, Paper } from '@mui/material'
 import { Logo } from 'app/components/Logo/Logo'
+import { favoritesActions } from 'app/modules/Favorites/slice'
+import { selectfavorites } from 'app/modules/Favorites/slice/selectors'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import { selectProfile } from 'app/modules/Profile/slice/selectors'
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { TMenuItem } from 'types/TMenuItem'
 
 import { MenuItem } from './MenuItem'
 
 export const LeftMenu: React.FC = () => {
+    const dispatch = useDispatch()
+
     const [isLage, setLage] = useState<boolean>(true)
 
     const profile = useSelector(selectProfile)
+
+    const favorites = useSelector(selectfavorites)
 
     const menuItems: TMenuItem[] = [
         {
@@ -48,6 +54,10 @@ export const LeftMenu: React.FC = () => {
             path: '/users',
         },
     ]
+
+    useEffect(() => {
+        dispatch(favoritesActions.loadFavorites())
+    }, [])
 
     return (
         <Paper
@@ -86,6 +96,21 @@ export const LeftMenu: React.FC = () => {
                 >
                     {menuItems.map((item, index) => (
                         <MenuItem key={index} item={item} isLage={isLage} />
+                    ))}
+
+                    {favorites.map((user) => (
+                        <MenuItem
+                            key={user.id}
+                            item={{
+                                icon: <AvatarImage name={user.name} image={user.avatar?.url} size={'24px'} />,
+                                title: `${user.last_name} ${user.name}`,
+                            }}
+                            isLage={isLage}
+                            onClick={() => {
+                                dispatch(favoritesActions.setActiveId(user.id))
+                                dispatch(favoritesActions.showModal())
+                            }}
+                        />
                     ))}
                 </Box>
             </Box>

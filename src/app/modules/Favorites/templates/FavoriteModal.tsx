@@ -21,58 +21,27 @@ import { LabelText } from 'app/components/LabelText'
 import { Modal } from 'app/components/Modal'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
+import { usersActions } from 'app/modules/Users/slice'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { ERole, EStatus } from 'types'
 import { convertGenderName, convertPlaceName, convertPositionName, convertRoleName } from 'utils/convertUtils'
 
-import { usersActions } from '../slice'
-import { selectForm, selectModal, selectUserById } from '../slice/selectors'
+import { favoritesActions } from '../slice'
+import { selectFavoriteById, selectModal } from '../slice/selectors'
 
-export const UserModal: React.FC = () => {
-    const history = useHistory()
+export const FavoriteModal: React.FC = () => {
     const dispatch = useDispatch()
 
-    const [openDelete, setOpenDelete] = useState<boolean>(false)
     const [openPhoto, setOpenPhoto] = useState<boolean>(false)
 
-    const { status } = useSelector(selectForm)
     const profileRole = useSelector(selectProfileRole)
     const { isOpen, activeId } = useSelector(selectModal)
-    const getUser = useSelector(selectUserById)
-    const user = getUser(activeId)
+    const user = useSelector(selectFavoriteById)(activeId)
 
     const handleClose = () => {
-        dispatch(usersActions.hideModal())
-    }
-
-    const handleActiveUser = () => {
-        if (user) {
-            dispatch(usersActions.activeUser(user.id))
-        }
-    }
-
-    const handleEditDocument = () => {
-        if (user) {
-            dispatch(usersActions.setForm(user))
-            history.push(`/users/${user.id}`)
-        }
-    }
-
-    const handleOpenDelete = () => {
-        setOpenDelete(true)
-    }
-
-    const handleCloseDelete = () => {
-        setOpenDelete(false)
-    }
-
-    const handleBanUser = () => {
-        if (user) {
-            dispatch(usersActions.banUser(user.id))
-        }
-        setOpenDelete(false)
+        dispatch(favoritesActions.hideModal())
     }
 
     const handleOpenAvatar = () => {
@@ -90,17 +59,6 @@ export const UserModal: React.FC = () => {
             dispatch(usersActions.deleteFavorite(user.id))
         }
     }
-
-    // const handleSetComplete = () => {
-    //     if (document) {
-    //         dispatch(
-    //             usersActions.setComplete({
-    //                 did: document.id,
-    //                 id: document.state.id,
-    //             })
-    //         )
-    //     }
-    // }
 
     return (
         <>
@@ -161,26 +119,6 @@ export const UserModal: React.FC = () => {
                 >
                     <Container>
                         <Grid container sx={{ mt: 2.5 }} spacing={2.5}>
-                            <Grid item xs={6}>
-                                <LabelText
-                                    label="Статус"
-                                    node={
-                                        <Typography
-                                            variant="body1"
-                                            sx={(theme) => ({
-                                                color: user?.blocked
-                                                    ? theme.palette.error.main
-                                                    : !user?.active
-                                                    ? theme.palette.success.main
-                                                    : theme.palette.warning.main,
-                                            })}
-                                        >
-                                            {user?.blocked ? 'Заблокирован' : !user?.active ? 'Новый' : 'Действующий'}
-                                        </Typography>
-                                    }
-                                />
-                            </Grid>
-
                             <Grid item xs={6}>
                                 <LabelText
                                     label="Email"
@@ -260,70 +198,9 @@ export const UserModal: React.FC = () => {
                                 </>
                             )}
                         </Grid>
-                        {!user?.active && (
-                            <LoadingButton
-                                loading={status === EStatus.PENDING}
-                                sx={{ mt: 4 }}
-                                fullWidth
-                                color="success"
-                                variant="contained"
-                                onClick={handleActiveUser}
-                            >
-                                Разрешить использовать платформу
-                            </LoadingButton>
-                        )}
-                    </Container>
-                </Box>
-
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        width: '100%',
-                        bottom: 0,
-                        py: 2,
-                        bgcolor: 'white',
-                        zIndex: 1,
-                    }}
-                >
-                    <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Box display={'flex'}>
-                            {profileRole === ERole.ADMIN && (
-                                <>
-                                    <IconButton color="error" onClick={handleOpenDelete}>
-                                        <DeleteIcon />
-                                    </IconButton>
-
-                                    <IconButton color="info" onClick={handleEditDocument}>
-                                        <EditIcon />
-                                    </IconButton>
-                                </>
-                            )}
-                        </Box>
-
-                        {/* {document?.state.state !== EState.COMPLETED && (
-                            <LoadingButton color="success" variant="contained" onClick={handleSetComplete}>
-                                Подтверждаю, что изучил
-                            </LoadingButton>
-                        )} */}
                     </Container>
                 </Box>
             </Modal>
-
-            <Dialog open={openDelete} onClose={handleCloseDelete} aria-labelledby="alert-dialog-title">
-                <DialogTitle id="alert-dialog-title">
-                    {`Вы уверены, что хотите заблокировать "${user?.name}"?`}
-                </DialogTitle>
-
-                <DialogActions>
-                    <Button onClick={handleCloseDelete} color="primary">
-                        Отмена
-                    </Button>
-
-                    <LoadingButton onClick={handleBanUser} autoFocus color="error">
-                        Заблокировать
-                    </LoadingButton>
-                </DialogActions>
-            </Dialog>
 
             <ModalComponent
                 open={openPhoto}

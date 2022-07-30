@@ -1,6 +1,7 @@
 import { IAuthState } from 'app/modules/Auth/slice/types'
 import { ICategoriesState } from 'app/modules/Categories/slice/types'
 import { IDocumentsState } from 'app/modules/Documents/slice/types'
+import { IFavoritesState } from 'app/modules/Favorites/slice/types'
 import { IFileState } from 'app/modules/File/slice/types'
 import { IProfileState } from 'app/modules/Profile/slice/types'
 import { IQuizState } from 'app/modules/Quiz/slice/types'
@@ -10,6 +11,7 @@ export interface RootState {
     auth: IAuthState
     categories: ICategoriesState
     documents: IDocumentsState
+    favorites: IFavoritesState
     file: IFileState
     profile: IProfileState
     quiz: IQuizState

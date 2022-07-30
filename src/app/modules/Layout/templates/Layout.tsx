@@ -1,5 +1,6 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { Auth } from 'app/modules/Auth/templates/Auth'
+import { FavoriteModal } from 'app/modules/Favorites/templates/FavoriteModal'
 import React from 'react'
 
 import { LeftMenu } from '../components/LeftMenu'
@@ -44,6 +45,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                         {children}
                     </Box>
                 )}
+
+                <FavoriteModal />
 
                 {isMobile && <MobileNavigation />}
             </Box>

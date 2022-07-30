@@ -26,6 +26,7 @@ const initialProfile: IUser = {
     phone: '',
     email: '',
     blocked: false,
+    favorite: false,
     createdAt: '',
 }
 

@@ -74,9 +74,8 @@ export const FaqCategoriesPage: React.FC = () => {
         setOpen(false)
     }
 
-    const handleSearchChange = (e: any) => {
-        const { value } = e.target
-        setSearch(value)
+    const handleSearchChange = (e: string) => {
+        setSearch(e)
     }
 
     return (
@@ -98,6 +97,8 @@ export const FaqCategoriesPage: React.FC = () => {
                         </IconButton>
                     ) : undefined
                 }
+                value={search}
+                onSearch={handleSearchChange}
             />
 
             <Box pt={4} flex="1 0 100%" sx={{ overflow: 'auto', maxHeight: { md: 'calc( 100vh - 90px )' } }}>
