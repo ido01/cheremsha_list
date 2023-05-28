@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { EAuthStatus, EStatus } from 'types'
+import { IUser } from 'types/IUser'
 
 import { IActiveToken, IAuthState, IConfirmRecovery, IRecovery, ISignin, ISignup } from './types'
 
@@ -18,8 +19,6 @@ const initialState: IAuthState = {
         signup: {
             status: EStatus.INITIAL,
             data: {
-                last_name: '',
-                name: '',
                 email: '',
                 password: '',
             },
@@ -56,6 +55,11 @@ const slice = createSlice({
             state.status = EStatus.PENDING
             action.payload
         },
+        profileLoaded(state, action: PayloadAction<IUser>) {
+            if (!action.payload.active) {
+                state.auth_status = EAuthStatus.NEW
+            }
+        },
         logined(state, action: PayloadAction<string>) {
             state.status = EStatus.FINISHED
             state.auth_status = EAuthStatus.AUTHORIZED
@@ -65,8 +69,10 @@ const slice = createSlice({
             state.forms.signup.status = EStatus.PENDING
             action.payload
         },
-        signUpFinished(state) {
-            state.forms.signup.status = EStatus.FINISHED
+        signUpFinished(state, action: PayloadAction<string>) {
+            state.status = EStatus.FINISHED
+            state.auth_status = EAuthStatus.NEW
+            localStorage.setItem('corp_token', action.payload)
         },
         statusSignUpError(state) {
             state.forms.signup.status = EStatus.ERROR

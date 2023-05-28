@@ -20,7 +20,7 @@ const slice = createSlice({
             order: 'desc',
         },
         pagination: {
-            limit: 10,
+            limit: 25,
             page: 1,
             total_pages: 0,
         },
@@ -48,6 +48,11 @@ const slice = createSlice({
                 fid: '',
                 university: '',
                 birthday: '',
+                day: 0,
+                month: 0,
+                workday: 0,
+                workmonth: 0,
+                workyear: 0,
                 hobby: '',
                 about: '',
                 place_id: '',
@@ -73,6 +78,9 @@ const slice = createSlice({
             state.filter = action.payload
         },
         loadUsers(state) {
+            state.status = EStatus.PENDING
+        },
+        loadContacts(state) {
             state.status = EStatus.PENDING
         },
         usersLoaded(state, action: PayloadAction<IUsersCollectionResponse>) {
@@ -134,10 +142,12 @@ const slice = createSlice({
             state.status = EStatus.ERROR
         },
         addFavorite(state, action: PayloadAction<string>) {
-            //
+            state
+            action.payload
         },
         deleteFavorite(state, action: PayloadAction<string>) {
-            //
+            state
+            action.payload
         },
     },
 })

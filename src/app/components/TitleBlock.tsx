@@ -47,7 +47,7 @@ export const TitleBlock: React.FC<TitleBlockProps> = ({
     }
 
     return (
-        <Box position={isMobile ? 'fixed' : 'relative'} top={0} width={'100%'} zIndex={1}>
+        <Box position={isMobile ? 'fixed' : 'relative'} top={0} width={'100%'} zIndex={2}>
             <Box
                 display={'flex'}
                 flexShrink={0}

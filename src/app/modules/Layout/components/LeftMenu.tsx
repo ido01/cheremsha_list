@@ -1,7 +1,10 @@
 import {
+    CalendarMonth as CalendarMonthIcon,
+    Contacts as ContactsIcon,
     DesignServices as DesignServicesIcon,
     Group as GroupIcon,
     Menu as MenuIcon,
+    Percent as PercentIcon,
     Quiz as QuizIcon,
     School as SchoolIcon,
     StackedLineChart as StackedLineChartIcon,
@@ -29,6 +32,11 @@ export const LeftMenu: React.FC = () => {
 
     const menuItems: TMenuItem[] = [
         {
+            icon: <ContactsIcon />,
+            title: 'Важные контакты',
+            path: '/contacts',
+        },
+        {
             icon: <QuizIcon />,
             title: 'Гайд',
             path: '/faq',
@@ -43,15 +51,25 @@ export const LeftMenu: React.FC = () => {
             title: 'Мотивация',
             path: '/motivation',
         },
-        // {
-        //     icon: <DesignServicesIcon />,
-        //     title: 'Тестирование',
-        //     path: '/quiz',
-        // },
+        {
+            icon: <PercentIcon />,
+            title: 'Акции',
+            path: '/actions',
+        },
+        {
+            icon: <DesignServicesIcon />,
+            title: 'Тестирование',
+            path: '/quiz',
+        },
         {
             icon: <GroupIcon />,
             title: 'Сотрудники',
             path: '/users',
+        },
+        {
+            icon: <CalendarMonthIcon />,
+            title: 'Календарь',
+            path: '/events',
         },
     ]
 
@@ -118,7 +136,7 @@ export const LeftMenu: React.FC = () => {
             <Box mb={3.5}>
                 <MenuItem
                     item={{
-                        icon: <AvatarImage name={profile.name} image={profile.avatar?.url} size={'24px'} />,
+                        icon: <AvatarImage name={profile.name} image={profile.avatar?.thumb} size={'24px'} />,
                         title: `${profile.last_name} ${profile.name}`,
                         path: '/profile',
                     }}

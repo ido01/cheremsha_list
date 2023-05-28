@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { EState, EStatus } from 'types'
 import { IDocumentStateRequest } from 'types/IDocumentState'
-import { IQuiz, IQuizResponse } from 'types/IQuiz'
+import { IQuestionRequest, IQuiz, IQuizItemResponse, IQuizResponse } from 'types/IQuiz'
 import { TTableOrder } from 'types/ITable'
 
 import { IQuizState } from './types'
@@ -27,15 +27,22 @@ const slice = createSlice({
             open: false,
             data: {
                 id: '',
+                draft: false,
                 type: 'quiz',
                 path: 'faq',
                 parentId: '',
                 name: '',
+                description: '',
+                incorrect_count: 0,
                 questions: [],
                 state: {
                     id: '',
                     state: EState.INITIAL,
                     uid: '',
+                    qid: '',
+                    correct: 0,
+                    incorrect: 0,
+                    all_questions: 0,
                     createdAt: '',
                     updatedAt: '',
                 },
@@ -44,12 +51,36 @@ const slice = createSlice({
         },
     }),
     reducers: {
-        loadDQuiz(state) {
+        loadQuiz(state) {
             state.status = EStatus.PENDING
         },
         quizLoaded(state, action: PayloadAction<IQuizResponse>) {
             quizAdapter.setAll(state, action.payload.data)
             state.status = EStatus.FINISHED
+        },
+        question(state, action: PayloadAction<IQuestionRequest>) {
+            state
+            action.payload
+        },
+        completed(state, action: PayloadAction<string>) {
+            state
+            action.payload
+        },
+        setPublic(state, action: PayloadAction<string>) {
+            state
+            action.payload
+        },
+        setDraft(state, action: PayloadAction<string>) {
+            state
+            action.payload
+        },
+        loadQuizById(state, action: PayloadAction<string>) {
+            state.status = EStatus.PENDING
+            action.payload
+        },
+        quizByIdLoaded(state, action: PayloadAction<IQuizItemResponse>) {
+            state.status = EStatus.FINISHED
+            quizAdapter.setOne(state, action.payload.data)
         },
         openEditModal(state, action: PayloadAction<IQuiz>) {
             state.form.status = EStatus.INITIAL
@@ -59,6 +90,18 @@ const slice = createSlice({
         hideEditModal(state) {
             state.form.open = false
             state.form.data.parentId = ''
+        },
+        moveUpInfo(state, action: PayloadAction<number>) {
+            ;[state.form.data.questions[action.payload], state.form.data.questions[action.payload - 1]] = [
+                state.form.data.questions[action.payload - 1],
+                state.form.data.questions[action.payload],
+            ]
+        },
+        moveDownInfo(state, action: PayloadAction<number>) {
+            ;[state.form.data.questions[action.payload], state.form.data.questions[action.payload + 1]] = [
+                state.form.data.questions[action.payload + 1],
+                state.form.data.questions[action.payload],
+            ]
         },
         createQuiz(state, action: PayloadAction<IQuiz>) {
             state.form.status = EStatus.PENDING
@@ -85,6 +128,10 @@ const slice = createSlice({
         },
         setActiveId(state, action: PayloadAction<string>) {
             state.modal.activeId = action.payload
+        },
+        setStart(state, action: PayloadAction<string>) {
+            state
+            action.payload
         },
         setComplete(state, action: PayloadAction<IDocumentStateRequest>) {
             state

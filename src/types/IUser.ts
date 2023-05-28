@@ -1,5 +1,6 @@
 import { EGender, EPosition, ERole } from '.'
 import { IFile } from './IFile'
+import { IQuizState } from './IQuizState'
 
 export type IUsersCollectionResponse = {
     data: IUser[]
@@ -18,6 +19,11 @@ export interface IProfileResponse {
     profile: IUser
 }
 
+export interface IResultRequest {
+    id: string
+    uid: string
+}
+
 export interface IUser {
     id: string
     active: boolean
@@ -31,6 +37,11 @@ export interface IUser {
     avatar?: IFile
     university: string
     birthday: string
+    day: number
+    month: number
+    workday: number
+    workmonth: number
+    workyear: number
     hobby: string
     about: string
     place_id: string
@@ -42,4 +53,6 @@ export interface IUser {
     blocked: boolean
     favorite: boolean
     createdAt: string
+    state?: IQuizState
+    quiz?: IQuizState
 }

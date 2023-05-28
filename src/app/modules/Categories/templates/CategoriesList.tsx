@@ -1,7 +1,6 @@
 import Table from 'app/components/Table'
 import { CategoryDateRow } from 'app/modules/Categories/components/CategoryDateRow'
 import { CategoryNameRow } from 'app/modules/Categories/components/CategoryNameRow'
-import { CategoryStatusRow } from 'app/modules/Categories/components/CategoryStatusRow'
 import { MobileCategoryView } from 'app/modules/Categories/components/MobileCategoryView'
 import {
     selectCategories,
@@ -52,17 +51,25 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({ type, search }) 
     const items = [...categories, ...documents].sort((a, b) => {
         if (order.row === 'status') {
             if (order.order === 'desc') {
+                if (a.type === 'category' && b.type === 'document') return -1
+                if (b.type === 'category' && a.type === 'document') return 1
                 if (stateSort.indexOf(a.state.state) < stateSort.indexOf(b.state.state)) return -1
                 return 1
             } else {
+                if (a.type === 'category' && b.type === 'document') return 1
+                if (b.type === 'category' && a.type === 'document') return -1
                 if (stateSort.indexOf(a.state.state) > stateSort.indexOf(b.state.state)) return -1
                 return 1
             }
         } else if (order.row === 'createdAt') {
             if (order.order === 'desc') {
+                if (a.type === 'category' && b.type === 'document') return -1
+                if (b.type === 'category' && a.type === 'document') return 1
                 if (moment(a.createdAt).unix() > moment(b.createdAt).unix()) return -1
                 return 1
             } else {
+                if (a.type === 'category' && b.type === 'document') return 1
+                if (b.type === 'category' && a.type === 'document') return -1
                 if (moment(a.createdAt).unix() < moment(b.createdAt).unix()) return -1
                 return 1
             }
@@ -102,11 +109,7 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({ type, search }) 
             isSort: true,
             xs: 3,
             element: (item: ICategory | IDocument) => (
-                <>
-                    {item.type === 'document' && <DocumentStatusRow item={item} />}
-
-                    {item.type === 'category' && <CategoryStatusRow item={item} />}
-                </>
+                <>{item.type === 'document' && <DocumentStatusRow item={item} />}</>
             ),
         },
     ]

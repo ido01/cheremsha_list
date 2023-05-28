@@ -22,6 +22,8 @@ import { categoriesActions } from 'app/modules/Categories/slice'
 import { CategoryForm } from 'app/modules/Categories/templates/CategoryForm'
 import { documentsActions } from 'app/modules/Documents/slice'
 import { DocumentForm } from 'app/modules/Documents/templates/DocumentForm'
+import { quizActions } from 'app/modules/Quiz/slice'
+import { QuizForm } from 'app/modules/Quiz/templates/QuizForm'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -78,17 +80,24 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
 
     const addQuiz = () => {
         dispatch(
-            documentsActions.openEditModal({
+            quizActions.openEditModal({
                 id: '',
-                type: 'document',
+                draft: true,
+                type: 'quiz',
                 path: type,
                 name: '',
+                description: '',
+                incorrect_count: 0,
                 parentId: id || '0',
-                info: [],
+                questions: [],
                 state: {
                     id: '',
                     state: EState.INITIAL,
                     uid: '',
+                    qid: '',
+                    correct: 0,
+                    incorrect: 0,
+                    all_questions: 0,
                     createdAt: '',
                     updatedAt: '',
                 },
@@ -166,6 +175,8 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
                                         ? 'Добавить гайд'
                                         : type === 'school'
                                         ? 'Добавить обучение'
+                                        : type === 'actions'
+                                        ? 'Добавить акцию'
                                         : type === 'motivation'
                                         ? 'Добавить мотивацию'
                                         : 'Добавить тестирование'
@@ -202,6 +213,7 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
 
             <CategoryForm />
             <DocumentForm />
+            <QuizForm />
 
             <Dialog open={openDelete} onClose={handleCloseDelete} aria-labelledby="alert-dialog-title">
                 <DialogTitle id="alert-dialog-title">

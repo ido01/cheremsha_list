@@ -46,12 +46,12 @@ export function* signIn(action: PayloadAction<ISignin>) {
 
 export function* signUp(action: PayloadAction<ISignup>) {
     try {
-        yield call(request, `auth/signup`, {
+        const response: signInResponse = yield call(request, `auth/signup`, {
             method: 'POST',
             data: action.payload,
         })
 
-        yield put(authActions.signUpFinished())
+        yield put(authActions.signUpFinished(response.token))
     } catch (error: any) {
         yield put(authActions.statusSignUpError())
 

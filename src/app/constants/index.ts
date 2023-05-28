@@ -20,6 +20,13 @@ export const POSITION_NAME: { [key in EPosition]: string } = {
     manager: 'Управляющий',
     owner: 'Владелец',
     creator: 'Создатель',
+    managerControl: 'Менеджер и Управляющий',
+    accountant: 'Бухгалтер',
+    storekeeper: 'Кладовщик',
+    technician: 'Техник',
+    opt: 'Оптовый менеджер',
+    office: 'Сотрудник офиса',
+    sklad: 'Сотрудник склада',
 }
 
 export const DOCUMENT_STATE: { [key in EState]: string } = {
@@ -27,6 +34,15 @@ export const DOCUMENT_STATE: { [key in EState]: string } = {
     pending: 'В процессе',
     rejected: 'Отклонён',
     completed: 'Изучено',
+    closed: 'Провален',
+}
+
+export const QUIZ_STATE: { [key in EState]: string } = {
+    initial: 'Новый',
+    pending: 'В процессе',
+    rejected: 'Требует пересдачи',
+    completed: 'Сдан',
+    closed: 'Провален',
 }
 
 export const PLACE_NAME: { [key in string]: string } = {

@@ -1,8 +1,9 @@
 import { Box, FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material'
+import { selectLocations } from 'app/modules/Locations/selectors'
 import { usersActions } from 'app/modules/Users/slice'
 import { selectFilter } from 'app/modules/Users/slice/selectors'
 import { TUserStatus } from 'app/modules/Users/slice/types'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EPosition } from 'types'
 
@@ -10,6 +11,11 @@ export const DesktopFilterBlock: React.FC = () => {
     const dispatch = useDispatch()
 
     const filter = useSelector(selectFilter)
+    const locations = useSelector(selectLocations)
+
+    const places = useMemo(() => {
+        return locations.map((location) => ({ label: location.name, value: location.id }))
+    }, [locations])
 
     return (
         <Box mb={4} px={4} display={'flex'} justifyContent={'flex-end'}>
@@ -48,6 +54,34 @@ export const DesktopFilterBlock: React.FC = () => {
                                 value: 'manager',
                             },
                             {
+                                label: 'Сотрудник офиса',
+                                value: 'office',
+                            },
+                            {
+                                label: 'Сотрудник склада',
+                                value: 'sklad',
+                            },
+                            {
+                                label: 'Менеджер и Управляющий',
+                                value: 'managerControl',
+                            },
+                            {
+                                label: 'Бухгалтер',
+                                value: 'accountant',
+                            },
+                            {
+                                label: 'Кладовщик',
+                                value: 'storekeeper',
+                            },
+                            {
+                                label: 'Техник',
+                                value: 'technician',
+                            },
+                            {
+                                label: 'Оптовый менеджер',
+                                value: 'opt',
+                            },
+                            {
                                 label: 'Владелец',
                                 value: 'owner',
                             },
@@ -80,94 +114,13 @@ export const DesktopFilterBlock: React.FC = () => {
                         }}
                     >
                         {[
-                            {
-                                label: 'Все',
-                                value: '',
-                            },
-                            {
-                                value: '1',
-                                label: 'Академ',
-                            },
-                            {
-                                value: '3',
-                                label: 'Виктория',
-                            },
-                            {
-                                value: '4',
-                                label: 'Миасс',
-                            },
-                            {
-                                value: '5',
-                                label: 'Новотроицк',
-                            },
-                            {
-                                value: '7',
-                                label: 'Парковый',
-                            },
-                            {
-                                value: '9',
-                                label: 'Советский',
-                            },
-                            {
-                                value: '10',
-                                label: 'Теплотех',
-                            },
-                            {
-                                value: '11',
-                                label: 'Тополинка',
-                            },
-                            {
-                                value: '13',
-                                label: 'Центр',
-                            },
-                            {
-                                value: '16',
-                                label: 'Чмз',
-                            },
-                            {
-                                value: '19',
-                                label: 'Ленинский',
-                            },
-                            {
-                                value: '20',
-                                label: 'Чтз',
-                            },
-                            {
-                                value: '21',
-                                label: 'ТОРГОВЫЙ',
-                            },
-                            {
-                                value: '22',
-                                label: 'Александровский',
-                            },
-                            {
-                                value: '26',
-                                label: 'Пушкина',
-                            },
-                            {
-                                value: '27',
-                                label: 'Екат Академ',
-                            },
-                            {
-                                value: '28',
-                                label: 'Академический',
-                            },
-                            {
-                                value: '30',
-                                label: 'Ньютон',
-                            },
-                            {
-                                value: '31',
-                                label: 'Миасс Старый',
-                            },
-                            {
-                                value: '32',
-                                label: 'Миасс Новый',
-                            },
-                            {
-                                value: '38',
-                                label: 'Кашириных',
-                            },
+                            ...[
+                                {
+                                    label: 'Все',
+                                    value: '',
+                                },
+                            ],
+                            ...places,
                         ].map((gender, index) => (
                             <MenuItem key={index} value={gender.value}>
                                 {gender.label}

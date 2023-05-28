@@ -30,7 +30,8 @@ export const Modal: React.FC<ModalProps> = ({ children, open, title, handleClose
         >
             <Box
                 sx={{
-                    py: 3,
+                    pt: 3,
+                    pb: isMobile ? 0 : 3,
                     display: 'flex',
                     flexDirection: 'column',
                     height: '100%',

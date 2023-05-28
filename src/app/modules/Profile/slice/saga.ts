@@ -13,6 +13,7 @@ export function* loadProfile() {
         if (response.profile.ban) {
             yield put(authActions.logout())
         }
+        yield put(authActions.profileLoaded(response.profile))
         yield put(profileActions.profileLoaded(response))
     } catch (error: any) {
         yield put(authActions.logout())

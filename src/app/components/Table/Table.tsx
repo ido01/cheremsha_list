@@ -20,6 +20,7 @@ interface TableProps {
     pagination?: TTablePagination
     isDraggable?: boolean
     isLoading?: boolean
+    disablePadding?: boolean
     mobileView?: (data: any) => React.ReactNode
     handleOrderChange?: (order: TTableOrder) => void
     handleLimitChange?: (limit: TLimit) => void
@@ -34,6 +35,7 @@ export const Table: React.FC<TableProps> = ({
     pagination,
     isDraggable,
     isLoading,
+    disablePadding,
     mobileView,
     handleOrderChange,
     handleLimitChange,
@@ -44,7 +46,7 @@ export const Table: React.FC<TableProps> = ({
     const isMobile = useMediaQuery(theme.breakpoints.between('xs', 'md'))
 
     return (
-        <Box px={{ xs: 1, md: 4 }} mb={6} position={'relative'}>
+        <Box px={{ xs: disablePadding ? 0 : 1, md: disablePadding ? 0 : 4 }} mb={6} position={'relative'}>
             {!isMobile && (
                 <Box
                     sx={{
@@ -119,16 +121,18 @@ export const Table: React.FC<TableProps> = ({
 
                     {isLoading && <CircularProgress />}
 
-                    <ToggleButtonGroup
-                        size="small"
-                        value={pagination.limit}
-                        exclusive
-                        onChange={(_, value) => handleLimitChange?.(value)}
-                    >
-                        <ToggleButton value={10}>10</ToggleButton>
-                        <ToggleButton value={25}>25</ToggleButton>
-                        <ToggleButton value={50}>50</ToggleButton>
-                    </ToggleButtonGroup>
+                    {!isMobile && (
+                        <ToggleButtonGroup
+                            size="small"
+                            value={pagination.limit}
+                            exclusive
+                            onChange={(_, value) => handleLimitChange?.(value)}
+                        >
+                            <ToggleButton value={25}>25</ToggleButton>
+                            <ToggleButton value={50}>50</ToggleButton>
+                            <ToggleButton value={100}>100</ToggleButton>
+                        </ToggleButtonGroup>
+                    )}
                 </Box>
             )}
         </Box>

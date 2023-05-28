@@ -3,4 +3,6 @@ export interface IVariant {
     parentId: string
     text: string
     isCorrect: boolean
+    uniq: string
+    delete?: boolean
 }

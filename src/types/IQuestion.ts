@@ -1,11 +1,22 @@
-import { IState } from './IState'
 import { IVariant } from './IVariant'
 
 export interface IQuestion {
     id: string
     parentId: string
+    delete?: boolean
     text: string
-    state: IState
+    sort: number
+    uniq: string
+    state?: IQuestionState
     variants: IVariant[]
     createdAt: string
+}
+
+interface IQuestionState {
+    id: string
+    uid: string
+    qid: string
+    quid: string
+    vid: string
+    result: boolean
 }

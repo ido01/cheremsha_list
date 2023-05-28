@@ -2,9 +2,10 @@ import { DesktopDatePicker, LoadingButton, LocalizationProvider } from '@mui/lab
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { PhoneField } from 'app/components/PhoneField'
+import { selectLocations } from 'app/modules/Locations/selectors'
 import { useFormik } from 'formik'
 import moment from 'moment'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ERole, EStatus } from 'types'
 import * as yup from 'yup'
@@ -16,6 +17,11 @@ export const UserDataForm: React.FC = () => {
     const dispatch = useDispatch()
 
     const { data, status } = useSelector(selectForm)
+    const locations = useSelector(selectLocations)
+
+    const places = useMemo(() => {
+        return locations.map((location) => ({ label: location.name, value: location.id }))
+    }, [locations])
 
     const positions = [
         {
@@ -37,6 +43,26 @@ export const UserDataForm: React.FC = () => {
         {
             label: 'Сотрудник склада',
             value: 'sklad',
+        },
+        {
+            label: 'Менеджер и Управляющий',
+            value: 'managerControl',
+        },
+        {
+            label: 'Бухгалтер',
+            value: 'accountant',
+        },
+        {
+            label: 'Кладовщик',
+            value: 'storekeeper',
+        },
+        {
+            label: 'Техник',
+            value: 'technician',
+        },
+        {
+            label: 'Оптовый менеджер',
+            value: 'opt',
         },
         {
             label: 'Владелец',
@@ -149,100 +175,7 @@ export const UserDataForm: React.FC = () => {
                                 formik.setFieldValue('place_id', value)
                             }}
                         >
-                            {[
-                                {
-                                    value: '1',
-                                    label: 'Академ',
-                                },
-                                {
-                                    value: '3',
-                                    label: 'Виктория',
-                                },
-                                {
-                                    value: '4',
-                                    label: 'Миасс',
-                                },
-                                {
-                                    value: '5',
-                                    label: 'Новотроицк',
-                                },
-                                {
-                                    value: '7',
-                                    label: 'Парковый',
-                                },
-                                {
-                                    value: '9',
-                                    label: 'Советский',
-                                },
-                                {
-                                    value: '10',
-                                    label: 'Теплотех',
-                                },
-                                {
-                                    value: '11',
-                                    label: 'Тополинка',
-                                },
-                                {
-                                    value: '13',
-                                    label: 'Центр',
-                                },
-                                {
-                                    value: '16',
-                                    label: 'Чмз',
-                                },
-                                {
-                                    value: '19',
-                                    label: 'Ленинский',
-                                },
-                                {
-                                    value: '20',
-                                    label: 'Чтз',
-                                },
-                                {
-                                    value: '21',
-                                    label: 'ТОРГОВЫЙ',
-                                },
-                                {
-                                    value: '22',
-                                    label: 'Александровский',
-                                },
-                                {
-                                    value: '26',
-                                    label: 'Пушкина',
-                                },
-                                {
-                                    value: '27',
-                                    label: 'Екат Академ',
-                                },
-                                {
-                                    value: '28',
-                                    label: 'Академический',
-                                },
-                                {
-                                    value: '30',
-                                    label: 'Ньютон',
-                                },
-                                {
-                                    value: '31',
-                                    label: 'Миасс Старый',
-                                },
-                                {
-                                    value: '32',
-                                    label: 'Миасс Новый',
-                                },
-                                {
-                                    value: '38',
-                                    label: 'Кашириных',
-                                },
-                                {
-                                    value: '39',
-                                    label: 'Склад',
-                                },
-                                {
-                                    value: '40',
-                                    label: 'Офис',
-                                },
-                            ].map((place_id, index) => (
+                            {places.map((place_id, index) => (
                                 <MenuItem key={index} value={place_id.value}>
                                     {place_id.label}
                                 </MenuItem>

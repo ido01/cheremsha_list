@@ -34,6 +34,31 @@ export function* loadUsers() {
     }
 }
 
+export function* loadContacts() {
+    try {
+        const pagination: TTablePagination = yield select(selectPagination)
+        const order: TTableOrder = yield select(selectOrder)
+        const filter: IUserFilter = yield select(selectFilter)
+
+        const response: IUsersCollectionResponse = yield call(request, `contacts`, {
+            params: {
+                page: pagination.page,
+                limit: pagination.limit,
+                order: order.order,
+                orderRow: order.row,
+                status: filter.status,
+                place_id: filter.place_id,
+                position: filter.position,
+                query: filter.query,
+            },
+        })
+
+        yield put(usersActions.usersLoaded(response))
+    } catch (error: any) {
+        yield put(usersActions.statusError())
+    }
+}
+
 export function* loadUser(action: PayloadAction<string>) {
     try {
         const getUser: (id: string) => IUser | undefined = yield select(selectUserById)
@@ -117,6 +142,7 @@ export function* deleteFavorite(action: PayloadAction<string>) {
 
 export function* usersWatcher() {
     yield takeLeading(usersActions.loadUsers.type, loadUsers)
+    yield takeLeading(usersActions.loadContacts.type, loadContacts)
     yield takeLeading(usersActions.loadUser.type, loadUser)
     yield takeLeading(usersActions.updateUser.type, updateUser)
     yield takeLeading(usersActions.activeUser.type, activeUser)

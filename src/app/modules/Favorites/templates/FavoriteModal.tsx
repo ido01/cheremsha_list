@@ -1,32 +1,15 @@
-import {
-    Delete as DeleteIcon,
-    Edit as EditIcon,
-    StarBorder as StarBorderIcon,
-    StarRate as StarRateIcon,
-} from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
-import {
-    Box,
-    Button,
-    Container,
-    Dialog,
-    DialogActions,
-    DialogTitle,
-    Grid,
-    IconButton,
-    Modal as ModalComponent,
-    Typography,
-} from '@mui/material'
+import { StarBorder as StarBorderIcon, StarRate as StarRateIcon } from '@mui/icons-material'
+import { Box, Container, Grid, IconButton, Modal as ModalComponent, Typography } from '@mui/material'
 import { LabelText } from 'app/components/LabelText'
 import { Modal } from 'app/components/Modal'
+import { selectLocation } from 'app/modules/Locations/selectors'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import { usersActions } from 'app/modules/Users/slice'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import { ERole, EStatus } from 'types'
-import { convertGenderName, convertPlaceName, convertPositionName, convertRoleName } from 'utils/convertUtils'
+import { ERole } from 'types'
+import { convertGenderName, convertPositionName, convertRoleName } from 'utils/convertUtils'
 
 import { favoritesActions } from '../slice'
 import { selectFavoriteById, selectModal } from '../slice/selectors'
@@ -39,6 +22,7 @@ export const FavoriteModal: React.FC = () => {
     const profileRole = useSelector(selectProfileRole)
     const { isOpen, activeId } = useSelector(selectModal)
     const user = useSelector(selectFavoriteById)(activeId)
+    const getLocation = useSelector(selectLocation)
 
     const handleClose = () => {
         dispatch(favoritesActions.hideModal())
@@ -174,10 +158,7 @@ export const FavoriteModal: React.FC = () => {
                                     </Grid>
 
                                     <Grid item xs={6}>
-                                        <LabelText
-                                            label="Место работы"
-                                            text={convertPlaceName(user?.place_id || '1')}
-                                        />
+                                        <LabelText label="Место работы" text={getLocation(user?.place_id)} />
                                     </Grid>
 
                                     <Grid item xs={6}>

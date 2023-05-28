@@ -1,6 +1,5 @@
 import { LoadingButton } from '@mui/lab'
-import { Box, Button, Dialog, DialogActions, DialogTitle, Paper, TextField, Typography } from '@mui/material'
-import { Logo } from 'app/components/Logo/Logo'
+import { Box, Button, Dialog, DialogActions, DialogTitle, Grid, TextField } from '@mui/material'
 import { useFormik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,7 +9,6 @@ import * as yup from 'yup'
 
 import { authActions } from '../slice'
 import { selectSignupForm } from '../slice/selectors'
-import { Auth } from './Auth'
 
 export const Signup: React.FC = () => {
     const dispatch = useDispatch()
@@ -21,7 +19,6 @@ export const Signup: React.FC = () => {
     const { status, data } = useSelector(selectSignupForm)
 
     const validationSchema = yup.object({
-        name: yup.string().required(),
         email: yup.string().required().email(),
         password: yup.string().required(),
     })
@@ -46,69 +43,20 @@ export const Signup: React.FC = () => {
     }, [status])
 
     return (
-        <Auth>
+        <>
             <Box
-                sx={{
-                    bgcolor: 'grey.200',
-                    display: 'flex',
-                    position: 'fixed',
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                noValidate
+                component="form"
+                onSubmit={(e: React.FormEvent) => {
+                    e.preventDefault()
+
+                    formik.handleSubmit()
                 }}
             >
-                <Paper
-                    sx={{
-                        bgcolor: 'white',
-                        p: 8.75,
-                        width: '480px',
-                        overflow: 'auto',
-                    }}
-                >
-                    <Box
-                        noValidate
-                        component="form"
-                        onSubmit={(e: React.FormEvent) => {
-                            e.preventDefault()
-
-                            formik.handleSubmit()
-                        }}
-                    >
-                        <Box mb={2} display={'flex'} justifyContent={'center'}>
-                            <Logo size="small" />
-                        </Box>
-
-                        <Box mb={2} display={'flex'} justifyContent={'center'}>
-                            <Typography variant="h5" fontWeight={500}>
-                                Заявка на регистрацию
-                            </Typography>
-                        </Box>
-
+                <Grid container>
+                    <Grid item xs={12} md={4}>
                         <TextField
                             fullWidth
-                            variant="outlined"
-                            label="Фамилия"
-                            name="last_name"
-                            value={formik.values.last_name || ''}
-                            error={!!formik.errors.last_name}
-                            onChange={formik.handleChange}
-                        />
-
-                        <TextField
-                            fullWidth
-                            sx={{ mt: 3 }}
-                            variant="outlined"
-                            label="Имя"
-                            name="name"
-                            value={formik.values.name || ''}
-                            error={!!formik.errors.name}
-                            onChange={formik.handleChange}
-                        />
-
-                        <TextField
-                            fullWidth
-                            sx={{ mt: 3 }}
                             variant="outlined"
                             label="Email"
                             name="email"
@@ -116,32 +64,40 @@ export const Signup: React.FC = () => {
                             error={!!formik.errors.email}
                             onChange={formik.handleChange}
                         />
+                    </Grid>
 
+                    <Grid item xs={12} md={8} />
+
+                    <Grid item xs={12} md={4}>
                         <TextField
                             fullWidth
-                            sx={{ mt: 3 }}
                             variant="outlined"
                             label="Пароль"
                             name="password"
                             type={'password'}
+                            sx={{ mt: 4 }}
                             value={formik.values.password || ''}
                             error={!!formik.errors.password}
                             onChange={formik.handleChange}
                         />
+                    </Grid>
 
+                    <Grid item xs={12} md={8} />
+
+                    <Grid item xs={12} md={4}>
                         <LoadingButton
                             loading={status === EStatus.PENDING}
                             fullWidth
                             size="large"
                             color="primary"
                             variant="contained"
-                            sx={{ mt: 3 }}
+                            sx={{ mt: 4 }}
                             onClick={() => formik.handleSubmit()}
                         >
-                            Оставить заявку
+                            Зарегистрироваться
                         </LoadingButton>
 
-                        <Box mt={1} display={'flex'} justifyContent={'flex-end'}>
+                        <Box mt={1}>
                             <Button
                                 variant="text"
                                 onClick={() => history.push('/auth')}
@@ -150,8 +106,8 @@ export const Signup: React.FC = () => {
                                 Уже есть аккаунт
                             </Button>
                         </Box>
-                    </Box>
-                </Paper>
+                    </Grid>
+                </Grid>
             </Box>
 
             <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title">
@@ -165,6 +121,6 @@ export const Signup: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Auth>
+        </>
     )
 }

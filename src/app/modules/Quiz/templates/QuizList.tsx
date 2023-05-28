@@ -5,14 +5,15 @@ import { TitleBlock } from 'app/components/TitleBlock'
 import { CategoryAdminSettings } from 'app/modules/Categories/components/CategoryAdminSettings'
 import { categoriesActions } from 'app/modules/Categories/slice'
 import { selectCategoryById } from 'app/modules/Categories/slice/selectors'
-import { CategoriesList } from 'app/modules/Categories/templates/CategoriesList'
-import { documentsActions } from 'app/modules/Documents/slice'
-import { DocumentModal } from 'app/modules/Documents/templates/DocumentModal'
+import { CategoriesQuizList } from 'app/modules/Categories/templates/CategoriesQuizList'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { ERole } from 'types'
+
+import { quizActions } from '../slice'
+import { QuizModal } from './QuizModal'
 
 export const QuizList: React.FC = () => {
     const dispatch = useDispatch()
@@ -20,7 +21,6 @@ export const QuizList: React.FC = () => {
     const { id } = useParams<{ id?: string }>()
 
     const [open, setOpen] = useState<boolean>(false)
-    const [search, setSearch] = useState<string>('')
 
     const profileRole = useSelector(selectProfileRole)
     const getCategory = useSelector(selectCategoryById)
@@ -63,7 +63,8 @@ export const QuizList: React.FC = () => {
 
     useEffect(() => {
         dispatch(categoriesActions.loadCategories('quiz'))
-        dispatch(documentsActions.loadDocuments('quiz'))
+        dispatch(quizActions.loadQuiz())
+        dispatch(quizActions.hideModal())
     }, [])
 
     const handleSettingOpen = () => {
@@ -72,11 +73,6 @@ export const QuizList: React.FC = () => {
 
     const handleClose = () => {
         setOpen(false)
-    }
-
-    const handleSearchChange = (e: any) => {
-        const { value } = e.target
-        setSearch(value)
     }
 
     return (
@@ -101,10 +97,10 @@ export const QuizList: React.FC = () => {
             />
 
             <Box pt={4} flex="1 0 100%" sx={{ overflow: 'auto', maxHeight: { md: 'calc( 100vh - 90px )' } }}>
-                <CategoriesList type={'quiz'} search={search} />
+                <CategoriesQuizList type={'quiz'} />
             </Box>
 
-            <DocumentModal />
+            <QuizModal />
 
             {profileRole === ERole.ADMIN && (
                 <CategoryAdminSettings

@@ -2,9 +2,10 @@ import { DesktopDatePicker, LoadingButton, LocalizationProvider } from '@mui/lab
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import { PhoneField } from 'app/components/PhoneField'
+import { selectLocations } from 'app/modules/Locations/selectors'
 import { useFormik } from 'formik'
 import moment from 'moment'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ERole, EStatus } from 'types'
 import * as yup from 'yup'
@@ -21,6 +22,11 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
 
     const profileRole = useSelector(selectProfileRole)
     const { data, status } = useSelector(selectForm)
+    const locations = useSelector(selectLocations)
+
+    const places = useMemo(() => {
+        return locations.map((location) => ({ label: location.name, value: location.id }))
+    }, [locations])
 
     const positions =
         profileRole === ERole.ADMIN
@@ -44,6 +50,26 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                   {
                       label: 'Сотрудник склада',
                       value: 'sklad',
+                  },
+                  {
+                      label: 'Менеджер и Управляющий',
+                      value: 'managerControl',
+                  },
+                  {
+                      label: 'Бухгалтер',
+                      value: 'accountant',
+                  },
+                  {
+                      label: 'Кладовщик',
+                      value: 'storekeeper',
+                  },
+                  {
+                      label: 'Техник',
+                      value: 'technician',
+                  },
+                  {
+                      label: 'Оптовый менеджер',
+                      value: 'opt',
                   },
                   {
                       label: 'Владелец',
@@ -71,10 +97,41 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                       label: 'Сотрудник склада',
                       value: 'sklad',
                   },
+                  {
+                      label: 'Менеджер и Управляющий',
+                      value: 'managerControl',
+                  },
+                  {
+                      label: 'Бухгалтер',
+                      value: 'accountant',
+                  },
+                  {
+                      label: 'Кладовщик',
+                      value: 'storekeeper',
+                  },
+                  {
+                      label: 'Техник',
+                      value: 'technician',
+                  },
+                  {
+                      label: 'Оптовый менеджер',
+                      value: 'opt',
+                  },
               ]
 
     const validationSchema = yup.object({
         email: yup.string().email('Не корректный Email').required(),
+        name: yup.string().required(),
+        last_name: yup.string().required(),
+        address: yup.string().required(),
+        university: yup.string().required(),
+        birthday: yup.string().required(),
+        hobby: yup.string().required(),
+        about: yup.string().required(),
+        place_id: yup.string().required(),
+        first_date: yup.string().required(),
+        position: yup.string().required(),
+        phone: yup.string().required(),
     })
 
     const formik = useFormik({
@@ -119,7 +176,7 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                         label="Фамилия"
                         name="last_name"
                         value={formik.values.last_name || ''}
-                        error={!!formik.errors.last_name}
+                        error={!!formik.errors.last_name && formik.touched.last_name}
                         onChange={formik.handleChange}
                     />
                 </Grid>
@@ -131,7 +188,7 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                         label="Имя"
                         name="name"
                         value={formik.values.name || ''}
-                        error={!!formik.errors.name}
+                        error={!!formik.errors.name && formik.touched.name}
                         onChange={formik.handleChange}
                     />
                 </Grid>
@@ -143,7 +200,7 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                         label="Номер телефона"
                         name="phone"
                         value={formik.values.phone || ''}
-                        error={!!formik.errors.phone}
+                        error={!!formik.errors.phone && formik.touched.phone}
                         onChange={formik.handleChange}
                     />
                 </Grid>
@@ -200,12 +257,29 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                             onChange={(val) => {
                                 formik.setFieldValue('birthday', val)
                             }}
-                            renderInput={(params) => <TextField fullWidth variant="outlined" {...params} />}
+                            renderInput={(params) => (
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    {...params}
+                                    error={!!formik.errors.birthday && formik.touched.birthday}
+                                />
+                            )}
                         />
                     </LocalizationProvider>
                 </Grid>
 
-                <Grid item xs={12} md={4} />
+                <Grid item xs={12} md={4}>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Хобби"
+                        name="hobby"
+                        value={formik.values.hobby || ''}
+                        error={!!formik.errors.hobby && formik.touched.hobby}
+                        onChange={formik.handleChange}
+                    />
+                </Grid>
 
                 <Grid item xs={12} md={4}>
                     <TextField
@@ -214,7 +288,7 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                         label="Адрес проживания"
                         name="address"
                         value={formik.values.address || ''}
-                        error={!!formik.errors.address}
+                        error={!!formik.errors.address && formik.touched.address}
                         onChange={formik.handleChange}
                     />
                 </Grid>
@@ -226,19 +300,7 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                         label="Место учебы"
                         name="university"
                         value={formik.values.university || ''}
-                        error={!!formik.errors.university}
-                        onChange={formik.handleChange}
-                    />
-                </Grid>
-
-                <Grid item xs={12} md={4}>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Хобби"
-                        name="hobby"
-                        value={formik.values.hobby || ''}
-                        error={!!formik.errors.hobby}
+                        error={!!formik.errors.university && formik.touched.university}
                         onChange={formik.handleChange}
                     />
                 </Grid>
@@ -252,7 +314,7 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                         label="О себе"
                         name="about"
                         value={formik.values.about || ''}
-                        error={!!formik.errors.about}
+                        error={!!formik.errors.about && formik.touched.about}
                         onChange={formik.handleChange}
                     />
                 </Grid>
@@ -266,7 +328,11 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
 
             <Grid container rowSpacing={2} columnSpacing={2}>
                 <Grid item xs={12} md={4}>
-                    <FormControl fullWidth variant="outlined" error={!!formik.errors?.position}>
+                    <FormControl
+                        fullWidth
+                        variant="outlined"
+                        error={!!formik.errors?.position && formik.touched.position}
+                    >
                         <InputLabel>Должность</InputLabel>
                         <Select
                             value={formik.values.position || ''}
@@ -287,7 +353,11 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                 </Grid>
 
                 <Grid item xs={12} md={4}>
-                    <FormControl fullWidth variant="outlined" error={!!formik.errors?.place_id}>
+                    <FormControl
+                        fullWidth
+                        variant="outlined"
+                        error={!!formik.errors?.place_id && formik.touched.place_id}
+                    >
                         <InputLabel>Место работы</InputLabel>
                         <Select
                             value={formik.values.place_id || ''}
@@ -298,102 +368,9 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                                 formik.setFieldValue('place_id', value)
                             }}
                         >
-                            {[
-                                {
-                                    value: '1',
-                                    label: 'Академ',
-                                },
-                                {
-                                    value: '3',
-                                    label: 'Виктория',
-                                },
-                                {
-                                    value: '4',
-                                    label: 'Миасс',
-                                },
-                                {
-                                    value: '5',
-                                    label: 'Новотроицк',
-                                },
-                                {
-                                    value: '7',
-                                    label: 'Парковый',
-                                },
-                                {
-                                    value: '9',
-                                    label: 'Советский',
-                                },
-                                {
-                                    value: '10',
-                                    label: 'Теплотех',
-                                },
-                                {
-                                    value: '11',
-                                    label: 'Тополинка',
-                                },
-                                {
-                                    value: '13',
-                                    label: 'Центр',
-                                },
-                                {
-                                    value: '16',
-                                    label: 'Чмз',
-                                },
-                                {
-                                    value: '19',
-                                    label: 'Ленинский',
-                                },
-                                {
-                                    value: '20',
-                                    label: 'Чтз',
-                                },
-                                {
-                                    value: '21',
-                                    label: 'Торговый',
-                                },
-                                {
-                                    value: '22',
-                                    label: 'Александровский',
-                                },
-                                {
-                                    value: '26',
-                                    label: 'Пушкина',
-                                },
-                                {
-                                    value: '27',
-                                    label: 'Екат Академ',
-                                },
-                                {
-                                    value: '28',
-                                    label: 'Академический',
-                                },
-                                {
-                                    value: '30',
-                                    label: 'Ньютон',
-                                },
-                                {
-                                    value: '31',
-                                    label: 'Миасс Старый',
-                                },
-                                {
-                                    value: '32',
-                                    label: 'Миасс Новый',
-                                },
-                                {
-                                    value: '38',
-                                    label: 'Кашириных',
-                                },
-                                {
-                                    value: '39',
-                                    label: 'Склад',
-                                },
-                                {
-                                    value: '40',
-                                    label: 'Офис',
-                                },
-                            ].map((place_id, index) => (
-                                <MenuItem key={index} value={place_id.value}>
-                                    {place_id.label}
+                            {places.map((place, index) => (
+                                <MenuItem key={index} value={place.value}>
+                                    {place.label}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -410,7 +387,14 @@ export const AccountDataForm: React.FC<AccountDataFormProps> = ({ onEditFinish }
                             onChange={(val) => {
                                 formik.setFieldValue('first_date', val)
                             }}
-                            renderInput={(params) => <TextField fullWidth variant="outlined" {...params} />}
+                            renderInput={(params) => (
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    {...params}
+                                    error={!!formik.errors.first_date && formik.touched.first_date}
+                                />
+                            )}
                         />
                     </LocalizationProvider>
                 </Grid>

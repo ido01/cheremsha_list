@@ -4,7 +4,6 @@ import { ICategory } from 'types/ICategory'
 
 import { CategoryDateRow } from './CategoryDateRow'
 import { CategoryNameRow } from './CategoryNameRow'
-import { CategoryStatusRow } from './CategoryStatusRow'
 
 interface MobileCategoryViewProps {
     item: ICategory
@@ -29,16 +28,6 @@ export const MobileCategoryView: React.FC<MobileCategoryViewProps> = ({ item }) 
                 </Typography>
 
                 <CategoryDateRow item={item} />
-            </Box>
-        </Box>
-
-        <Box mt={2} display={'flex'} justifyContent={'flex-end'}>
-            <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-                <Typography mr={1} variant="caption" color="grey.600">
-                    Статус
-                </Typography>
-
-                <CategoryStatusRow item={item} />
             </Box>
         </Box>
     </Box>

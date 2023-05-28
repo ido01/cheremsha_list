@@ -9,5 +9,6 @@ export interface IFile {
     path: string
     size: string
     url: string
+    thumb: string
     createdAt: string
 }

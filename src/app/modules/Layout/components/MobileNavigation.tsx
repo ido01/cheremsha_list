@@ -1,10 +1,4 @@
-import {
-    DesignServices as DesignServicesIcon,
-    Group as GroupIcon,
-    Quiz as QuizIcon,
-    School as SchoolIcon,
-    StackedLineChart as StackedLineChartIcon,
-} from '@mui/icons-material'
+import { CalendarMonth as CalendarMonthIcon, Group as GroupIcon, School as SchoolIcon } from '@mui/icons-material'
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import { selectProfile } from 'app/modules/Profile/slice/selectors'
@@ -25,38 +19,44 @@ export const MobileNavigation: React.FC = () => {
         {
             icon: <GroupIcon />,
             title: 'Сотрудники',
-            path: '/users',
+            path: '/peoples',
             id: 0,
         },
         {
-            icon: <QuizIcon />,
-            title: 'Гайд',
-            path: '/faq',
+            icon: <SchoolIcon />,
+            title: 'Документы',
+            path: '/doc',
             id: 1,
         },
         {
-            icon: <SchoolIcon />,
-            title: 'Обучение',
-            path: '/school',
+            icon: <CalendarMonthIcon />,
+            title: 'Календарь',
+            path: '/events',
             id: 2,
         },
-        // {
-        //     icon: <DesignServicesIcon />,
-        //     title: 'Тестирование',
-        //     path: '/quiz',
-        //     id: 3,
-        // },
         {
-            icon: <StackedLineChartIcon />,
-            title: 'Мотивация',
-            path: '/motivation',
-        },
-        {
-            icon: <AvatarImage name={profile.name} image={profile.avatar?.url} size={'24px'} />,
+            icon: <AvatarImage name={profile.name} image={profile.avatar?.thumb} size={'24px'} />,
             title: 'Профиль',
             path: '/profile',
-            id: 4,
+            id: 3,
         },
+        // {
+        //     icon: <QuizIcon />,
+        //     title: 'Гайд',
+        //     path: '/faq',
+        //     id: 1,
+        // },
+        // {
+        //     icon: <SchoolIcon />,
+        //     title: 'Обучение',
+        //     path: '/school',
+        //     id: 2,
+        // },
+        // {
+        //     icon: <StackedLineChartIcon />,
+        //     title: 'Мотивация',
+        //     path: '/motivation',
+        // },
     ]
 
     useEffect(() => {
@@ -77,7 +77,7 @@ export const MobileNavigation: React.FC = () => {
     }
 
     return (
-        <Box position={'fixed'} bottom={0} left={0} width={'100%'}>
+        <Box sx={{ position: 'fixed', bottom: 0, left: 0, width: '100%', pb: 2, backgroundColor: '#fff' }}>
             <BottomNavigation showLabels value={value}>
                 {menuItems.map((item, index) => (
                     <BottomNavigationAction

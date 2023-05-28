@@ -2,6 +2,7 @@ import { FilterAlt as FilterAltIcon } from '@mui/icons-material'
 import { Box, Button, Typography, useMediaQuery, useTheme } from '@mui/material'
 import Table, { TableEmptyRow } from 'app/components/Table'
 import { TitleBlock } from 'app/components/TitleBlock'
+import { selectLocation } from 'app/modules/Locations/selectors'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import moment from 'moment'
 import React, { useEffect, useState } from 'react'
@@ -9,7 +10,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EStatus } from 'types'
 import { TLimit, TTableOrder, TTableRowData } from 'types/ITable'
 import { IUser } from 'types/IUser'
-import { convertPlaceName } from 'utils/convertUtils'
 
 import { FilterBlock } from '../components/FilterBlock'
 import { MobileUserView } from '../components/MobileUserView'
@@ -38,6 +38,7 @@ export const UsersList: React.FC = () => {
     const pagination = useSelector(selectPagination)
     const count = useSelector(selectTotalCount)
     const filter = useSelector(selectFilter)
+    const getLocation = useSelector(selectLocation)
 
     const tableRows: TTableRowData[] = [
         {
@@ -46,7 +47,7 @@ export const UsersList: React.FC = () => {
             xs: 5,
             element: (user: IUser) => (
                 <>
-                    <AvatarImage name={`${user.last_name} ${user.name}`} image={user.avatar?.url} size={'36px'} />
+                    <AvatarImage name={`${user.last_name} ${user.name}`} image={user.avatar?.thumb} size={'36px'} />
 
                     <Box ml={2}>
                         <Typography variant="body2">{`${user.last_name} ${user.name}`}</Typography>
@@ -62,7 +63,7 @@ export const UsersList: React.FC = () => {
                 <>
                     {!!user.place_id && (
                         <Typography variant="body2" color="grey.600">
-                            {convertPlaceName(user.place_id)}
+                            {getLocation(user.place_id)}
                         </Typography>
                     )}
 
@@ -89,14 +90,14 @@ export const UsersList: React.FC = () => {
                 <Typography
                     variant="body2"
                     sx={(theme) => ({
-                        color: user.blocked
+                        color: user.ban
                             ? theme.palette.error.main
                             : !user.active
                             ? theme.palette.success.main
                             : theme.palette.warning.main,
                     })}
                 >
-                    {user.blocked ? 'Заблокирован' : !user.active ? 'Новый' : 'Действующий'}
+                    {user.ban ? 'Заблокирован' : !user.active ? 'Новый' : 'Действующий'}
                 </Typography>
             ),
         },
@@ -112,6 +113,7 @@ export const UsersList: React.FC = () => {
     useEffect(() => {
         dispatch(usersActions.cleanUsers())
         dispatch(usersActions.loadUsers())
+        dispatch(usersActions.hideModal())
     }, [filter])
 
     const handleOrderChange = (order: TTableOrder) => {

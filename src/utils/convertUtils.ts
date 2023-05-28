@@ -1,4 +1,4 @@
-import { DOCUMENT_STATE, GENDER_NAME, PLACE_NAME, POSITION_NAME, ROLE_NAME } from 'app/constants'
+import { DOCUMENT_STATE, GENDER_NAME, PLACE_NAME, POSITION_NAME, QUIZ_STATE, ROLE_NAME } from 'app/constants'
 import { EGender, EPosition, ERole, EState } from 'types'
 
 export const convertGenderName = (gender: EGender) => {
@@ -15,6 +15,10 @@ export const convertRoleName = (role: ERole) => {
 
 export const convertDocumentState = (state: EState) => {
     return DOCUMENT_STATE[state as EState]
+}
+
+export const convertQuizState = (state: EState) => {
+    return QUIZ_STATE[state as EState]
 }
 
 export const convertPlaceName = (placeId: string) => {

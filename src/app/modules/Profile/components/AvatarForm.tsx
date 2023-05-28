@@ -20,7 +20,7 @@ export const AvatarForm: React.FC = () => {
     const [imageName, setImageName] = useState<string>('')
     const [image, setImage] = useState<string>('')
 
-    const imageSrc = profile?.avatar?.url || ''
+    const imageSrc = profile?.avatar?.thumb || ''
     const userName = profile?.name
 
     const ref = useRef<HTMLInputElement>(null)

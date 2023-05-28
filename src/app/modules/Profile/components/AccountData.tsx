@@ -1,13 +1,15 @@
 import { Box, Grid, Typography } from '@mui/material'
 import { LabelText } from 'app/components/LabelText'
+import { selectLocation } from 'app/modules/Locations/selectors'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { convertGenderName, convertPlaceName, convertPositionName } from 'utils/convertUtils'
+import { convertGenderName, convertPositionName } from 'utils/convertUtils'
 
 import { selectProfile } from '../slice/selectors'
 
 export const AccountData: React.FC = () => {
     const profile = useSelector(selectProfile)
+    const getLocation = useSelector(selectLocation)
 
     return (
         <Box>
@@ -73,7 +75,7 @@ export const AccountData: React.FC = () => {
                 </Grid>
 
                 <Grid item xs={12} md={4}>
-                    <LabelText label="Место работы" text={convertPlaceName(profile.place_id)} />
+                    <LabelText label="Место работы" text={getLocation(profile.place_id)} />
                 </Grid>
 
                 <Grid item xs={12} md={4}>
