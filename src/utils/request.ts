@@ -15,6 +15,10 @@ async function checkStatus(response: AxiosResponse) {
         return response
     }
 
+    toast.error(response.data.message || response.data.error || 'Что-то пошло не так', {
+        type: 'error',
+    })
+
     throw response
 }
 
@@ -40,10 +44,6 @@ export async function request(url: string, config?: AxiosRequestConfig) {
         })
         .catch(async (data) => {
             const response: any = await checkStatus(data.response)
-
-            toast.error(response.data.message || response.data.error || 'Что-то пошло не так', {
-                type: 'error',
-            })
 
             return parseJSON(response)
         })

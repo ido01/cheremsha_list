@@ -51,6 +51,20 @@ export const ResultModalContent: React.FC<ResultModalContentProps> = ({ id, user
 
     const stateToText = useMemo(() => convertResultState(quiz?.state?.state || EQuizState.INITIAL), [quiz])
 
+    const timePassed = useMemo(() => {
+        if (quiz && quiz.state) {
+            const all_time = quiz.state.end_time - quiz.state.start_time
+            const hours = Math.floor(all_time / 3600)
+            const minutes = Math.floor((all_time % 3600) / 60)
+            const seconds = all_time % 60
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
+                .toString()
+                .padStart(2, '0')}`
+        }
+
+        return '00:00:00'
+    }, [quiz])
+
     const percent = useMemo(() => {
         if (quiz && quiz.state) {
             return `${Math.round((quiz.state.correct / quiz.state.all_questions) * 100)}%`
@@ -82,7 +96,7 @@ export const ResultModalContent: React.FC<ResultModalContentProps> = ({ id, user
         <>
             <Grid container sx={{ my: 2.5 }} spacing={2.5}>
                 {quiz && (
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                         <LabelText
                             label="Статус"
                             node={
@@ -115,6 +129,13 @@ export const ResultModalContent: React.FC<ResultModalContentProps> = ({ id, user
                     quiz.state.state !== EQuizState.REJECTED &&
                     quiz.state.state !== EQuizState.PENDING && (
                         <>
+                            <Grid item xs={6}>
+                                <LabelText
+                                    label="Время выполнения"
+                                    node={<Typography variant="h6">{timePassed}</Typography>}
+                                />
+                            </Grid>
+
                             <Grid item xs={6}>
                                 <LabelText
                                     label="Результат"

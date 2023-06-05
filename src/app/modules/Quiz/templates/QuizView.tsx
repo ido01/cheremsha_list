@@ -46,8 +46,7 @@ export const QuizView: React.FC = () => {
     }
 
     useEffect(() => {
-        console.log(time)
-        if (time && time <= 0) {
+        if (time && time <= 0 && quiz?.state.state === EQuizState.PENDING) {
             handleCompleted()
         }
     }, [time])

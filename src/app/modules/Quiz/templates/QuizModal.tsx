@@ -37,6 +37,20 @@ export const QuizModal: React.FC = () => {
     const getQuiz = useSelector(selectQuizById)
     const quiz = getQuiz(activeId)
 
+    const timePassed = useMemo(() => {
+        if (quiz && quiz.state) {
+            const all_time = quiz.state.end_time - quiz.state.start_time
+            const hours = Math.floor(all_time / 3600)
+            const minutes = Math.floor((all_time % 3600) / 60)
+            const seconds = all_time % 60
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
+                .toString()
+                .padStart(2, '0')}`
+        }
+
+        return '00:00:00'
+    }, [quiz])
+
     const percent = useMemo(() => {
         if (quiz?.state) {
             return `${Math.round((quiz.state.correct / quiz.state.all_questions) * 100)}%`
@@ -125,7 +139,7 @@ export const QuizModal: React.FC = () => {
                             </Box>
                         </Box>
                         <Grid container sx={{ my: 2.5 }} spacing={2.5}>
-                            <Grid item xs={6}>
+                            <Grid item xs={12}>
                                 <LabelText
                                     label="Статус"
                                     node={
@@ -154,6 +168,12 @@ export const QuizModal: React.FC = () => {
                                 (quiz?.state.state === EQuizState.CLOSED ||
                                     quiz?.state.state === EQuizState.COMPLETED) && (
                                     <>
+                                        <Grid item xs={6}>
+                                            <LabelText
+                                                label="Время выполнения"
+                                                node={<Typography variant="h6">{timePassed}</Typography>}
+                                            />
+                                        </Grid>
                                         <Grid item xs={6}>
                                             <LabelText
                                                 label="Результат"

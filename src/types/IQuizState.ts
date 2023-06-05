@@ -16,6 +16,8 @@ export interface IQuizState {
     correct: number
     incorrect: number
     all_questions: number
+    start_time: number
+    end_time: number
     time_passed: number
     createdAt: string
     updatedAt: string

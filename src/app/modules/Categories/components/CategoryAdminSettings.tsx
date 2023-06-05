@@ -104,6 +104,8 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
                     incorrect: 0,
                     all_questions: 0,
                     time_passed: 0,
+                    start_time: 0,
+                    end_time: 0,
                     createdAt: '',
                     updatedAt: '',
                 },
