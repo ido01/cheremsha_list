@@ -13,6 +13,12 @@ export interface IResultFilter {
 
 export interface IResultsState extends EntityState<IUser> {
     status: EStatus
+    completedLoading: boolean
+    closedLoading: boolean
+    rejectedLoading: boolean
+    acceptLoading: boolean
+    declineLoading: boolean
+    active_question_id: string
     order: TTableOrder
     total_count: number
     old_total_count: number

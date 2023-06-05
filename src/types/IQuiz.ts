@@ -11,10 +11,16 @@ export interface IQuizItemResponse {
     data: IQuiz
 }
 
+export interface ISortValue {
+    [key: string]: string
+}
+
 export interface IQuestionRequest {
     id: string
     qid: string
-    vid: string
+    vid?: string
+    answer?: string
+    sortValue?: ISortValue
 }
 
 export interface IQuiz {
@@ -26,6 +32,7 @@ export interface IQuiz {
     name: string
     description: string
     incorrect_count: number
+    max_min: number
     questions: IQuestion[]
     state: IQuizState
     createdAt: string

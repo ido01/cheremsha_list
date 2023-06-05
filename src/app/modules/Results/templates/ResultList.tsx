@@ -10,9 +10,10 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { EState, EStatus } from 'types'
+import { EQuizState } from 'types/IQuizState'
 import { TLimit, TTableOrder, TTableRowData } from 'types/ITable'
 import { IUser } from 'types/IUser'
-import { convertPositionName } from 'utils/convertUtils'
+import { convertPositionName, convertQuizState, convertResultState } from 'utils/convertUtils'
 
 import { FilterBlock } from '../components/FilterBlock'
 import { MobileResultView } from '../components/MobileResultView'
@@ -46,21 +47,6 @@ export const ResultList: React.FC = () => {
     const getLocation = useSelector(selectLocation)
     const getQuiz = useSelector(selectQuizById)
     const quiz = getQuiz(id)
-
-    const stateToText = (state: EState) => {
-        switch (state) {
-            case EState.INITIAL:
-                return 'Не пройден'
-            case EState.PENDING:
-                return 'В процессе'
-            case EState.COMPLETED:
-                return 'Выполнен'
-            case EState.CLOSED:
-                return 'Провален'
-            case EState.REJECTED:
-                return 'Отменен'
-        }
-    }
 
     const tableRows: TTableRowData[] = [
         {
@@ -113,16 +99,19 @@ export const ResultList: React.FC = () => {
                     variant="body2"
                     sx={(theme) => ({
                         color:
-                            !user.quiz || user.quiz.state === EState.INITIAL || user.quiz.state === EState.REJECTED
+                            !user.quiz ||
+                            user.quiz.state === EQuizState.INITIAL ||
+                            user.quiz.state === EQuizState.REJECTED ||
+                            user.quiz.state === EQuizState.PENDING
                                 ? theme.palette.primary.main
-                                : user.quiz.state === EState.PENDING
+                                : user.quiz.state === EQuizState.DONE
                                 ? theme.palette.warning.main
-                                : user.quiz.state === EState.COMPLETED
+                                : user.quiz.state === EQuizState.COMPLETED
                                 ? theme.palette.success.main
                                 : theme.palette.error.main,
                     })}
                 >
-                    {stateToText(user.quiz?.state || EState.INITIAL)}
+                    {convertResultState(user.quiz?.state || EQuizState.INITIAL)}
                 </Typography>
             ),
         },

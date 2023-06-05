@@ -20,24 +20,21 @@ import {
     Typography,
 } from '@mui/material'
 import { Modal } from 'app/components/Modal'
-import { ImageUploadForm } from 'app/modules/File/templates/ImageUploadForm'
 import dayjs from 'dayjs'
 import { useFormik } from 'formik'
 import md5 from 'md5'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { EState, EStatus } from 'types'
-import { TDocumentInfoType } from 'types/IDocumentInfo'
+import { EStatus } from 'types'
+import { EQuestionType } from 'types/IQuestion'
+import { convertQuestionType } from 'utils/convertUtils'
 import * as yup from 'yup'
 
-// import { TextAreaEdit } from '../components/TextAreaEdit'
 import { quizActions } from '../slice'
 import { selectForm } from '../slice/selectors'
 
 export const QuizForm: React.FC = () => {
     const dispatch = useDispatch()
-
-    const [expanded, setExpanded] = useState<number | false>(false)
 
     const { data, status, open } = useSelector(selectForm)
 
@@ -94,6 +91,7 @@ export const QuizForm: React.FC = () => {
                                     id: '',
                                     parentId: '',
                                     text: '',
+                                    second_text: '',
                                     isCorrect: false,
                                     uniq: md5(`${dayjs().unix()}`),
                                 },
@@ -106,7 +104,7 @@ export const QuizForm: React.FC = () => {
         )
     }
 
-    const handleAddQuestion = () => {
+    const handleAddQuestion = (type: EQuestionType) => {
         dispatch(
             quizActions.openEditModal({
                 ...formik.values,
@@ -118,11 +116,13 @@ export const QuizForm: React.FC = () => {
                         text: '',
                         sort: formik.values.questions.length,
                         uniq: md5(`${dayjs().unix()}`),
+                        type: type,
                         variants: [
                             {
                                 id: '',
                                 parentId: '',
                                 text: '',
+                                second_text: '',
                                 uniq: md5(`${dayjs().unix() + 1}`),
                                 isCorrect: true,
                             },
@@ -130,6 +130,7 @@ export const QuizForm: React.FC = () => {
                                 id: '',
                                 parentId: '',
                                 text: '',
+                                second_text: '',
                                 uniq: md5(`${dayjs().unix() + 2}`),
                                 isCorrect: false,
                             },
@@ -137,10 +138,32 @@ export const QuizForm: React.FC = () => {
                                 id: '',
                                 parentId: '',
                                 text: '',
+                                second_text: '',
                                 uniq: md5(`${dayjs().unix() + 3}`),
                                 isCorrect: false,
                             },
                         ],
+                        createdAt: '',
+                    },
+                ],
+            })
+        )
+    }
+
+    const handleAddQuestionText = () => {
+        dispatch(
+            quizActions.openEditModal({
+                ...formik.values,
+                questions: [
+                    ...formik.values.questions,
+                    {
+                        id: '',
+                        parentId: data.id,
+                        text: '',
+                        sort: formik.values.questions.length,
+                        uniq: md5(`${dayjs().unix()}`),
+                        type: EQuestionType.TEXT,
+                        variants: [],
                         createdAt: '',
                     },
                 ],
@@ -238,10 +261,6 @@ export const QuizForm: React.FC = () => {
         dispatch(quizActions.moveDownInfo(index))
     }
 
-    const handleChange = (index: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-        setExpanded(isExpanded ? index : false)
-    }
-
     return (
         <Modal open={open} title={data.id ? 'Редактирование теста' : 'Создание теста'} handleClose={handleClose}>
             <Box
@@ -288,16 +307,27 @@ export const QuizForm: React.FC = () => {
                         maxRows={4}
                     />
 
-                    <TextField
-                        fullWidth
-                        type="number"
-                        variant="outlined"
-                        label="Минимальное количество ошибок"
-                        name={'incorrect_count'}
-                        sx={{ mt: 2 }}
-                        value={formik.values.incorrect_count || 0}
-                        onChange={formik.handleChange}
-                    />
+                    <Box sx={{ display: 'flex', mt: 2, gap: 2 }}>
+                        <TextField
+                            fullWidth
+                            type="number"
+                            variant="outlined"
+                            label="Минимальное количество ошибок"
+                            name={'incorrect_count'}
+                            value={formik.values.incorrect_count || 0}
+                            onChange={formik.handleChange}
+                        />
+
+                        <TextField
+                            fullWidth
+                            type="number"
+                            variant="outlined"
+                            label="Ограничение времени на прохождение тестирования"
+                            name={'max_min'}
+                            value={formik.values.max_min || 0}
+                            onChange={formik.handleChange}
+                        />
+                    </Box>
 
                     {formik.values.questions
                         .map((question, index) => ({ ...question, sort: index }))
@@ -315,6 +345,9 @@ export const QuizForm: React.FC = () => {
                                 <Accordion sx={{ flexGrow: 1 }}>
                                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                         <Typography sx={{ width: '33%', flexShrink: 0 }}>Вопрос {index + 1}</Typography>
+                                        <Typography sx={{ color: 'text.secondary' }}>
+                                            {convertQuestionType(question.type)}
+                                        </Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
                                         <TextField
@@ -328,59 +361,133 @@ export const QuizForm: React.FC = () => {
                                             maxRows={4}
                                         />
 
-                                        <Divider sx={{ mt: 1, mb: 2 }} />
+                                        {question.type === EQuestionType.VARIANT && (
+                                            <>
+                                                <Divider sx={{ mt: 1, mb: 2 }} />
 
-                                        <Typography mt={1} variant="body3">
-                                            Ответы
-                                        </Typography>
+                                                <Typography mt={1} variant="body3">
+                                                    Ответы
+                                                </Typography>
 
-                                        {question.variants
-                                            .map((variant, index) => ({ ...variant, sort: index }))
-                                            .filter((variant) => !variant.delete)
-                                            .map((variant, i) => (
-                                                <Box
-                                                    key={variant.uniq}
-                                                    sx={{
-                                                        display: variant.delete ? 'none' : 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 1,
-                                                    }}
-                                                >
-                                                    <Checkbox
-                                                        checked={variant.isCorrect || false}
-                                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                            formik.setFieldValue(
-                                                                `questions.${question.sort}.variants.${variant.sort}.isCorrect`,
-                                                                event.target.checked
-                                                            )
-                                                        }}
-                                                    />
-                                                    <TextField
-                                                        sx={{ mt: 1 }}
-                                                        fullWidth
-                                                        size="small"
-                                                        variant="outlined"
-                                                        label={`Ответ ${i + 1}`}
-                                                        name={`questions.${question.sort}.variants.${variant.sort}.text`}
-                                                        value={variant.text || ''}
-                                                        onChange={formik.handleChange}
-                                                    />
+                                                {question.variants
+                                                    .map((variant, index) => ({ ...variant, sort: index }))
+                                                    .filter((variant) => !variant.delete)
+                                                    .map((variant, i) => (
+                                                        <Box
+                                                            key={variant.uniq}
+                                                            sx={{
+                                                                display: variant.delete ? 'none' : 'flex',
+                                                                alignItems: 'center',
+                                                                gap: 1,
+                                                            }}
+                                                        >
+                                                            <Checkbox
+                                                                checked={variant.isCorrect || false}
+                                                                onChange={(
+                                                                    event: React.ChangeEvent<HTMLInputElement>
+                                                                ) => {
+                                                                    formik.setFieldValue(
+                                                                        `questions.${question.sort}.variants.${variant.sort}.isCorrect`,
+                                                                        event.target.checked
+                                                                    )
+                                                                }}
+                                                            />
+                                                            <TextField
+                                                                sx={{ mt: 1 }}
+                                                                fullWidth
+                                                                size="small"
+                                                                variant="outlined"
+                                                                label={`Ответ ${i + 1}`}
+                                                                name={`questions.${question.sort}.variants.${variant.sort}.text`}
+                                                                value={variant.text || ''}
+                                                                onChange={formik.handleChange}
+                                                            />
 
-                                                    <IconButton
-                                                        color="error"
-                                                        onClick={() =>
-                                                            handleRemoveVariant(question.uniq, variant.uniq, variant.id)
-                                                        }
-                                                    >
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </Box>
-                                            ))}
-                                        <ButtonGroup fullWidth size="small" sx={{ my: 5 }}>
-                                            <Button onClick={() => handleAddVariant(question.sort)}>
-                                                Добавить Ответ
-                                            </Button>
-                                        </ButtonGroup>
+                                                            <IconButton
+                                                                color="error"
+                                                                onClick={() =>
+                                                                    handleRemoveVariant(
+                                                                        question.uniq,
+                                                                        variant.uniq,
+                                                                        variant.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                <DeleteIcon />
+                                                            </IconButton>
+                                                        </Box>
+                                                    ))}
+                                                <ButtonGroup fullWidth size="small" sx={{ my: 5 }}>
+                                                    <Button onClick={() => handleAddVariant(question.sort)}>
+                                                        Добавить Ответ
+                                                    </Button>
+                                                </ButtonGroup>
+                                            </>
+                                        )}
+
+                                        {question.type === EQuestionType.SORT && (
+                                            <>
+                                                <Divider sx={{ mt: 1, mb: 2 }} />
+
+                                                <Typography mt={1} variant="body3">
+                                                    Ответы
+                                                </Typography>
+
+                                                {question.variants
+                                                    .map((variant, index) => ({ ...variant, sort: index }))
+                                                    .filter((variant) => !variant.delete)
+                                                    .map((variant, i) => (
+                                                        <Box
+                                                            key={variant.uniq}
+                                                            sx={{
+                                                                display: variant.delete ? 'none' : 'flex',
+                                                                alignItems: 'center',
+                                                                gap: 1,
+                                                            }}
+                                                        >
+                                                            <TextField
+                                                                sx={{ mt: 1 }}
+                                                                fullWidth
+                                                                size="small"
+                                                                variant="outlined"
+                                                                label={`Ответ ${i + 1}`}
+                                                                name={`questions.${question.sort}.variants.${variant.sort}.text`}
+                                                                value={variant.text || ''}
+                                                                onChange={formik.handleChange}
+                                                            />
+
+                                                            <TextField
+                                                                sx={{ mt: 1 }}
+                                                                fullWidth
+                                                                size="small"
+                                                                variant="outlined"
+                                                                label={`Ответ ${i + 1} часть 2`}
+                                                                name={`questions.${question.sort}.variants.${variant.sort}.second_text`}
+                                                                value={variant.second_text || ''}
+                                                                onChange={formik.handleChange}
+                                                            />
+
+                                                            <IconButton
+                                                                color="error"
+                                                                onClick={() =>
+                                                                    handleRemoveVariant(
+                                                                        question.uniq,
+                                                                        variant.uniq,
+                                                                        variant.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                <DeleteIcon />
+                                                            </IconButton>
+                                                        </Box>
+                                                    ))}
+                                                <ButtonGroup fullWidth size="small" sx={{ my: 5 }}>
+                                                    <Button onClick={() => handleAddVariant(question.sort)}>
+                                                        Добавить Ответ
+                                                    </Button>
+                                                </ButtonGroup>
+                                            </>
+                                        )}
                                     </AccordionDetails>
                                 </Accordion>
 
@@ -412,7 +519,9 @@ export const QuizForm: React.FC = () => {
                         ))}
 
                     <ButtonGroup fullWidth size="small" sx={{ my: 5 }}>
-                        <Button onClick={() => handleAddQuestion()}>Добавить Вопрос</Button>
+                        <Button onClick={() => handleAddQuestion(EQuestionType.VARIANT)}>+ Обычный Вопрос</Button>
+                        <Button onClick={() => handleAddQuestionText()}>+ Вариативный Вопрос</Button>
+                        <Button onClick={() => handleAddQuestion(EQuestionType.SORT)}>+ Вопрос с соответствиями</Button>
                     </ButtonGroup>
                 </Container>
             </Box>

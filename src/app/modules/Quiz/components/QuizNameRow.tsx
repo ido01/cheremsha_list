@@ -3,6 +3,7 @@ import { Typography } from '@mui/material'
 import React from 'react'
 import { EState } from 'types'
 import { IQuiz } from 'types/IQuiz'
+import { EQuizState } from 'types/IQuizState'
 
 interface QuizNameRowProps {
     item: IQuiz
@@ -10,31 +11,25 @@ interface QuizNameRowProps {
 
 export const QuizNameRow: React.FC<QuizNameRowProps> = ({ item }) => (
     <>
-        {item.state.state !== EState.COMPLETED && (
+        {item.state.state !== EQuizState.COMPLETED && (
             <AssignmentIcon
                 sx={(theme) => ({
-                    color:
-                        item.state.state === EState.REJECTED || item.state.state === EState.CLOSED
-                            ? theme.palette.error.main
-                            : item.state.state === EState.PENDING
-                            ? theme.palette.warning.main
-                            : item.state.state === EState.COMPLETED
-                            ? theme.palette.success.main
-                            : theme.palette.primary.main,
+                    color: item.draft
+                        ? theme.palette.grey[600]
+                        : item.state.state === EQuizState.REJECTED || item.state.state === EQuizState.CLOSED
+                        ? theme.palette.error.main
+                        : item.state.state === EQuizState.DONE
+                        ? theme.palette.warning.main
+                        : item.state.state === EQuizState.COMPLETED
+                        ? theme.palette.success.main
+                        : theme.palette.primary.main,
                 })}
             />
         )}
-        {item.state.state === EState.COMPLETED && (
+        {item.state.state === EQuizState.COMPLETED && (
             <AssignmentTurnedInIcon
                 sx={(theme) => ({
-                    color:
-                        item.state.state === EState.REJECTED
-                            ? theme.palette.error.main
-                            : item.state.state === EState.PENDING
-                            ? theme.palette.warning.main
-                            : item.state.state === EState.COMPLETED
-                            ? theme.palette.success.main
-                            : theme.palette.primary.main,
+                    color: theme.palette.success.main,
                 })}
             />
         )}

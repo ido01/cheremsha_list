@@ -14,6 +14,12 @@ const slice = createSlice({
         ids: [],
         entities: {},
         status: EStatus.INITIAL,
+        completedLoading: false,
+        closedLoading: false,
+        rejectedLoading: false,
+        acceptLoading: false,
+        declineLoading: false,
+        active_question_id: '',
         status_quiz: EStatus.INITIAL,
         total_count: 0,
         old_total_count: 0,
@@ -43,6 +49,7 @@ const slice = createSlice({
             state.pagination.page = 1
             state.pagination.total_pages = 1
             state.total_count = 0
+            state.modal.activeId = ''
         },
         setFilter(state, action: PayloadAction<IResultFilter>) {
             state.filter = action.payload
@@ -60,18 +67,36 @@ const slice = createSlice({
         loadResult(state, action: PayloadAction<IResultRequest>) {
             state.status_quiz = EStatus.PENDING
             action.payload
+            state.quiz = undefined
         },
         resultLoaded(state, action: PayloadAction<IResultResponse>) {
             state.status_quiz = EStatus.FINISHED
+            state.closedLoading = false
+            state.completedLoading = false
+            state.rejectedLoading = false
+            state.acceptLoading = false
+            state.declineLoading = false
             resultsAdapter.setOne(state, action.payload.user)
             state.quiz = action.payload.data
         },
+        setQuestionAccept(state, action: PayloadAction<string>) {
+            state.acceptLoading = true
+            state.active_question_id = action.payload
+        },
+        setQuestionDecline(state, action: PayloadAction<string>) {
+            state.declineLoading = true
+            state.active_question_id = action.payload
+        },
         setResultCompleted(state, action: PayloadAction<IResultRequest>) {
-            state
+            state.completedLoading = true
+            action.payload
+        },
+        setResultClosed(state, action: PayloadAction<IResultRequest>) {
+            state.closedLoading = true
             action.payload
         },
         setResultReject(state, action: PayloadAction<IResultRequest>) {
-            state
+            state.rejectedLoading = true
             action.payload
         },
         setOrder(state, action: PayloadAction<TTableOrder>) {

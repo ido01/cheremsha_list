@@ -82,7 +82,8 @@ export const MobileNavigation: React.FC = () => {
                 {menuItems.map((item, index) => (
                     <BottomNavigationAction
                         key={index}
-                        label={item.title}
+                        // label={item.title}
+                        label={''}
                         icon={item.icon}
                         onClick={() => handleClick(item)}
                     />

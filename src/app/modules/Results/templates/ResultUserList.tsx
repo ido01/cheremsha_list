@@ -5,8 +5,10 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { EState } from 'types'
 import { IQuiz, IQuizResponse } from 'types/IQuiz'
+import { EQuizState, IQuizState } from 'types/IQuizState'
 import { TTableRowData } from 'types/ITable'
 import { IUser } from 'types/IUser'
+import { convertQuizState, convertResultState } from 'utils/convertUtils'
 import { request } from 'utils/request'
 
 import { ResultModalContent } from '../components/ResultModalContent'
@@ -23,21 +25,6 @@ export const ResultUserList: React.FC<ResultUserListProps> = ({ user }) => {
     const [isLoading, setLoading] = useState<boolean>(false)
     const [activeUserQuiz, setActiveUserQuiz] = useState<IUser>()
     const [activeQuiz, setActiveQuiz] = useState<IQuiz>()
-
-    const stateToText = (state: EState) => {
-        switch (state) {
-            case EState.INITIAL:
-                return 'Не пройден'
-            case EState.PENDING:
-                return 'В процессе'
-            case EState.COMPLETED:
-                return 'Выполнен'
-            case EState.CLOSED:
-                return 'Провален'
-            case EState.REJECTED:
-                return 'Отменен'
-        }
-    }
 
     const loadQuiz = () => {
         request(`results/list/${user.id}`).then((response: IQuizResponse) => {
@@ -62,16 +49,19 @@ export const ResultUserList: React.FC<ResultUserListProps> = ({ user }) => {
                     variant="body2"
                     sx={(theme) => ({
                         color:
-                            !item.state || item.state.state === EState.INITIAL || item.state.state === EState.REJECTED
+                            !item.state ||
+                            item.state.state === EQuizState.INITIAL ||
+                            item.state.state === EQuizState.REJECTED ||
+                            item.state.state === EQuizState.PENDING
                                 ? theme.palette.primary.main
-                                : item.state.state === EState.PENDING
+                                : item.state.state === EQuizState.DONE
                                 ? theme.palette.warning.main
-                                : item.state.state === EState.COMPLETED
+                                : item.state.state === EQuizState.COMPLETED
                                 ? theme.palette.success.main
                                 : theme.palette.error.main,
                     })}
                 >
-                    {stateToText(item.state?.state || EState.INITIAL)}
+                    {convertResultState(item.state?.state || EQuizState.INITIAL)}
                 </Typography>
             ),
         },
@@ -84,17 +74,36 @@ export const ResultUserList: React.FC<ResultUserListProps> = ({ user }) => {
     }, [user.id])
 
     const handleClick = (quiz: IQuiz) => {
+        dispatch(
+            resultsActions.loadResult({
+                id: quiz.id,
+                uid: user.id,
+            })
+        )
         setActiveQuiz(quiz)
         setActiveUserQuiz({
             ...user,
             quiz: quiz.state,
         })
-        dispatch(resultsActions.loadResult({ id: quiz.id, uid: user.id }))
     }
 
     const handleHistoryBack = () => {
         setActiveQuiz(undefined)
         setActiveUserQuiz(undefined)
+    }
+
+    const handleQuizStateChange = (state: IQuizState) => {
+        setItems((quiz) =>
+            quiz.map((item) => {
+                if (item.id === state.qid) {
+                    return {
+                        ...item,
+                        state,
+                    }
+                }
+                return item
+            })
+        )
     }
 
     return (
@@ -118,7 +127,11 @@ export const ResultUserList: React.FC<ResultUserListProps> = ({ user }) => {
                         <Typography variant="h4">{activeQuiz.name}</Typography>
                     </Box>
 
-                    <ResultModalContent id={activeQuiz.id} user={activeUserQuiz} />
+                    <ResultModalContent
+                        id={activeQuiz.id}
+                        user={activeUserQuiz}
+                        onQuizStateChange={handleQuizStateChange}
+                    />
                 </>
             )}
         </Box>

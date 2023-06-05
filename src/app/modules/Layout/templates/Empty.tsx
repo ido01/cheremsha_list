@@ -4,6 +4,8 @@ import {
     Button,
     Dialog,
     DialogActions,
+    DialogContent,
+    DialogContentText,
     DialogTitle,
     Paper,
     Step,
@@ -98,7 +100,11 @@ export const Empty: React.FC<EmptyProps> = ({ children }) => {
             </Box>
 
             <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title">
-                <DialogTitle id="alert-dialog-title">Вы уверены, что хотите выйти?</DialogTitle>
+                <DialogTitle id="alert-dialog-title">Внимание!</DialogTitle>
+
+                <DialogContent>
+                    <DialogContentText>Вы уверены, что хотите выйти?</DialogContentText>
+                </DialogContent>
 
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

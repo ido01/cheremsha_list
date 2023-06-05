@@ -51,7 +51,7 @@ export const PeoplesList: React.FC = () => {
 
     return (
         <>
-            <TitleBlock title={'Документы'} />
+            <TitleBlock title={'Сотрудники'} />
 
             <Box flex="1 0 100%" sx={{ overflow: 'auto', maxHeight: { md: 'calc( 100vh - 90px )' } }}>
                 <Table items={links} rows={tableRows} handleClickRow={handleClickRow} />

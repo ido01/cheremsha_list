@@ -2,6 +2,7 @@ import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolki
 import { EState, EStatus } from 'types'
 import { IDocumentStateRequest } from 'types/IDocumentState'
 import { IQuestionRequest, IQuiz, IQuizItemResponse, IQuizResponse } from 'types/IQuiz'
+import { EQuizState } from 'types/IQuizState'
 import { TTableOrder } from 'types/ITable'
 
 import { IQuizState } from './types'
@@ -14,6 +15,8 @@ const slice = createSlice({
         ids: [],
         entities: {},
         status: EStatus.INITIAL,
+        quizLoading: false,
+        questionLoading: false,
         order: {
             row: 'createdAt',
             order: 'desc',
@@ -34,15 +37,18 @@ const slice = createSlice({
                 name: '',
                 description: '',
                 incorrect_count: 0,
+                max_min: 30,
                 questions: [],
                 state: {
                     id: '',
-                    state: EState.INITIAL,
+                    state: EQuizState.INITIAL,
                     uid: '',
                     qid: '',
+                    current_question: -1,
                     correct: 0,
                     incorrect: 0,
                     all_questions: 0,
+                    time_passed: 0,
                     createdAt: '',
                     updatedAt: '',
                 },
@@ -59,8 +65,12 @@ const slice = createSlice({
             state.status = EStatus.FINISHED
         },
         question(state, action: PayloadAction<IQuestionRequest>) {
-            state
+            state.questionLoading = true
             action.payload
+        },
+        questionLoaded(state, action: PayloadAction<IQuizItemResponse>) {
+            state.questionLoading = false
+            quizAdapter.setOne(state, action.payload.data)
         },
         completed(state, action: PayloadAction<string>) {
             state
@@ -76,10 +86,12 @@ const slice = createSlice({
         },
         loadQuizById(state, action: PayloadAction<string>) {
             state.status = EStatus.PENDING
+            state.quizLoading = true
             action.payload
         },
         quizByIdLoaded(state, action: PayloadAction<IQuizItemResponse>) {
             state.status = EStatus.FINISHED
+            state.quizLoading = false
             quizAdapter.setOne(state, action.payload.data)
         },
         openEditModal(state, action: PayloadAction<IQuiz>) {

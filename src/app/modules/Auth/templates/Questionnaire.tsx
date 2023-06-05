@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogTitle, Typography } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material'
 import { AccountDataForm } from 'app/modules/Profile/components/AccountDataForm'
 import { selectProfile } from 'app/modules/Profile/slice/selectors'
 import React, { useState } from 'react'
@@ -22,9 +22,12 @@ export const Questionnaire: React.FC = () => {
             <AccountDataForm onEditFinish={() => setOpen(true)} />
 
             <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title">
-                <DialogTitle id="alert-dialog-title">
-                    Заявка на регистрацию отправлена, ждите подтверждения на email
-                </DialogTitle>
+                <DialogTitle id="alert-dialog-title">Вы прекрасны!</DialogTitle>
+
+                <DialogContent>
+                    <DialogContentText>Ваша заявка на допуск к платформе отправлена администратору!</DialogContentText>
+                    <DialogContentText>После получения доступа вы получите email сообщение</DialogContentText>
+                </DialogContent>
 
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

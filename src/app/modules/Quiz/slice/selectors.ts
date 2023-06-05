@@ -9,6 +9,10 @@ const selectDomain = (state: RootState) => state.quiz
 
 export const selectStatus = createSelector([selectDomain], (state) => state.status)
 
+export const selectQuestionLoading = createSelector([selectDomain], (state) => state.questionLoading)
+
+export const selectQuizLoading = createSelector([selectDomain], (state) => state.quizLoading)
+
 export const selectForm = createSelector([selectDomain], (state) => state.form)
 
 export const selectOrder = createSelector([selectDomain], (state) => state.order)

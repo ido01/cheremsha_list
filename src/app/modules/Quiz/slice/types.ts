@@ -5,6 +5,8 @@ import { TTableOrder } from 'types/ITable'
 
 export interface IQuizState extends EntityState<IQuiz> {
     status: EStatus
+    questionLoading: boolean
+    quizLoading: boolean
     order: TTableOrder
     modal: {
         isOpen: boolean

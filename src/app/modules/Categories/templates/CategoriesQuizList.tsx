@@ -21,6 +21,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { EState, EStatus, EType } from 'types'
 import { ICategory } from 'types/ICategory'
 import { IQuiz } from 'types/IQuiz'
+import { EQuizState } from 'types/IQuizState'
 import { TTableOrder, TTableRowData } from 'types/ITable'
 
 import { categoriesActions } from '../slice'
@@ -47,7 +48,18 @@ export const CategoriesQuizList: React.FC<CategoriesQuizListProps> = ({ type, se
     const categories = !search ? getCategories(id || '0', type) : searchCategories(search, type)
     const quiz = !search ? getQuiz(id || '0') : searchQuiz(search, type)
 
-    const stateSort: EState[] = [EState.REJECTED, EState.PENDING, EState.INITIAL, EState.COMPLETED]
+    const stateSort: (EState | EQuizState)[] = [
+        EState.REJECTED,
+        EState.PENDING,
+        EState.INITIAL,
+        EState.COMPLETED,
+        EQuizState.DONE,
+        EQuizState.INITIAL,
+        EQuizState.REJECTED,
+        EQuizState.CLOSED,
+        EQuizState.COMPLETED,
+        EQuizState.PENDING,
+    ]
     const items = [...categories, ...quiz].sort((a, b) => {
         if (order.row === 'status') {
             if (order.order === 'desc') {

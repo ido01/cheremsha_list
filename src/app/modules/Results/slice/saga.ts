@@ -60,6 +60,22 @@ export function* setResultCompleted(action: PayloadAction<IResultRequest>) {
     }
 }
 
+export function* setResultClosed(action: PayloadAction<IResultRequest>) {
+    try {
+        const response: IResultResponse = yield call(
+            request,
+            `results/${action.payload.id}/${action.payload.uid}/closed`,
+            {
+                method: 'POST',
+            }
+        )
+
+        yield put(resultsActions.resultLoaded(response))
+    } catch (error: any) {
+        yield put(resultsActions.statusError())
+    }
+}
+
 export function* setResultReject(action: PayloadAction<IResultRequest>) {
     try {
         const response: IResultResponse = yield call(
@@ -76,9 +92,36 @@ export function* setResultReject(action: PayloadAction<IResultRequest>) {
     }
 }
 
+export function* setQuestionAccept(action: PayloadAction<string>) {
+    try {
+        const response: IResultResponse = yield call(request, `question/${action.payload}/accept`, {
+            method: 'POST',
+        })
+
+        yield put(resultsActions.resultLoaded(response))
+    } catch (error: any) {
+        yield put(resultsActions.statusError())
+    }
+}
+
+export function* setQuestionDecline(action: PayloadAction<string>) {
+    try {
+        const response: IResultResponse = yield call(request, `question/${action.payload}/decline`, {
+            method: 'POST',
+        })
+
+        yield put(resultsActions.resultLoaded(response))
+    } catch (error: any) {
+        yield put(resultsActions.statusError())
+    }
+}
+
 export function* resultsWatcher() {
     yield takeLeading(resultsActions.loadResults.type, loadResults)
     yield takeLeading(resultsActions.loadResult.type, loadResult)
     yield takeLeading(resultsActions.setResultCompleted.type, setResultCompleted)
+    yield takeLeading(resultsActions.setResultClosed.type, setResultClosed)
     yield takeLeading(resultsActions.setResultReject.type, setResultReject)
+    yield takeLeading(resultsActions.setQuestionAccept.type, setQuestionAccept)
+    yield takeLeading(resultsActions.setQuestionDecline.type, setQuestionDecline)
 }

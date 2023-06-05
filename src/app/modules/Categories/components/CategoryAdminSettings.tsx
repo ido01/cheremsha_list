@@ -9,6 +9,8 @@ import {
     Button,
     Dialog,
     DialogActions,
+    DialogContent,
+    DialogContentText,
     DialogTitle,
     Divider,
     List,
@@ -29,6 +31,7 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { EState, EType } from 'types'
 import { ICategory } from 'types/ICategory'
+import { EQuizState } from 'types/IQuizState'
 
 interface CategoryAdminSettingsProps {
     type: EType
@@ -88,16 +91,19 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
                 name: '',
                 description: '',
                 incorrect_count: 0,
+                max_min: 30,
                 parentId: id || '0',
                 questions: [],
                 state: {
                     id: '',
-                    state: EState.INITIAL,
+                    state: EQuizState.INITIAL,
                     uid: '',
                     qid: '',
+                    current_question: -1,
                     correct: 0,
                     incorrect: 0,
                     all_questions: 0,
+                    time_passed: 0,
                     createdAt: '',
                     updatedAt: '',
                 },
@@ -216,9 +222,11 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
             <QuizForm />
 
             <Dialog open={openDelete} onClose={handleCloseDelete} aria-labelledby="alert-dialog-title">
-                <DialogTitle id="alert-dialog-title">
-                    {`Вы уверены, что хотите удалить катеорию ${category?.name}?`}
-                </DialogTitle>
+                <DialogTitle id="alert-dialog-title">Внимание!</DialogTitle>
+
+                <DialogContent>
+                    <DialogContentText>{`Вы уверены, что хотите удалить катеорию ${category?.name}?`}</DialogContentText>
+                </DialogContent>
 
                 <DialogActions>
                     <Button onClick={handleCloseDelete} color="primary">

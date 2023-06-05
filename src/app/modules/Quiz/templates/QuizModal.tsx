@@ -1,13 +1,27 @@
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Box, Button, Container, Dialog, DialogActions, DialogTitle, IconButton, Typography } from '@mui/material'
+import {
+    Box,
+    Button,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Grid,
+    IconButton,
+    Typography,
+} from '@mui/material'
 import { LabelText } from 'app/components/LabelText'
 import { Modal } from 'app/components/Modal'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { ERole, EState } from 'types'
+import { EQuizState } from 'types/IQuizState'
+import { convertQuizState } from 'utils/convertUtils'
 
 import { quizActions } from '../slice'
 import { selectModal, selectQuizById } from '../slice/selectors'
@@ -22,6 +36,14 @@ export const QuizModal: React.FC = () => {
     const { isOpen, activeId } = useSelector(selectModal)
     const getQuiz = useSelector(selectQuizById)
     const quiz = getQuiz(activeId)
+
+    const percent = useMemo(() => {
+        if (quiz?.state) {
+            return `${Math.round((quiz.state.correct / quiz.state.all_questions) * 100)}%`
+        }
+
+        return '0%'
+    }, [quiz])
 
     const handleClose = () => {
         dispatch(quizActions.hideModal())
@@ -102,6 +124,98 @@ export const QuizModal: React.FC = () => {
                                 />
                             </Box>
                         </Box>
+                        <Grid container sx={{ my: 2.5 }} spacing={2.5}>
+                            <Grid item xs={6}>
+                                <LabelText
+                                    label="Статус"
+                                    node={
+                                        <Typography
+                                            variant="body2"
+                                            sx={(theme) => ({
+                                                color:
+                                                    !quiz?.state ||
+                                                    quiz?.state.state === EQuizState.INITIAL ||
+                                                    quiz?.state.state === EQuizState.REJECTED ||
+                                                    quiz?.state.state === EQuizState.PENDING
+                                                        ? theme.palette.primary.main
+                                                        : quiz?.state.state === EQuizState.DONE
+                                                        ? theme.palette.warning.main
+                                                        : quiz?.state.state === EQuizState.COMPLETED
+                                                        ? theme.palette.success.main
+                                                        : theme.palette.error.main,
+                                            })}
+                                        >
+                                            {convertQuizState(quiz?.state.state || EQuizState.INITIAL)}
+                                        </Typography>
+                                    }
+                                />
+                            </Grid>
+                            {quiz?.state &&
+                                (quiz?.state.state === EQuizState.CLOSED ||
+                                    quiz?.state.state === EQuizState.COMPLETED) && (
+                                    <>
+                                        <Grid item xs={6}>
+                                            <LabelText
+                                                label="Результат"
+                                                node={
+                                                    <Typography
+                                                        variant="h6"
+                                                        sx={(theme) => ({
+                                                            color:
+                                                                quiz?.state?.state === EQuizState.COMPLETED
+                                                                    ? theme.palette.success.main
+                                                                    : theme.palette.error.main,
+                                                        })}
+                                                    >
+                                                        {percent}
+                                                    </Typography>
+                                                }
+                                            />
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <LabelText
+                                                label="Правильно"
+                                                node={
+                                                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={(theme) => ({
+                                                                color: theme.palette.success.main,
+                                                                lineHeight: 1,
+                                                            })}
+                                                        >
+                                                            {quiz?.state.correct}
+                                                        </Typography>
+
+                                                        <Typography>из {quiz?.state.all_questions}</Typography>
+                                                    </Box>
+                                                }
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={6}>
+                                            <LabelText
+                                                label="Ошибки"
+                                                node={
+                                                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+                                                        <Typography
+                                                            variant="h6"
+                                                            sx={(theme) => ({
+                                                                color: theme.palette.error.main,
+                                                                lineHeight: 1,
+                                                            })}
+                                                        >
+                                                            {quiz?.state.incorrect}
+                                                        </Typography>
+
+                                                        <Typography>из {quiz?.state.all_questions}</Typography>
+                                                    </Box>
+                                                }
+                                            />
+                                        </Grid>
+                                    </>
+                                )}
+                        </Grid>
                     </Container>
                 </Box>
 
@@ -147,11 +261,14 @@ export const QuizModal: React.FC = () => {
                             )}
                         </Box>
 
-                        {quiz && quiz.state.state !== EState.COMPLETED && quiz.state.state !== EState.CLOSED && (
-                            <LoadingButton color="success" variant="contained" onClick={handleStart}>
-                                Приступить к тестированию
-                            </LoadingButton>
-                        )}
+                        {quiz &&
+                            quiz.state.state !== EQuizState.COMPLETED &&
+                            quiz.state.state !== EQuizState.CLOSED &&
+                            quiz.state.state !== EQuizState.DONE && (
+                                <LoadingButton color="success" variant="contained" onClick={() => setOpenStart(true)}>
+                                    Приступить к тестированию
+                                </LoadingButton>
+                            )}
                         {quiz && quiz.draft && profileRole === ERole.ADMIN && (
                             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                                 <Typography color="grey.600">Черновик</Typography>
@@ -166,9 +283,11 @@ export const QuizModal: React.FC = () => {
             </Modal>
 
             <Dialog open={openDelete} onClose={handleCloseDelete} aria-labelledby="alert-dialog-title">
-                <DialogTitle id="alert-dialog-title">
-                    {`Вы уверены, что хотите удалить тест "${quiz?.name}"?`}
-                </DialogTitle>
+                <DialogTitle id="alert-dialog-title">Внимание!</DialogTitle>
+
+                <DialogContent>
+                    <DialogContentText>{`Вы уверены, что хотите удалить тест "${quiz?.name}"?`}</DialogContentText>
+                </DialogContent>
 
                 <DialogActions>
                     <Button onClick={handleCloseDelete} color="primary">
@@ -182,9 +301,12 @@ export const QuizModal: React.FC = () => {
             </Dialog>
 
             <Dialog open={openStart} onClose={handleCloseStart} aria-labelledby="alert-dialog-title">
-                <DialogTitle id="alert-dialog-title">
-                    {`Вы уверены, что хотите начать тест "${quiz?.name}"? У вас будет огранично время выполнения`}
-                </DialogTitle>
+                <DialogTitle>Осторожно</DialogTitle>
+
+                <DialogContent>
+                    <DialogContentText>{`Вы уверены, что хотите начать тест "${quiz?.name}"?`}</DialogContentText>
+                    <DialogContentText>У вас будет огранично время выполнения</DialogContentText>
+                </DialogContent>
 
                 <DialogActions>
                     <Button onClick={handleCloseStart} color="primary">

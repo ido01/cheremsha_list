@@ -1,4 +1,6 @@
 import { EGender, EPosition, ERole, EState } from 'types'
+import { EQuestionType } from 'types/IQuestion'
+import { EQuizState } from 'types/IQuizState'
 
 export const PROJECT_NAME = process.env.REACT_APP_NAME
 
@@ -17,8 +19,8 @@ export const ROLE_NAME: { [key in ERole]: string } = {
 export const POSITION_NAME: { [key in EPosition]: string } = {
     seller: 'Продавец',
     hookah: 'Кальянщик',
-    manager: 'Управляющий',
-    owner: 'Владелец',
+    manager: 'Менеджер',
+    owner: 'Управляющий',
     creator: 'Создатель',
     managerControl: 'Менеджер и Управляющий',
     accountant: 'Бухгалтер',
@@ -37,12 +39,28 @@ export const DOCUMENT_STATE: { [key in EState]: string } = {
     closed: 'Провален',
 }
 
-export const QUIZ_STATE: { [key in EState]: string } = {
+export const QUIZ_STATE: { [key in EQuizState]: string } = {
     initial: 'Новый',
     pending: 'В процессе',
     rejected: 'Требует пересдачи',
     completed: 'Сдан',
     closed: 'Провален',
+    done: 'На проверке',
+}
+
+export const RESULT_STATE: { [key in EQuizState]: string } = {
+    initial: 'Не пройден',
+    pending: 'В процессе',
+    rejected: 'Требует пересдачи',
+    completed: 'Сдан',
+    closed: 'Провален',
+    done: 'Нужна проверка',
+}
+
+export const QUESTION_TYPE: { [key in EQuestionType]: string } = {
+    variant: 'Обычный',
+    text: 'Вариативный',
+    sort: 'Соответствие',
 }
 
 export const PLACE_NAME: { [key in string]: string } = {

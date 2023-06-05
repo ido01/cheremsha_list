@@ -11,6 +11,22 @@ export const selectStatus = createSelector([selectDomain], (state) => state.stat
 
 export const selectStatusQuiz = createSelector([selectDomain], (state) => state.status_quiz)
 
+export const selectCompletedLoading = createSelector([selectDomain], (state) => state.completedLoading)
+
+export const selectClosedLoading = createSelector([selectDomain], (state) => state.closedLoading)
+
+export const selectRejectedLoading = createSelector([selectDomain], (state) => state.rejectedLoading)
+
+export const selectAcceptLoading = createSelector(
+    [selectDomain],
+    (state) => (id: string) => state.acceptLoading && state.active_question_id === id
+)
+
+export const selectDeclineLoading = createSelector(
+    [selectDomain],
+    (state) => (id: string) => state.declineLoading && state.active_question_id === id
+)
+
 export const selectFilter = createSelector([selectDomain], (state) => state.filter)
 
 export const selectTotalCount = createSelector([selectDomain], (state) => state.total_count)

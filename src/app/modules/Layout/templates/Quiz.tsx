@@ -1,5 +1,15 @@
 import { Logout as LogoutIcon } from '@mui/icons-material'
-import { Box, Button, Dialog, DialogActions, DialogTitle, useMediaQuery, useTheme } from '@mui/material'
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material'
 import { Logo } from 'app/components/Logo/Logo'
 import { authActions } from 'app/modules/Auth/slice'
 import { Auth } from 'app/modules/Auth/templates/Auth'
@@ -58,7 +68,11 @@ export const Quiz: React.FC<QuizProps> = ({ children }) => {
             </Box>
 
             <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title">
-                <DialogTitle id="alert-dialog-title">Вы уверены, что хотите выйти?</DialogTitle>
+                <DialogTitle id="alert-dialog-title">Внимание!</DialogTitle>
+
+                <DialogContent>
+                    <DialogContentText>Вы уверены, что хотите выйти?</DialogContentText>
+                </DialogContent>
 
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

@@ -6,6 +6,8 @@ import {
     Container,
     Dialog,
     DialogActions,
+    DialogContent,
+    DialogContentText,
     DialogTitle,
     Grid,
     IconButton,
@@ -226,9 +228,11 @@ export const UserModalContent: React.FC<UserModalContentProps> = ({ profileRole,
             )}
 
             <Dialog open={openDelete} onClose={handleCloseDelete} aria-labelledby="alert-dialog-title">
-                <DialogTitle id="alert-dialog-title">
-                    {`Вы уверены, что хотите заблокировать "${user?.name}"?`}
-                </DialogTitle>
+                <DialogTitle id="alert-dialog-title">Внимание!</DialogTitle>
+
+                <DialogContent>
+                    <DialogContentText>{`Вы уверены, что хотите заблокировать "${user?.name}"?`}</DialogContentText>
+                </DialogContent>
 
                 <DialogActions>
                     <Button onClick={handleCloseDelete} color="primary">

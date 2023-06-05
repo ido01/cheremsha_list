@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { stringify } from 'qs'
+import { toast } from 'react-toastify'
 
 function parseJSON(response: AxiosResponse) {
     if (response.status === 204 || response.status === 205) {
@@ -39,6 +40,10 @@ export async function request(url: string, config?: AxiosRequestConfig) {
         })
         .catch(async (data) => {
             const response: any = await checkStatus(data.response)
+
+            toast.error(response.data.message || response.data.error || 'Что-то пошло не так', {
+                type: 'error',
+            })
 
             return parseJSON(response)
         })

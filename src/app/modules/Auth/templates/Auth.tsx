@@ -3,7 +3,8 @@ import { selectProfile } from 'app/modules/Profile/slice/selectors'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useRouteMatch } from 'react-router-dom'
-import { EAuthStatus, EState } from 'types'
+import { EAuthStatus } from 'types'
+import { EQuizState } from 'types/IQuizState'
 
 import { selectAuthStatus } from '../slice/selectors'
 
@@ -37,9 +38,9 @@ export const Auth: React.FC<AuthProps> = ({ children }) => {
 
     useEffect(() => {
         if (authStatus === EAuthStatus.AUTHORIZED) {
-            if (profile.state?.state === EState.PENDING && url !== '/test') {
+            if (profile.state?.state === EQuizState.PENDING && url !== '/test') {
                 history.push('/test')
-            } else if (profile.state?.state !== EState.PENDING && url === '/test') {
+            } else if (profile.state?.state !== EQuizState.PENDING && url === '/test') {
                 history.push('/')
             }
         }

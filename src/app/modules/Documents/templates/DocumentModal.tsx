@@ -1,6 +1,17 @@
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Box, Button, Container, Dialog, DialogActions, DialogTitle, IconButton, Typography } from '@mui/material'
+import {
+    Box,
+    Button,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    Typography,
+} from '@mui/material'
 import { Modal } from 'app/components/Modal'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React, { useState } from 'react'
@@ -135,9 +146,11 @@ export const DocumentModal: React.FC = () => {
             </Modal>
 
             <Dialog open={openDelete} onClose={handleCloseDelete} aria-labelledby="alert-dialog-title">
-                <DialogTitle id="alert-dialog-title">
-                    {`Вы уверены, что хотите удалить документ "${document?.name}"?`}
-                </DialogTitle>
+                <DialogTitle id="alert-dialog-title">Внимание!</DialogTitle>
+
+                <DialogContent>
+                    <DialogContentText>{`Вы уверены, что хотите удалить документ "${document?.name}"?`}</DialogContentText>
+                </DialogContent>
 
                 <DialogActions>
                     <Button onClick={handleCloseDelete} color="primary">

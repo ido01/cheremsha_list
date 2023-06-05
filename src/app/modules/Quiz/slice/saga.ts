@@ -1,7 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { categoriesActions } from 'app/modules/Categories/slice'
 import { profileActions } from 'app/modules/Profile/slice'
-import { toast } from 'react-toastify'
 import { call, put, takeLeading } from 'redux-saga/effects'
 import { IQuestionRequest, IQuiz, IQuizItemResponse, IQuizResponse } from 'types/IQuiz'
 import { IProfileResponse } from 'types/IUser'
@@ -36,15 +35,14 @@ export function* question(action: PayloadAction<IQuestionRequest>) {
             data: {
                 qid: action.payload.qid,
                 vid: action.payload.vid,
+                answer: action.payload.answer,
+                sortValue: action.payload.sortValue,
             },
         })
 
-        yield put(quizActions.quizByIdLoaded(response))
+        yield put(quizActions.questionLoaded(response))
     } catch (error: any) {
         yield put(quizActions.statusError())
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 
@@ -57,9 +55,6 @@ export function* completed(action: PayloadAction<string>) {
         yield put(quizActions.quizByIdLoaded(response))
     } catch (error: any) {
         yield put(quizActions.statusError())
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 
@@ -72,9 +67,6 @@ export function* setPublic(action: PayloadAction<string>) {
         yield put(quizActions.quizByIdLoaded(response))
     } catch (error: any) {
         yield put(quizActions.statusError())
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 
@@ -87,9 +79,6 @@ export function* setDraft(action: PayloadAction<string>) {
         yield put(quizActions.quizByIdLoaded(response))
     } catch (error: any) {
         yield put(quizActions.statusError())
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 
@@ -102,9 +91,6 @@ export function* setStart(action: PayloadAction<string>) {
         yield put(profileActions.profileLoaded(response))
     } catch (error: any) {
         yield put(quizActions.statusError())
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 

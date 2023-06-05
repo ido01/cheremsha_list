@@ -1,5 +1,5 @@
 import { Edit as EditIcon, Logout as LogoutIcon } from '@mui/icons-material'
-import { Box, Button, Dialog, DialogActions, DialogTitle } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import { TitleBlock } from 'app/components/TitleBlock'
 import { authActions } from 'app/modules/Auth/slice'
 import React, { useState } from 'react'
@@ -67,7 +67,11 @@ export const ProfileView: React.FC = () => {
                 </Box>
 
                 <Dialog open={open} onClose={handleClose} aria-labelledby="alert-dialog-title">
-                    <DialogTitle id="alert-dialog-title">Вы уверены, что хотите выйти?</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">Внимание!</DialogTitle>
+
+                    <DialogContent>
+                        <DialogContentText>Вы уверены, что хотите выйти?</DialogContentText>
+                    </DialogContent>
 
                     <DialogActions>
                         <Button onClick={handleClose} color="primary">

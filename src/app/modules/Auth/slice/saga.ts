@@ -1,5 +1,4 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { toast } from 'react-toastify'
 import { call, put, takeLeading } from 'redux-saga/effects'
 import { request } from 'utils/request'
 
@@ -20,10 +19,6 @@ export function* activeLogin(action: PayloadAction<IActiveToken>) {
         yield put(authActions.logined(response.token))
     } catch (error: any) {
         yield put(authActions.statusError())
-
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 
@@ -37,10 +32,6 @@ export function* signIn(action: PayloadAction<ISignin>) {
         yield put(authActions.logined(response.token))
     } catch (error: any) {
         yield put(authActions.statusError())
-
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 
@@ -54,10 +45,6 @@ export function* signUp(action: PayloadAction<ISignup>) {
         yield put(authActions.signUpFinished(response.token))
     } catch (error: any) {
         yield put(authActions.statusSignUpError())
-
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 
@@ -71,10 +58,6 @@ export function* recovery(action: PayloadAction<IRecovery>) {
         yield put(authActions.recoveryFinished())
     } catch (error: any) {
         yield put(authActions.statusRecoveryError())
-
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 
@@ -87,10 +70,6 @@ export function* logout() {
         yield put(authActions.logouted())
     } catch (error: any) {
         yield put(authActions.statusSignUpError())
-
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 
@@ -104,10 +83,6 @@ export function* confirmRecovery(action: PayloadAction<IConfirmRecovery>) {
         yield put(authActions.confirmRecoveryFinished(response.token))
     } catch (error: any) {
         yield put(authActions.statusConfirmRecoveryError())
-
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 

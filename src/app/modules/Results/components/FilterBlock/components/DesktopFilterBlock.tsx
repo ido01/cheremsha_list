@@ -150,6 +150,10 @@ export const DesktopFilterBlock: React.FC = () => {
                                 value: 'all',
                             },
                             {
+                                label: 'На проверке',
+                                value: 'done',
+                            },
+                            {
                                 label: 'Не пройден',
                                 value: 'initial',
                             },

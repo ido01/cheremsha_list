@@ -4,8 +4,9 @@ import { selectLocation } from 'app/modules/Locations/selectors'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { EState } from 'types'
+import { EQuizState } from 'types/IQuizState'
 import { IUser } from 'types/IUser'
+import { convertResultState } from 'utils/convertUtils'
 
 interface MobileUserViewProps {
     user: IUser
@@ -13,21 +14,6 @@ interface MobileUserViewProps {
 
 export const MobileResultView: React.FC<MobileUserViewProps> = ({ user }) => {
     const getLocation = useSelector(selectLocation)
-
-    const stateToText = (state: EState) => {
-        switch (state) {
-            case EState.INITIAL:
-                return 'Не пройден'
-            case EState.PENDING:
-                return 'В процессе'
-            case EState.COMPLETED:
-                return 'Выполнен'
-            case EState.CLOSED:
-                return 'Провален'
-            case EState.REJECTED:
-                return 'Отменен'
-        }
-    }
 
     return (
         <Box px={2} pt={2} width={'100%'}>
@@ -66,16 +52,19 @@ export const MobileResultView: React.FC<MobileUserViewProps> = ({ user }) => {
                         variant="body2"
                         sx={(theme) => ({
                             color:
-                                !user.quiz || user.quiz.state === EState.INITIAL || user.quiz.state === EState.REJECTED
+                                !user.quiz ||
+                                user.quiz.state === EQuizState.INITIAL ||
+                                user.quiz.state === EQuizState.REJECTED ||
+                                user.quiz.state === EQuizState.PENDING
                                     ? theme.palette.primary.main
-                                    : user.quiz.state === EState.PENDING
+                                    : user.quiz.state === EQuizState.DONE
                                     ? theme.palette.warning.main
-                                    : user.quiz.state === EState.COMPLETED
+                                    : user.quiz.state === EQuizState.COMPLETED
                                     ? theme.palette.success.main
                                     : theme.palette.error.main,
                         })}
                     >
-                        {stateToText(user.quiz?.state || EState.INITIAL)}
+                        {convertResultState(user.quiz?.state || EQuizState.INITIAL)}
                     </Typography>
                 </Box>
             </Box>

@@ -50,9 +50,19 @@ export const ContactsList: React.FC = () => {
             ),
         },
         {
+            title: 'Телефон',
+            name: 'phone',
+            xs: 3,
+            element: (user: IUser) => (
+                <Typography variant="body2">
+                    <a href={`tel:${user.phone}`}>{user.phone}</a>
+                </Typography>
+            ),
+        },
+        {
             title: 'Должность',
             name: 'position',
-            xs: 3,
+            xs: 2,
             element: (user: IUser) => <Typography variant="body2">{convertPositionName(user.position)}</Typography>,
         },
         {
@@ -69,17 +79,6 @@ export const ContactsList: React.FC = () => {
 
                     {!user.place_id && <TableEmptyRow />}
                 </>
-            ),
-        },
-        {
-            title: 'Дата регистрации',
-            name: 'createdAt',
-            isSort: true,
-            xs: 2,
-            element: (user: IUser) => (
-                <Typography variant="body2" color="grey.600">
-                    {moment(user.createdAt).format('L')}
-                </Typography>
             ),
         },
     ]

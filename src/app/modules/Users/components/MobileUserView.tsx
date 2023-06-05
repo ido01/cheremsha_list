@@ -20,19 +20,23 @@ export const MobileUserView: React.FC<MobileUserViewProps> = ({ user }) => {
 
                     <Box ml={2}>
                         <Typography variant="body2">{`${user.last_name} ${user.name}`}</Typography>
+
+                        <Typography variant="body3" color="grey.800">
+                            <a href={`tel:${user.phone}`}>{user.phone}</a>
+                        </Typography>
                     </Box>
                 </Box>
             </Box>
 
             <Box mt={2} display={'flex'} justifyContent={'space-between'}>
-                <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'}>
+                <Box display={'flex'} justifyContent={'flex-start'} alignItems={'flex-end'}>
                     <Typography mr={1} variant="caption" color="grey.600">
                         Точка
                     </Typography>
 
                     <>
                         {!!user.place_id && (
-                            <Typography variant="body2" color="grey.600">
+                            <Typography variant="body2" color="grey.600" lineHeight="1.4">
                                 {getLocation(user.place_id)}
                             </Typography>
                         )}
@@ -40,13 +44,14 @@ export const MobileUserView: React.FC<MobileUserViewProps> = ({ user }) => {
                         {!user.place_id && <TableEmptyRow />}
                     </>
                 </Box>
-                <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+                <Box display={'flex'} justifyContent={'flex-end'} alignItems={'flex-end'}>
                     <Typography mr={1} variant="caption" color="grey.600">
                         Статус
                     </Typography>
 
                     <Typography
                         variant="body2"
+                        lineHeight="1.4"
                         sx={(theme) => ({
                             color: user.blocked
                                 ? theme.palette.error.main

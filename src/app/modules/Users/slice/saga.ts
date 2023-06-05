@@ -85,10 +85,6 @@ export function* updateUser(action: PayloadAction<IUser>) {
         })
     } catch (error: any) {
         yield put(usersActions.statusError())
-
-        toast.error(error.data.message || error.data.error || 'Что-то пошло не так', {
-            type: 'error',
-        })
     }
 }
 

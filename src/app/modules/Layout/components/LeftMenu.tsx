@@ -32,11 +32,6 @@ export const LeftMenu: React.FC = () => {
 
     const menuItems: TMenuItem[] = [
         {
-            icon: <ContactsIcon />,
-            title: 'Важные контакты',
-            path: '/contacts',
-        },
-        {
             icon: <QuizIcon />,
             title: 'Гайд',
             path: '/faq',
@@ -62,14 +57,19 @@ export const LeftMenu: React.FC = () => {
             path: '/quiz',
         },
         {
+            icon: <CalendarMonthIcon />,
+            title: 'Календарь',
+            path: '/events',
+        },
+        {
             icon: <GroupIcon />,
             title: 'Сотрудники',
             path: '/users',
         },
         {
-            icon: <CalendarMonthIcon />,
-            title: 'Календарь',
-            path: '/events',
+            icon: <ContactsIcon />,
+            title: 'Важные контакты',
+            path: '/contacts',
         },
     ]
 
