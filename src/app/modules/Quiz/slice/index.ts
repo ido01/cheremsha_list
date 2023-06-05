@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { EState, EStatus } from 'types'
+import { EStatus } from 'types'
 import { IDocumentStateRequest } from 'types/IDocumentState'
 import { IQuestionRequest, IQuiz, IQuizItemResponse, IQuizResponse } from 'types/IQuiz'
 import { EQuizState } from 'types/IQuizState'

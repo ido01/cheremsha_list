@@ -19,7 +19,7 @@ import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { ERole, EState } from 'types'
+import { ERole } from 'types'
 import { EQuizState } from 'types/IQuizState'
 import { convertQuizState } from 'utils/convertUtils'
 
