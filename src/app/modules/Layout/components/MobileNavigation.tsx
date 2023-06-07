@@ -1,4 +1,9 @@
-import { CalendarMonth as CalendarMonthIcon, Group as GroupIcon, School as SchoolIcon } from '@mui/icons-material'
+import {
+    CalendarMonth as CalendarMonthIcon,
+    Group as GroupIcon,
+    School as SchoolIcon,
+    SportsEsports as SportsEsportsIcon,
+} from '@mui/icons-material'
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import { selectProfile } from 'app/modules/Profile/slice/selectors'
@@ -33,6 +38,11 @@ export const MobileNavigation: React.FC = () => {
             title: 'Календарь',
             path: '/events',
             id: 2,
+        },
+        {
+            icon: <SportsEsportsIcon />,
+            title: 'Лишний цвет',
+            path: '/game',
         },
         {
             icon: <AvatarImage name={profile.name} image={profile.avatar?.thumb} size={'24px'} />,

@@ -29,12 +29,24 @@ export const UserDataForm: React.FC = () => {
             value: 'seller',
         },
         {
+            label: 'Старший продавец',
+            value: 'topSeller',
+        },
+        {
             label: 'Кальянщик',
             value: 'hookah',
         },
         {
+            label: 'Старший кальянщик',
+            value: 'topHookah',
+        },
+        {
             label: 'Управляющий',
             value: 'manager',
+        },
+        {
+            label: 'Маркетолог',
+            value: 'marketer',
         },
         {
             label: 'Сотрудник офиса',

@@ -1,4 +1,6 @@
 import { DocumentsList } from 'app/modules/Documents/templates/DocumentsList'
+import { GameList } from 'app/modules/Game/templates/GameList'
+import { Game } from 'app/modules/Layout/templates/Game'
 import { Layout } from 'app/modules/Layout/templates/Layout'
 import { Quiz } from 'app/modules/Layout/templates/Quiz'
 import { QuizView } from 'app/modules/Quiz/templates/QuizView'
@@ -11,6 +13,7 @@ import { AuthPages } from './AuthPages'
 import { ContactsPage } from './ContactsPage'
 import { EventsPages } from './EventsPage'
 import { FaqPages } from './FaqPages'
+import { GamePage } from './GamePages'
 import { MainPage } from './MainPage'
 import { MotivationPages } from './MotivationPages'
 import { ProfilePages } from './ProfilePages'
@@ -21,6 +24,14 @@ import { UsersPages } from './UsersPages'
 export const Pages: React.FC = () => (
     <Switch>
         <Route exact path={['/auth', '/auth/*']} component={AuthPages} />
+        <Route exact path={['/game/*']}>
+            <Game>
+                <Switch>
+                    <Route exact path={['/game/*']} component={GamePage} />
+                </Switch>
+            </Game>
+        </Route>
+
         <Route exact path={['/test']}>
             <Quiz>
                 <Switch>
@@ -42,6 +53,7 @@ export const Pages: React.FC = () => (
                     <Route exact path={['/events', '/events/*']} component={EventsPages} />
                     <Route exact path={['/doc']} component={DocumentsList} />
                     <Route exact path={['/peoples']} component={PeoplesList} />
+                    <Route exact path={['/game']} component={GameList} />
 
                     <Route exact path={['/*']} component={MainPage} />
                 </Switch>

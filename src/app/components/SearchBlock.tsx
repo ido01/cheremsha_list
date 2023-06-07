@@ -1,5 +1,5 @@
 import { Search as SearchIcon } from '@mui/icons-material'
-import { Box, TextField, Typography } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import React from 'react'
 
 export const SearchBlock: React.FC = () => (

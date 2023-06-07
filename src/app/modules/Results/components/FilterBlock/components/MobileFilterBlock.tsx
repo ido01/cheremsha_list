@@ -63,20 +63,28 @@ export const MobileFilterBlock: React.FC<MobileFilterBlockProps> = ({ open, onCl
                             >
                                 {[
                                     {
-                                        label: 'Все',
-                                        value: '',
-                                    },
-                                    {
                                         label: 'Продавец',
                                         value: 'seller',
+                                    },
+                                    {
+                                        label: 'Старший продавец',
+                                        value: 'topSeller',
                                     },
                                     {
                                         label: 'Кальянщик',
                                         value: 'hookah',
                                     },
                                     {
+                                        label: 'Старший кальянщик',
+                                        value: 'topHookah',
+                                    },
+                                    {
                                         label: 'Управляющий',
                                         value: 'manager',
+                                    },
+                                    {
+                                        label: 'Маркетолог',
+                                        value: 'marketer',
                                     },
                                     {
                                         label: 'Сотрудник офиса',

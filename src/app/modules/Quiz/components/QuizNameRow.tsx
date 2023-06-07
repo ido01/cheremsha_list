@@ -1,7 +1,6 @@
 import { Assignment as AssignmentIcon, AssignmentTurnedIn as AssignmentTurnedInIcon } from '@mui/icons-material'
 import { Typography } from '@mui/material'
 import React from 'react'
-import { EState } from 'types'
 import { IQuiz } from 'types/IQuiz'
 import { EQuizState } from 'types/IQuizState'
 

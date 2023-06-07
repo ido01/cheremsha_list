@@ -6,7 +6,10 @@ export type EGender = 'female' | 'male'
 
 export type EPosition =
     | 'seller'
+    | 'topSeller'
     | 'hookah'
+    | 'topHookah'
+    | 'marketer'
     | 'manager'
     | 'owner'
     | 'creator'

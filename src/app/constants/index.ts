@@ -18,8 +18,11 @@ export const ROLE_NAME: { [key in ERole]: string } = {
 
 export const POSITION_NAME: { [key in EPosition]: string } = {
     seller: 'Продавец',
+    topSeller: 'Старший продавец',
     hookah: 'Кальянщик',
+    topHookah: 'Старший кальянщик',
     manager: 'Менеджер',
+    marketer: 'Маркетолог',
     owner: 'Управляющий',
     creator: 'Создатель',
     managerControl: 'Менеджер и Управляющий',

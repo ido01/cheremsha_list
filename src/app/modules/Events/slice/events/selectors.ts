@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { EType, RootState } from 'types'
+import { RootState } from 'types'
 
 import { eventsAdapter } from '.'
 
