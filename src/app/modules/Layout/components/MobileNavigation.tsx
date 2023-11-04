@@ -41,7 +41,7 @@ export const MobileNavigation: React.FC = () => {
         },
         {
             icon: <SportsEsportsIcon />,
-            title: 'Лишний цвет',
+            title: 'Игры',
             path: '/game',
             id: 3,
         },

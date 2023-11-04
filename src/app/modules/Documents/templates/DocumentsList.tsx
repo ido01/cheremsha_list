@@ -1,6 +1,7 @@
 import {
     DesignServices as DesignServicesIcon,
     Percent as PercentIcon,
+    Poll as PollIcon,
     Quiz as QuizIcon,
     School as SchoolIcon,
     StackedLineChart as StackedLineChartIcon,
@@ -8,8 +9,11 @@ import {
 import { Box, Typography } from '@mui/material'
 import Table from 'app/components/Table'
 import { TitleBlock } from 'app/components/TitleBlock'
+import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { ERole } from 'types'
 import { TTableRowData } from 'types/ITable'
 
 interface ILink {
@@ -20,6 +24,8 @@ interface ILink {
 
 export const DocumentsList: React.FC = () => {
     const history = useHistory()
+
+    const profileRole = useSelector(selectProfileRole)
 
     const links: ILink[] = [
         {
@@ -48,6 +54,13 @@ export const DocumentsList: React.FC = () => {
             path: '/quiz',
         },
     ]
+    if (profileRole === ERole.ADMIN) {
+        links.push({
+            icon: <PollIcon />,
+            title: 'Опрос',
+            path: '/polls',
+        })
+    }
 
     const tableRows: TTableRowData[] = [
         {
