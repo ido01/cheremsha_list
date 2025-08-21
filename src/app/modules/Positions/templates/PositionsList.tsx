@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ERole, EStatus } from 'types'
 import { IPosition } from 'types/IPosition'
-import { TTableRowData } from 'types/ITable'
+import { TTableRowData } from 'types/ITableDisplay'
 
 import { DeleteModal } from '../components/DeleteModal'
 import { FormModal } from '../components/FormModal'

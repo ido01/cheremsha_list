@@ -1,6 +1,6 @@
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material'
 import { Modal } from 'app/components/Modal'
-import { selectLocations } from 'app/modules/Locations/selectors'
+import { selectLocations } from 'app/modules/Locations/slice/selectors'
 import { selectPositions } from 'app/modules/Positions/slice/selectors'
 import { resultsActions } from 'app/modules/Results/slice'
 import { selectFilter } from 'app/modules/Results/slice/selectors'

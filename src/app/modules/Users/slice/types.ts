@@ -1,6 +1,6 @@
 import { EntityState } from '@reduxjs/toolkit'
 import { EStatus } from 'types'
-import { TTableOrder, TTablePagination } from 'types/ITable'
+import { TTableOrder, TTablePagination } from 'types/ITableDisplay'
 import { IUser } from 'types/IUser'
 
 export type TUserStatus = 'all' | 'new' | 'active' | 'blocked'

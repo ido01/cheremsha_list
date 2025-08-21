@@ -22,7 +22,7 @@ import { EState, EStatus, EType } from 'types'
 import { ICategory } from 'types/ICategory'
 import { IQuiz } from 'types/IQuiz'
 import { EQuizState } from 'types/IQuizState'
-import { TTableOrder, TTableRowData } from 'types/ITable'
+import { TTableOrder, TTableRowData } from 'types/ITableDisplay'
 
 import { categoriesActions } from '../slice'
 

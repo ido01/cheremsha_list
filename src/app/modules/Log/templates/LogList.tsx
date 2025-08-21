@@ -4,7 +4,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { EStatus } from 'types'
 import { ILog } from 'types/ILog'
-import { TTableRowData } from 'types/ITable'
+import { TTableRowData } from 'types/ITableDisplay'
 
 import { selectLog, selectStatus } from '../slice/selectors'
 

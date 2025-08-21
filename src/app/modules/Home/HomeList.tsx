@@ -11,6 +11,7 @@ import { Box, Container, Grid, useMediaQuery, useTheme } from '@mui/material'
 import { ITile, Tile } from 'app/components/Tile'
 import { TitleBlock } from 'app/components/TitleBlock'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
+import { selectSettings } from 'app/modules/Settings/slice/selectors'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -22,6 +23,7 @@ export const HomeList: React.FC = () => {
     const isMobile = useMediaQuery(theme.breakpoints.between('xs', 'md'))
 
     const profileRole = useSelector(selectProfileRole)
+    const settings = useSelector(selectSettings)
 
     const links: ITile[] = [
         // {
@@ -54,12 +56,15 @@ export const HomeList: React.FC = () => {
             title: 'Игры',
             path: '/game',
         },
-        {
+    ]
+    if (settings.project === 'hrzn') {
+        links.push({
             icon: <ListAltIcon fontSize="large" />,
             title: 'Брони',
             path: '/list',
-        },
-    ]
+        })
+    }
+
     if (profileRole === ERole.ADMIN) {
         links.push({
             icon: <PollIcon fontSize="large" />,

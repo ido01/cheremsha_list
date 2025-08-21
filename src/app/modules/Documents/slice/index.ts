@@ -3,7 +3,7 @@ import { EState, EStatus, EType } from 'types'
 import { IDocument, IDocumentsResponse } from 'types/IDocument'
 import { IDocumentStateRequest } from 'types/IDocumentState'
 import { IFile } from 'types/IFile'
-import { TTableOrder } from 'types/ITable'
+import { TTableOrder } from 'types/ITableDisplay'
 
 import { IDocumentsState } from './types'
 

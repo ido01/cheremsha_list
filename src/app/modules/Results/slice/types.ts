@@ -1,7 +1,7 @@
 import { EntityState } from '@reduxjs/toolkit'
 import { EStatus } from 'types'
 import { IQuiz } from 'types/IQuiz'
-import { TTableOrder, TTablePagination } from 'types/ITable'
+import { TTableOrder, TTablePagination } from 'types/ITableDisplay'
 import { IUser } from 'types/IUser'
 
 export interface IResultFilter {

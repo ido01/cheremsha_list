@@ -1,24 +1,17 @@
-export interface ITime {
-    hour: number
-    minute: number
-}
+import { Dayjs } from 'dayjs'
+import { ITime } from 'types/ITable'
 
-export interface ITableTime {
+export interface ITableFree {
     id: string
-    tid: string
-    name: string
-    start: ITime
+    full_name: string
+    places: number
+    disabled: boolean
     end: ITime
 }
 
-export interface ITable {
-    id: string
-    name: string
-    places: number
-    reservations: ITableTime[]
-}
-
-export interface IMinLine {
-    height: string
-    left: string
+export interface IFilter {
+    hour: number
+    minute: number
+    guests: number
+    date: Dayjs
 }

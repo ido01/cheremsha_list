@@ -1,7 +1,7 @@
 import DownloadIcon from '@mui/icons-material/Download'
 import { Box, Button, Grid, Typography } from '@mui/material'
 import { LabelText } from 'app/components/LabelText'
-import { selectLocation } from 'app/modules/Locations/selectors'
+import { selectLocation } from 'app/modules/Locations/slice/selectors'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { convertGenderName } from 'utils/convertUtils'

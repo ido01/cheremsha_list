@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
-
-import { IMinLine } from '../types'
+import { IMinLine } from 'types/ITable'
 
 export const TimesListItem: React.FC<{
     width: number

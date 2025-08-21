@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { EStatus } from 'types'
 import { IResultResponse } from 'types/IResult'
-import { TLimit, TTableOrder } from 'types/ITable'
+import { TLimit, TTableOrder } from 'types/ITableDisplay'
 import { IResultRequest, IUser, IUsersCollectionResponse } from 'types/IUser'
 
 import { IResultFilter, IResultsState } from './types'

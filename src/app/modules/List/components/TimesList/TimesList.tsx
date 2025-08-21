@@ -1,8 +1,8 @@
 import { Box } from '@mui/material'
-import React, { RefObject, useMemo } from 'react'
+import React, { useMemo } from 'react'
+import { IMinLine } from 'types/ITable'
 
-import { IMinLine } from '../types'
-import { TimesListItem } from './TimesListItem'
+import { TimesListItem } from './components/TimesListItem'
 
 export const TimesList: React.FC<{ count: number; width: number; onDoubleClick: () => void }> = ({
     count,

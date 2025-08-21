@@ -8,6 +8,7 @@ import { Quiz } from 'app/modules/Layout/templates/Quiz'
 import { List } from 'app/modules/List/templates/List'
 import { PositionsList } from 'app/modules/Positions/templates/PositionsList'
 import { QuizView } from 'app/modules/Quiz/templates/QuizView'
+import { TablesList } from 'app/modules/Tables/templates/TablesList'
 import { PeoplesList } from 'app/modules/Users/templates/PeoplesList'
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
@@ -30,10 +31,11 @@ import { UsersPages } from './UsersPages'
 export const Pages: React.FC = () => (
     <Switch>
         <Route exact path={['/auth', '/auth/*']} component={AuthPages} />
-        <Route exact path={['/game/*']}>
+        <Route exact path={['/game/*', '/list']}>
             <Game>
                 <Switch>
                     <Route exact path={['/game/*']} component={GamePage} />
+                    <Route exact path={['/list']} component={List} />
                 </Switch>
             </Game>
         </Route>
@@ -52,7 +54,7 @@ export const Pages: React.FC = () => (
                     <Route exact path={['/', '/profile', '/profile/*']} component={ProfilePages} />
                     <Route exact path={['/admin']} component={AdminList} />
                     <Route exact path={['/positions']} component={PositionsList} />
-                    <Route exact path={['/list']} component={List} />
+                    <Route exact path={['/tables']} component={TablesList} />
                     <Route exact path={['/faq', '/faq/*']} component={FaqPages} />
                     <Route exact path={['/tasks', '/tasks/*']} component={TasksPages} />
                     <Route exact path={['/school', '/school/*']} component={SchoolPages} />

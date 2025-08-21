@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material'
 import { ReactComponent as SortSVG } from 'assets/icons/Sort.svg'
 import { ReactComponent as SortDownSVG } from 'assets/icons/SortDown.svg'
 import React from 'react'
-import { TTableOrder } from 'types/ITable'
+import { TTableOrder } from 'types/ITableDisplay'
 
 interface TableHeaderRowProps {
     title: string

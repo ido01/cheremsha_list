@@ -1,7 +1,7 @@
 import { EntityState } from '@reduxjs/toolkit'
 import { EStatus } from 'types'
 import { IQuiz } from 'types/IQuiz'
-import { TTableOrder } from 'types/ITable'
+import { TTableOrder } from 'types/ITableDisplay'
 
 export interface IQuizState extends EntityState<IQuiz> {
     status: EStatus

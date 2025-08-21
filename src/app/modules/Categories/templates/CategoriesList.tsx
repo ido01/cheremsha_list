@@ -21,7 +21,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { EState, EStatus, EType } from 'types'
 import { ICategory } from 'types/ICategory'
 import { IDocument } from 'types/IDocument'
-import { TTableOrder, TTableRowData } from 'types/ITable'
+import { TTableOrder, TTableRowData } from 'types/ITableDisplay'
 
 import { categoriesActions } from '../slice'
 

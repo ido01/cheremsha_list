@@ -16,25 +16,6 @@ export const ROLE_NAME: { [key in ERole]: string } = {
     admin: 'Администратор',
 }
 
-const POSITION_NAME: { [key in string]: string } = {
-    barista: 'Бариста',
-    seller: 'Продавец',
-    topSeller: 'Старший продавец',
-    hookah: 'Кальянщик',
-    topHookah: 'Старший кальянщик',
-    manager: 'Менеджер',
-    marketer: 'Маркетолог',
-    owner: 'Управляющий',
-    creator: 'Создатель',
-    managerControl: 'Менеджер и Управляющий',
-    accountant: 'Бухгалтер',
-    storekeeper: 'Кладовщик',
-    technician: 'Техник',
-    opt: 'Оптовый менеджер',
-    office: 'Сотрудник офиса',
-    sklad: 'Сотрудник склада',
-}
-
 export const DOCUMENT_STATE: { [key in EState]: string } = {
     initial: 'Новый',
     pending: 'В процессе',

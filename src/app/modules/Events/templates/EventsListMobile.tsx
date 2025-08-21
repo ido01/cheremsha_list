@@ -19,7 +19,7 @@ import {
     selectWorkdays,
     selectWorkdaysDay,
 } from 'app/modules/Events/slice/workday/selectors'
-import { selectLocation } from 'app/modules/Locations/selectors'
+import { selectLocation } from 'app/modules/Locations/slice/selectors'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import { MobileUserView } from 'app/modules/Users/components/MobileUserView'
@@ -31,7 +31,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ERole, EStatus } from 'types'
 import { IEvent } from 'types/IEvent'
-import { TTableRowData } from 'types/ITable'
+import { TTableRowData } from 'types/ITableDisplay'
 import { IUser } from 'types/IUser'
 import { getNoun } from 'utils/getNoun'
 

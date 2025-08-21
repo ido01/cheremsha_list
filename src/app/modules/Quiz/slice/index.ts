@@ -3,7 +3,7 @@ import { EStatus } from 'types'
 import { IDocumentStateRequest } from 'types/IDocumentState'
 import { IQuestionRequest, IQuiz, IQuizItemResponse, IQuizResponse } from 'types/IQuiz'
 import { EQuizState } from 'types/IQuizState'
-import { TTableOrder } from 'types/ITable'
+import { TTableOrder } from 'types/ITableDisplay'
 
 import { IQuizState } from './types'
 

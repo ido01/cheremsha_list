@@ -3,6 +3,7 @@ import {
     CalendarMonth as CalendarMonthIcon,
     DesignServices as DesignServicesIcon,
     Group as GroupIcon,
+    ListAlt as ListAltIcon,
     Menu as MenuIcon,
     Percent as PercentIcon,
     Poll as PollIcon,
@@ -13,6 +14,7 @@ import { Box, colors, Container, Divider, IconButton, Paper } from '@mui/materia
 import { Logo } from 'app/components/Logo/Logo'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import { selectProfile, selectProfileRole } from 'app/modules/Profile/slice/selectors'
+import { selectSettings } from 'app/modules/Settings/slice/selectors'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { ERole } from 'types'
@@ -25,6 +27,7 @@ export const LeftMenu: React.FC = () => {
 
     const profile = useSelector(selectProfile)
     const profileRole = useSelector(selectProfileRole)
+    const settings = useSelector(selectSettings)
 
     const menuItems: TMenuItem[] = [
         // {
@@ -62,6 +65,14 @@ export const LeftMenu: React.FC = () => {
             path: '/game',
         },
     ]
+
+    if (settings.project === 'hrzn') {
+        menuItems.push({
+            icon: <ListAltIcon />,
+            title: 'Брони',
+            path: '/list',
+        })
+    }
 
     if (profileRole === ERole.ADMIN) {
         menuItems.push({

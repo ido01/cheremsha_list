@@ -5,7 +5,7 @@ import Table from 'app/components/Table'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import React, { useEffect, useState } from 'react'
 import { IGame, IGamesResponse } from 'types/IGame'
-import { TTableRowData } from 'types/ITable'
+import { TTableRowData } from 'types/ITableDisplay'
 import { request } from 'utils/request'
 
 interface ResultsProps {
@@ -51,7 +51,7 @@ export const Results: React.FC<ResultsProps> = ({ isOpen, handleClose }) => {
                         )}
                         <AvatarImage
                             name={`${item.user?.last_name} ${item.user?.name}`}
-                            image={item.user?.avatar?.thumb}
+                            image={item.user?.image}
                             size={'36px'}
                         />
 

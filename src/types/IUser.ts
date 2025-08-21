@@ -36,6 +36,7 @@ export interface IUser {
     gender: EGender
     name: string
     last_name: string
+    image?: string
     address: string
     position_id: number
     job?: string

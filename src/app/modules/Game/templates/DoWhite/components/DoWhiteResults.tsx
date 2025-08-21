@@ -3,7 +3,7 @@ import Table from 'app/components/Table'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import React, { useEffect, useState } from 'react'
 import { IGame, IGamesResponse } from 'types/IGame'
-import { TTableRowData } from 'types/ITable'
+import { TTableRowData } from 'types/ITableDisplay'
 import { request } from 'utils/request'
 
 export const DoWhiteResults: React.FC = () => {
@@ -44,7 +44,7 @@ export const DoWhiteResults: React.FC = () => {
                         )}
                         <AvatarImage
                             name={`${item.user?.last_name} ${item.user?.name}`}
-                            image={item.user?.avatar?.thumb}
+                            image={item.user?.image}
                             size={'36px'}
                         />
 

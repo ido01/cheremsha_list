@@ -4,8 +4,7 @@ import React, { ReactNode, useEffect, useRef } from 'react'
 export const ScrollBlock: React.FC<{
     scrollLeft: number
     children: ReactNode
-    onScroll: (position: number) => void
-}> = ({ scrollLeft, children, onScroll }) => {
+}> = ({ scrollLeft, children }) => {
     const ref = useRef<HTMLElement>(null)
 
     const halfWidth = window.innerWidth / 2
@@ -19,18 +18,6 @@ export const ScrollBlock: React.FC<{
             })
         }
     }, [scrollLeft])
-
-    const handleScroll = () => {
-        onScroll(ref.current?.scrollLeft || 0)
-    }
-
-    useEffect(() => {
-        if (!ref.current) return
-        ref.current.addEventListener('scroll', handleScroll)
-        return () => {
-            ref?.current?.removeEventListener('scroll', handleScroll)
-        }
-    }, [])
 
     return (
         <Box

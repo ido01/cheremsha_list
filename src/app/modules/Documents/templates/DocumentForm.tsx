@@ -10,7 +10,7 @@ import { Autocomplete, Box, Button, ButtonGroup, Chip, Container, IconButton, Te
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { Modal } from 'app/components/Modal'
 import { ImageUploadForm } from 'app/modules/File/templates/ImageUploadForm'
-import { selectLocations } from 'app/modules/Locations/selectors'
+import { selectLocations } from 'app/modules/Locations/slice/selectors'
 import { tinyUsersActions } from 'app/modules/Users/slice/tiny'
 import { selectStatus, selectUsers } from 'app/modules/Users/slice/tiny/selectors'
 import dayjs, { Dayjs } from 'dayjs'

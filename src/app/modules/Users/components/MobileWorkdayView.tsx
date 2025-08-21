@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import { TableEmptyRow } from 'app/components/Table'
-import { selectLocation } from 'app/modules/Locations/selectors'
+import { selectLocation } from 'app/modules/Locations/slice/selectors'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import dayjs from 'dayjs'
 import React from 'react'

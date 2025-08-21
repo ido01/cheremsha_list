@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { EState, EStatus, EType } from 'types'
 import { ICategoriesResponse, ICategory } from 'types/ICategory'
-import { TTableOrder } from 'types/ITable'
+import { TTableOrder } from 'types/ITableDisplay'
 
 import { ICategoriesState } from './types'
 

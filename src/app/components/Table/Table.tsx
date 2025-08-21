@@ -9,7 +9,7 @@ import {
     useTheme,
 } from '@mui/material'
 import React from 'react'
-import { TLimit, TTableOrder, TTablePagination, TTableRowData } from 'types/ITable'
+import { TLimit, TTableOrder, TTablePagination, TTableRowData } from 'types/ITableDisplay'
 
 import { DragTableItem, TableHeaderRow } from '.'
 

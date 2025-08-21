@@ -31,7 +31,7 @@ export const Modal: React.FC<ModalProps> = ({ children, open, title, handleClose
         >
             <Box
                 sx={{
-                    pt: 3,
+                    pt: isMobile ? 1 : 3,
                     pb: isMobile ? 0 : 3,
                     display: 'flex',
                     flexDirection: 'column',
@@ -47,7 +47,10 @@ export const Modal: React.FC<ModalProps> = ({ children, open, title, handleClose
                             justifyContent: 'space-between',
                         }}
                     >
-                        <Typography sx={{ fontWeight: 500, textTransform: 'uppercase' }} variant="h5">
+                        <Typography
+                            sx={{ fontWeight: 500, textTransform: 'uppercase' }}
+                            variant={isMobile ? 'h6' : 'h5'}
+                        >
                             {title}
                         </Typography>
 
@@ -57,7 +60,7 @@ export const Modal: React.FC<ModalProps> = ({ children, open, title, handleClose
                     </Box>
                 </Container>
 
-                <Divider sx={{ mt: 2.75 }} />
+                <Divider sx={{ mt: isMobile ? 1 : 2.75, mb: 1 }} />
 
                 {children}
             </Box>

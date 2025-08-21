@@ -19,14 +19,15 @@ export const TextAreaEdit: React.FC<TextAreaEditProps> = ({ value, onChange }) =
                 initialValue={value}
                 init={{
                     height: 300,
-                    menubar: false,
+                    menubar: true,
                     plugins: [
                         'advlist autolink lists link image charmap print preview anchor',
                         'searchreplace visualblocks code fullscreen textcolor ',
                         'insertdatetime media table paste code help wordcount',
                         'lists',
                     ],
-                    toolbar: 'numlist bullist | bold italic | alignleft aligncenter alignright alignjustify',
+                    toolbar:
+                        'numlist bullist | bold italic | alignleft aligncenter alignright alignjustify link | link',
                     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
                 }}
                 onEditorChange={handleEditorChange}

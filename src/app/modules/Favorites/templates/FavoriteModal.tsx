@@ -2,7 +2,7 @@ import { StarBorder as StarBorderIcon, StarRate as StarRateIcon } from '@mui/ico
 import { Box, Container, Grid, IconButton, Modal as ModalComponent, Typography } from '@mui/material'
 import { LabelText } from 'app/components/LabelText'
 import { Modal } from 'app/components/Modal'
-import { selectLocation } from 'app/modules/Locations/selectors'
+import { selectLocation } from 'app/modules/Locations/slice/selectors'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import { usersActions } from 'app/modules/Users/slice'

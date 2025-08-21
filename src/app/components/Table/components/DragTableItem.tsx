@@ -1,7 +1,7 @@
 import { Box, Grid, IconButton, useMediaQuery, useTheme } from '@mui/material'
 import { ReactComponent as DndSVG } from 'assets/icons/DND.svg'
 import React from 'react'
-import { TTableRowData } from 'types/ITable'
+import { TTableRowData } from 'types/ITableDisplay'
 
 import { TableRow } from './TableRow'
 

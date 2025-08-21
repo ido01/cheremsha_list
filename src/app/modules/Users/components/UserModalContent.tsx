@@ -17,7 +17,7 @@ import {
     useTheme,
 } from '@mui/material'
 import { LabelText } from 'app/components/LabelText'
-import { selectLocation } from 'app/modules/Locations/selectors'
+import { selectLocation } from 'app/modules/Locations/slice/selectors'
 import dayjs from 'dayjs'
 import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'

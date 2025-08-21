@@ -1,7 +1,7 @@
 import { EntityState } from '@reduxjs/toolkit'
 import { EStatus } from 'types'
 import { IDocument } from 'types/IDocument'
-import { TTableOrder } from 'types/ITable'
+import { TTableOrder } from 'types/ITableDisplay'
 
 export interface IDocumentsState extends EntityState<IDocument> {
     status: EStatus

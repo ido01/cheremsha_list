@@ -1,5 +1,5 @@
 import { Autocomplete, Box, Stack, TextField } from '@mui/material'
-import { selectLocations } from 'app/modules/Locations/selectors'
+import { selectLocations } from 'app/modules/Locations/slice/selectors'
 import { selectUsers } from 'app/modules/Users/slice/tiny/selectors'
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'

@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import React from 'react'
-
-import { ITable } from '../types'
+import { ITable } from 'types/ITable'
 
 export const TableListItem: React.FC<{ table: ITable; height: number }> = ({ table, height }) => {
     return (

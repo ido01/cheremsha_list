@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
 import { call, put, select, takeLeading } from 'redux-saga/effects'
-import { TTableOrder, TTablePagination } from 'types/ITable'
+import { TTableOrder, TTablePagination } from 'types/ITableDisplay'
 import { IUser, IUserItemResponse, IUsersCollectionResponse } from 'types/IUser'
 import { request } from 'utils/request'
 

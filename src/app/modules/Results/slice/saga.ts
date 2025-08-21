@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { call, put, select, takeLeading } from 'redux-saga/effects'
 import { IResultResponse } from 'types/IResult'
-import { TTableOrder, TTablePagination } from 'types/ITable'
+import { TTableOrder, TTablePagination } from 'types/ITableDisplay'
 import { IResultRequest, IUsersCollectionResponse } from 'types/IUser'
 import { request } from 'utils/request'
 
