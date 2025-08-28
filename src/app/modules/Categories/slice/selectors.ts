@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { EType, RootState } from 'types'
+import { RootState } from 'types'
 
 import { categoriesAdapter } from '.'
 
@@ -17,15 +17,14 @@ export const selectmoveCategoryId = createSelector([selectDomain], (state) => st
 
 export const selectCategories = createSelector(
     [selectDomain],
-    (state) => (id: string, path: EType) =>
-        selectAll(state).filter((category) => category.parentId === id && category.path === path)
+    (state) => (id: string) => selectAll(state).filter((category) => category.parentId === id)
 )
 
 export const selectSearchCategories = createSelector(
     [selectDomain],
-    (state) => (search: string, path: EType) =>
+    (state) => (search: string, id: string) =>
         selectAll(state)
-            .filter((category) => category.path === path)
+            .filter((category) => category.parentId === id)
             .filter((category) => {
                 const words = search.toLowerCase().split(' ')
 

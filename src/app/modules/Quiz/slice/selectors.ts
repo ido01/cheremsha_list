@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { EType, RootState } from 'types'
+import { RootState } from 'types'
 
 import { quizAdapter } from '.'
 
@@ -28,9 +28,9 @@ export const selectQuiz = createSelector(
 
 export const selectSearchQuiz = createSelector(
     [selectDomain],
-    (state) => (search: string, path: EType) =>
+    (state) => (search: string, id: string) =>
         selectAll(state)
-            .filter((document) => document.path === path)
+            .filter((document) => document.parentId === id)
             .filter((document) => {
                 const words = search.toLowerCase().split(' ')
 

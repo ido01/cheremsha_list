@@ -1,7 +1,5 @@
 export type { RootState } from './RootState'
 
-export type EType = 'faq' | 'school' | 'quiz' | 'motivation' | 'actions' | 'task'
-
 export type EGender = 'female' | 'male'
 
 export enum EState {

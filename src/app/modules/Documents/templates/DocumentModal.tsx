@@ -172,12 +172,12 @@ export const DocumentModal: React.FC = () => {
                     })}
                 >
                     <Container>
-                        {document?.end_date && (document.path === 'actions' || document.path === 'motivation') && (
+                        {document?.end_date && (
                             <Box mb={4}>
                                 <LabelText label="Дата окончания акции" text={document.end_date} variant="body2" />
                             </Box>
                         )}
-                        {document?.path === 'task' && (
+                        {/* {document?.path === 'task' && (
                             <Box mb={4} sx={{ display: 'flex', gap: 4 }}>
                                 {document?.author && (
                                     <Box>
@@ -207,7 +207,7 @@ export const DocumentModal: React.FC = () => {
                                     </Box>
                                 )}
                             </Box>
-                        )}
+                        )} */}
                         {document?.info.map((info, index) => (
                             <Box key={index}>
                                 {info.type === 'title' && (
@@ -455,7 +455,7 @@ export const DocumentModal: React.FC = () => {
                             )}
                         </Box>
 
-                        {document?.state.state !== EState.COMPLETED && document?.path !== 'task' && (
+                        {document?.state.state !== EState.COMPLETED && (
                             <LoadingButton color="success" variant="contained" onClick={handleSetComplete}>
                                 Прочитал
                             </LoadingButton>

@@ -1,11 +1,10 @@
 import {
     AssistWalker as AssistWalkerIcon,
     CalendarMonth as CalendarMonthIcon,
-    DesignServices as DesignServicesIcon,
+    Contacts as ContactsIcon,
     Group as GroupIcon,
     ListAlt as ListAltIcon,
     Menu as MenuIcon,
-    Percent as PercentIcon,
     Poll as PollIcon,
     School as SchoolIcon,
     SportsEsports as SportsEsportsIcon,
@@ -45,19 +44,14 @@ export const LeftMenu: React.FC = () => {
             path: '/doc',
         },
         {
-            icon: <PercentIcon />,
-            title: 'Акции',
-            path: '/actions',
+            icon: <ContactsIcon />,
+            title: 'Важные контакты',
+            path: '/contacts',
         },
         {
             icon: <GroupIcon />,
-            title: 'Контакты',
-            path: '/peoples',
-        },
-        {
-            icon: <DesignServicesIcon />,
-            title: 'Тестирование',
-            path: '/quiz',
+            title: 'Все сотрудники',
+            path: '/users',
         },
         {
             icon: <SportsEsportsIcon />,

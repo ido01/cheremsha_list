@@ -1,7 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { categoriesActions } from 'app/modules/Categories/slice'
 import { call, put, takeLeading } from 'redux-saga/effects'
-import { EType } from 'types'
 import { IDocument, IDocumentResponse, IDocumentsResponse } from 'types/IDocument'
 import { IDocumentStateRequest } from 'types/IDocumentState'
 import { request } from 'utils/request'
@@ -9,11 +8,11 @@ import { request } from 'utils/request'
 import { documentsActions } from '.'
 import { IPasteDocument } from './types'
 
-export function* loadDocuments(action: PayloadAction<EType>) {
+export function* loadDocuments(action: PayloadAction<string>) {
     try {
         const response: IDocumentsResponse = yield call(request, `documents/${action.payload}`)
 
-        yield put(documentsActions.documentsLoaded(response))
+        yield put(documentsActions.documentsLoaded(response.data))
     } catch (error: any) {
         yield put(documentsActions.statusError())
     }

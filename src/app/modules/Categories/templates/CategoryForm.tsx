@@ -1,3 +1,4 @@
+import * as Icons from '@mui/icons-material'
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import { ModalForm } from 'app/components/ModalForm'
 import { useFormik } from 'formik'
@@ -16,7 +17,15 @@ export const CategoryForm: React.FC = () => {
     const getCategories = useSelector(selectCategories)
     const getCategory = useSelector(selectCategoryById)
     const parentCategory = getCategory(data.parentId)
-    const categories = getCategories(parentCategory?.parentId || '0', data.path)
+    const categories = getCategories(parentCategory?.parentId || '0')
+
+    const iconsFiltered = Object.keys(Icons).filter(
+        (icon) =>
+            !icon.includes('Outlined') &&
+            !icon.includes('Rounded') &&
+            !icon.includes('Sharp') &&
+            !icon.includes('TwoTone')
+    )
 
     const validationSchema = yup.object({
         name: yup.string().required(),
@@ -60,6 +69,35 @@ export const CategoryForm: React.FC = () => {
                 }}
             >
                 <Grid container spacing={3}>
+                    {formik.values.parentId === '0' && (
+                        <Grid item xs={12} md={6}>
+                            <FormControl fullWidth variant="outlined" error={!!formik.errors?.parentId}>
+                                <InputLabel>Иконка</InputLabel>
+
+                                <Select
+                                    value={formik.values.icon || ''}
+                                    label="Иконка"
+                                    onChange={(e) => {
+                                        const { value } = e.target
+
+                                        formik.setFieldValue('icon', value)
+                                    }}
+                                >
+                                    {iconsFiltered.map((icon, index) => {
+                                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                        // @ts-ignore
+                                        const Icon = Icons[icon]
+                                        return (
+                                            <MenuItem key={index} value={icon}>
+                                                <Icon />
+                                                {icon}
+                                            </MenuItem>
+                                        )
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    )}
                     <Grid item xs={12} md={6}>
                         <TextField
                             fullWidth
@@ -73,27 +111,29 @@ export const CategoryForm: React.FC = () => {
                         />
                     </Grid>
 
-                    <Grid item xs={12} md={6}>
-                        <FormControl fullWidth variant="outlined" error={!!formik.errors?.parentId}>
-                            <InputLabel>Родительская категория</InputLabel>
+                    {formik.values.parentId !== '0' && (
+                        <Grid item xs={12} md={6}>
+                            <FormControl fullWidth variant="outlined" error={!!formik.errors?.parentId}>
+                                <InputLabel>Родительская категория</InputLabel>
 
-                            <Select
-                                value={formik.values.parentId || ''}
-                                label="Родительская категория"
-                                onChange={(e) => {
-                                    const { value } = e.target
+                                <Select
+                                    value={formik.values.parentId || ''}
+                                    label="Родительская категория"
+                                    onChange={(e) => {
+                                        const { value } = e.target
 
-                                    formik.setFieldValue('parentId', value)
-                                }}
-                            >
-                                {categories.map((category, index) => (
-                                    <MenuItem key={index} value={category.id}>
-                                        {category.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
+                                        formik.setFieldValue('parentId', value)
+                                    }}
+                                >
+                                    {categories.map((category, index) => (
+                                        <MenuItem key={index} value={category.id}>
+                                            {category.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    )}
                 </Grid>
             </Box>
         </ModalForm>

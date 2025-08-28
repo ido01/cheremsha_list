@@ -13,7 +13,7 @@ export function* loadQuiz() {
     try {
         const response: IQuizResponse = yield call(request, 'quiz')
 
-        yield put(quizActions.quizLoaded(response))
+        yield put(quizActions.quizLoaded(response.data))
     } catch (error: any) {
         yield put(quizActions.statusError())
     }

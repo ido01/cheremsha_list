@@ -1,17 +1,20 @@
 import { PayloadAction } from '@reduxjs/toolkit'
+import { documentsActions } from 'app/modules/Documents/slice'
 import { IPasteDocument } from 'app/modules/Documents/slice/types'
+import { quizActions } from 'app/modules/Quiz/slice'
 import { call, put, takeLatest, takeLeading } from 'redux-saga/effects'
-import { EType } from 'types'
 import { ICategoriesResponse, ICategory, ICategoryResponse } from 'types/ICategory'
 import { request } from 'utils/request'
 
 import { categoriesActions } from '.'
 
-export function* loadCategories(action: PayloadAction<EType>) {
+export function* loadCategories(action: PayloadAction<string>) {
     try {
         const response: ICategoriesResponse = yield call(request, `categories/${action.payload}`)
 
         yield put(categoriesActions.categoriesLoaded(response))
+        yield put(documentsActions.documentsLoaded(response.documents))
+        yield put(quizActions.quizLoaded(response.quiz))
     } catch (error: any) {
         yield put(categoriesActions.statusError())
     }

@@ -33,27 +33,20 @@ import { QuizForm } from 'app/modules/Quiz/templates/QuizForm'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { EState, EStatus, EType } from 'types'
+import { EState, EStatus } from 'types'
 import { ICategory } from 'types/ICategory'
 import { EQuizState } from 'types/IQuizState'
 
 import { selectmoveCategoryId } from '../slice/selectors'
 
 interface CategoryAdminSettingsProps {
-    type: EType
     open: boolean
     id?: string
     category?: ICategory
     handleClose: () => void
 }
 
-export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
-    id,
-    category,
-    open,
-    type,
-    handleClose,
-}) => {
+export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({ id, category, open, handleClose }) => {
     const dispatch = useDispatch()
     const history = useHistory()
 
@@ -68,7 +61,6 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
             categoriesActions.moveCategory({
                 id: moveCategoryId,
                 parentId: id || '0',
-                path: type,
             })
         )
     }
@@ -78,7 +70,6 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
             documentsActions.moveDocument({
                 id: moveId,
                 parentId: id || '0',
-                path: type,
             })
         )
     }
@@ -88,7 +79,6 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
             quizActions.moveQuiz({
                 id: quizMoveId,
                 parentId: id || '0',
-                path: type,
             })
         )
     }
@@ -98,27 +88,12 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
             categoriesActions.openModal({
                 id: '',
                 type: 'category',
-                path: type,
                 name: '',
                 parentId: id || '0',
-                // state: {
-                //     id: '',
-                //     state: EState.INITIAL,
-                //     uid: '',
-                //     createdAt: '',
-                //     updatedAt: '',
-                // },
                 createdAt: '',
+                icon: '',
             })
         )
-    }
-
-    const handleAddEvent = () => {
-        if (type === 'quiz') {
-            addQuiz()
-        } else {
-            addDocument()
-        }
     }
 
     const addQuiz = () => {
@@ -127,7 +102,6 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
                 id: '',
                 draft: true,
                 type: 'quiz',
-                path: type,
                 name: '',
                 description: '',
                 incorrect_count: 0,
@@ -160,7 +134,6 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
                 id: '',
                 task_status: EStatus.INITIAL,
                 type: 'document',
-                path: type,
                 uid: '',
                 name: '',
                 end_date: '',
@@ -205,7 +178,7 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
     const handleDeleteCategory = () => {
         if (id) {
             dispatch(categoriesActions.deleteCategory(id))
-            history.push(`/${type}/${category?.parentId}`)
+            history.push(`/doc/${category?.parentId}`)
         }
         setOpenDelete(false)
     }
@@ -214,110 +187,102 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
         <>
             <SettingsModal open={open} handleClose={handleClose}>
                 <List>
-                    {type !== 'task' && (
-                        <ListItem disablePadding onClick={handleAddCategory}>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <AddBoxIcon />
-                                </ListItemIcon>
+                    <ListItem disablePadding onClick={handleAddCategory}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <AddBoxIcon />
+                            </ListItemIcon>
 
-                                <ListItemText primary={'Добавить подкатегорию'} />
-                            </ListItemButton>
-                        </ListItem>
-                    )}
+                            <ListItemText primary={'Добавить подкатегорию'} />
+                        </ListItemButton>
+                    </ListItem>
 
-                    <ListItem disablePadding onClick={handleAddEvent}>
+                    <ListItem disablePadding onClick={addDocument}>
                         <ListItemButton>
                             <ListItemIcon>
                                 <AddCircleIcon />
                             </ListItemIcon>
 
-                            <ListItemText
-                                primary={
-                                    type === 'faq'
-                                        ? 'Добавить гайд'
-                                        : type === 'school'
-                                        ? 'Добавить обучение'
-                                        : type === 'actions'
-                                        ? 'Добавить акцию'
-                                        : type === 'motivation'
-                                        ? 'Добавить мотивацию'
-                                        : type === 'task'
-                                        ? 'Добавить задачу'
-                                        : 'Добавить тестирование'
-                                }
-                            />
+                            <ListItemText primary={'Добавить документ'} />
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem disablePadding onClick={addQuiz}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <AddCircleIcon />
+                            </ListItemIcon>
+
+                            <ListItemText primary={'Добавить тестирование'} />
                         </ListItemButton>
                     </ListItem>
                 </List>
 
                 <Divider />
 
-                {type !== 'task' && (
-                    <List>
-                        {id && id !== '0' && id !== moveCategoryId && (
-                            <ListItem
-                                // disabled={!id || id === '0'}
-                                disablePadding
-                                onClick={handleCutCategory}
-                            >
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <ContentCutIcon />
-                                    </ListItemIcon>
-
-                                    <ListItemText primary={'Перенести категорию'} />
-                                </ListItemButton>
-                            </ListItem>
-                        )}
-
-                        {moveCategoryId && id !== moveCategoryId && (
-                            <ListItem
-                                // disabled={!id || id === '0'}
-                                disablePadding
-                                onClick={handlePasteCategory}
-                            >
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <ContentPasteGoIcon />
-                                    </ListItemIcon>
-
-                                    <ListItemText primary={'Вставить категорию'} />
-                                </ListItemButton>
-                            </ListItem>
-                        )}
-
+                <List>
+                    {id && id !== '0' && id !== moveCategoryId && (
                         <ListItem
                             // disabled={!id || id === '0'}
                             disablePadding
-                            onClick={handleUpdateCategory}
+                            onClick={handleCutCategory}
                         >
                             <ListItemButton>
                                 <ListItemIcon>
-                                    <EditIcon />
+                                    <ContentCutIcon />
                                 </ListItemIcon>
 
-                                <ListItemText primary={'Редактировать категорию'} />
+                                <ListItemText primary={'Перенести категорию'} />
                             </ListItemButton>
                         </ListItem>
+                    )}
 
+                    {moveCategoryId && id !== moveCategoryId && (
                         <ListItem
                             // disabled={!id || id === '0'}
                             disablePadding
-                            onClick={handleShowDeleteCategory}
+                            onClick={handlePasteCategory}
                         >
                             <ListItemButton>
                                 <ListItemIcon>
-                                    <DeleteForeverIcon />
+                                    <ContentPasteGoIcon />
                                 </ListItemIcon>
 
-                                <ListItemText primary={'Удалить категорию'} />
+                                <ListItemText primary={'Вставить категорию'} />
                             </ListItemButton>
                         </ListItem>
-                    </List>
-                )}
+                    )}
 
-                {!!moveId && type !== 'quiz' && (
+                    <ListItem
+                        // disabled={!id || id === '0'}
+                        disablePadding
+                        onClick={handleUpdateCategory}
+                    >
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <EditIcon />
+                            </ListItemIcon>
+
+                            <ListItemText primary={'Редактировать категорию'} />
+                        </ListItemButton>
+                    </ListItem>
+
+                    <ListItem
+                        // disabled={!id || id === '0'}
+                        disablePadding
+                        onClick={handleShowDeleteCategory}
+                    >
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <DeleteForeverIcon />
+                            </ListItemIcon>
+
+                            <ListItemText primary={'Удалить категорию'} />
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+
+                {!!moveId && (
                     <>
                         <Divider />
                         <List>
@@ -338,7 +303,7 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({
                     </>
                 )}
 
-                {!!quizMoveId && type === 'quiz' && (
+                {!!quizMoveId && (
                     <>
                         <Divider />
                         <List>

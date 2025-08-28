@@ -1,13 +1,14 @@
-import { EType } from '.'
-import { IState } from './IState'
+import { IDocument } from './IDocument'
+import { IQuiz } from './IQuiz'
 
 export interface ICategoriesRequest {
     id?: string
-    path: EType
 }
 
 export interface ICategoriesResponse {
     data: ICategory[]
+    documents: IDocument[]
+    quiz: IQuiz[]
 }
 
 export interface ICategoryResponse {
@@ -17,9 +18,8 @@ export interface ICategoryResponse {
 export interface ICategory {
     id: string
     type: 'category'
-    path: EType
     parentId: string
     name: string
-    // state: IState
     createdAt: string
+    icon: string
 }

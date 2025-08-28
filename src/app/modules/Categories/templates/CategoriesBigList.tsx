@@ -14,7 +14,7 @@ import moment from 'moment'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { EState, EStatus, EType } from 'types'
+import { EState, EStatus } from 'types'
 import { ICategory } from 'types/ICategory'
 import { IDocument } from 'types/IDocument'
 import { TTableOrder, TTableRowData } from 'types/ITableDisplay'
@@ -22,11 +22,10 @@ import { TTableOrder, TTableRowData } from 'types/ITableDisplay'
 import { categoriesActions } from '../slice'
 
 interface CategoriesListProps {
-    type: EType
     search?: string
 }
 
-export const CategoriesBigList: React.FC<CategoriesListProps> = ({ type, search }) => {
+export const CategoriesBigList: React.FC<CategoriesListProps> = ({ search }) => {
     const dispatch = useDispatch()
     const history = useHistory()
 
@@ -38,7 +37,7 @@ export const CategoriesBigList: React.FC<CategoriesListProps> = ({ type, search 
     const searchDocuments = useSelector(selectSearchDocuments)
     const order = useSelector(selectOrder)
 
-    const documents = !search ? getDocuments(id || '0', type) : searchDocuments(search, type)
+    const documents = !search ? getDocuments(id || '0') : searchDocuments(search, id || '0')
 
     const stateSort: EState[] = [EState.REJECTED, EState.PENDING, EState.INITIAL, EState.COMPLETED]
     const items = [...documents].sort((a, b) => {
@@ -118,7 +117,7 @@ export const CategoriesBigList: React.FC<CategoriesListProps> = ({ type, search 
     // }
 
     const handleClickRow = (item: ICategory | IDocument) => {
-        item.type === 'category' && history.push(`/${type}/${item.id}`)
+        item.type === 'category' && history.push(`/doc/${item.id}`)
 
         if (item.type === 'document') {
             dispatch(documentsActions.setActiveId(item.id))

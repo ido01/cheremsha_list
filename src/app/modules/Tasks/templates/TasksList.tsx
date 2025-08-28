@@ -76,14 +76,12 @@ export const TasksList: React.FC = () => {
                 }}
             >
                 <FilterBlock />
-                <CategoriesBigList type={'task'} />
+                <CategoriesBigList />
             </Box>
 
             <DocumentModal />
 
-            {profileRole === ERole.ADMIN && (
-                <CategoryAdminSettings type={'task'} open={open} id={id} handleClose={handleClose} />
-            )}
+            {profileRole === ERole.ADMIN && <CategoryAdminSettings open={open} id={id} handleClose={handleClose} />}
         </>
     )
 }

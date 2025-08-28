@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { EState, EStatus, EType } from 'types'
-import { IDocument, IDocumentsResponse } from 'types/IDocument'
+import { EState, EStatus } from 'types'
+import { IDocument } from 'types/IDocument'
 import { IDocumentStateRequest } from 'types/IDocumentState'
 import { IFile } from 'types/IFile'
 import { TTableOrder } from 'types/ITableDisplay'
@@ -36,7 +36,6 @@ const slice = createSlice({
                 id: '',
                 type: 'document',
                 task_status: EStatus.INITIAL,
-                path: 'faq',
                 uid: '',
                 parentId: '',
                 name: '',
@@ -58,12 +57,12 @@ const slice = createSlice({
         },
     }),
     reducers: {
-        loadDocuments(state, action: PayloadAction<EType>) {
+        loadDocuments(state, action: PayloadAction<string>) {
             state.status = EStatus.PENDING
             action.payload
         },
-        documentsLoaded(state, action: PayloadAction<IDocumentsResponse>) {
-            documentsAdapter.setAll(state, action.payload.data)
+        documentsLoaded(state, action: PayloadAction<IDocument[]>) {
+            documentsAdapter.setMany(state, action.payload)
             state.status = EStatus.FINISHED
         },
         openEditModal(state, action: PayloadAction<IDocument>) {

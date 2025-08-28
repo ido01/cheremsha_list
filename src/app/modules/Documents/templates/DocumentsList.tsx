@@ -1,84 +1,41 @@
-import {
-    DesignServices as DesignServicesIcon,
-    Percent as PercentIcon,
-    Poll as PollIcon,
-    Quiz as QuizIcon,
-    School as SchoolIcon,
-    StackedLineChart as StackedLineChartIcon,
-} from '@mui/icons-material'
-import { Box, Container, Grid, useMediaQuery, useTheme } from '@mui/material'
+import { MoreVert as MoreVertIcon } from '@mui/icons-material'
+import * as Icons from '@mui/icons-material'
+import { Box, Container, Grid, IconButton, useMediaQuery, useTheme } from '@mui/material'
 import { ITile, Tile } from 'app/components/Tile'
 import { TitleBlock } from 'app/components/TitleBlock'
+import { CategoryMainAdminSettings } from 'app/modules/Categories/components/CategoryMainAdminSettings'
+import { categoriesActions } from 'app/modules/Categories/slice'
+import { selectCategories } from 'app/modules/Categories/slice/selectors'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { ERole } from 'types'
 
 export const DocumentsList: React.FC = () => {
+    const dispatch = useDispatch()
+
     const history = useHistory()
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.between('xs', 'md'))
 
+    const [open, setOpen] = useState<boolean>(false)
     const profileRole = useSelector(selectProfileRole)
+    const getCategories = useSelector(selectCategories)
 
-    const links: ITile[] = isMobile
-        ? [
-              {
-                  icon: <QuizIcon fontSize="large" />,
-                  title: 'Гайд',
-                  path: '/faq',
-              },
-              {
-                  icon: <SchoolIcon fontSize="large" />,
-                  title: 'Обучение',
-                  path: '/school',
-              },
-              {
-                  icon: <StackedLineChartIcon fontSize="large" />,
-                  title: 'Мотивация',
-                  path: '/motivation',
-              },
-              {
-                  icon: <PercentIcon fontSize="large" />,
-                  title: 'Акции',
-                  path: '/actions',
-              },
-              {
-                  icon: <DesignServicesIcon fontSize="large" />,
-                  title: 'Тестирование',
-                  path: '/quiz',
-              },
-          ]
-        : [
-              {
-                  icon: <QuizIcon fontSize="large" />,
-                  title: 'Гайд',
-                  path: '/faq',
-              },
-              {
-                  icon: <SchoolIcon fontSize="large" />,
-                  title: 'Обучение',
-                  path: '/school',
-              },
-              {
-                  icon: <StackedLineChartIcon fontSize="large" />,
-                  title: 'Мотивация',
-                  path: '/motivation',
-              },
-              {
-                  icon: <PercentIcon fontSize="large" />,
-                  title: 'Акции',
-                  path: '/actions',
-              },
-          ]
-    if (profileRole === ERole.ADMIN && isMobile) {
-        links.push({
-            icon: <PollIcon fontSize="large" />,
-            title: 'Опрос',
-            path: '/polls',
-        })
+    const categories = getCategories('0')
+
+    const handleSettingOpen = () => {
+        setOpen(true)
     }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    useEffect(() => {
+        dispatch(categoriesActions.loadCategories('0'))
+    }, [])
 
     const handleClickRow = (item: ITile) => {
         history.push(item.path)
@@ -86,7 +43,23 @@ export const DocumentsList: React.FC = () => {
 
     return (
         <>
-            <TitleBlock title={'Документы'} searchDisabled />
+            <TitleBlock
+                title={'Документы'}
+                searchDisabled
+                endNode={
+                    profileRole === ERole.ADMIN ? (
+                        <IconButton
+                            sx={{ ml: 2 }}
+                            aria-label="more"
+                            id="long-button"
+                            aria-haspopup="true"
+                            onClick={handleSettingOpen}
+                        >
+                            <MoreVertIcon />
+                        </IconButton>
+                    ) : undefined
+                }
+            />
 
             <Box
                 flex="1 0 100%"
@@ -100,14 +73,28 @@ export const DocumentsList: React.FC = () => {
             >
                 <Container>
                     <Grid container spacing={2}>
-                        {links.map((link, index) => (
-                            <Grid item key={index} xs={isMobile ? 6 : 3}>
-                                <Tile data={link} onClick={handleClickRow} />
-                            </Grid>
-                        ))}
+                        {categories.map((category, index) => {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            const Icon = Icons[category.icon]
+                            return (
+                                <Grid item key={index} xs={isMobile ? 6 : 3}>
+                                    <Tile
+                                        data={{
+                                            title: category.name,
+                                            icon: Icon ? <Icon fontSize="large" /> : <></>,
+                                            path: `/doc/${category.id}`,
+                                        }}
+                                        onClick={handleClickRow}
+                                    />
+                                </Grid>
+                            )
+                        })}
                     </Grid>
                 </Container>
             </Box>
+
+            {profileRole === ERole.ADMIN && <CategoryMainAdminSettings open={open} handleClose={handleClose} />}
         </>
     )
 }

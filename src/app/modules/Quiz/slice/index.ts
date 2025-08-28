@@ -2,7 +2,7 @@ import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolki
 import { IPasteDocument } from 'app/modules/Documents/slice/types'
 import { EStatus } from 'types'
 import { IDocumentStateRequest } from 'types/IDocumentState'
-import { IQuestionRequest, IQuiz, IQuizItemResponse, IQuizResponse } from 'types/IQuiz'
+import { IQuestionRequest, IQuiz, IQuizItemResponse } from 'types/IQuiz'
 import { EQuizState } from 'types/IQuizState'
 import { TTableOrder } from 'types/ITableDisplay'
 
@@ -34,7 +34,6 @@ const slice = createSlice({
                 id: '',
                 draft: false,
                 type: 'quiz',
-                path: 'faq',
                 parentId: '',
                 name: '',
                 description: '',
@@ -64,8 +63,8 @@ const slice = createSlice({
         loadQuiz(state) {
             state.status = EStatus.PENDING
         },
-        quizLoaded(state, action: PayloadAction<IQuizResponse>) {
-            quizAdapter.setAll(state, action.payload.data)
+        quizLoaded(state, action: PayloadAction<IQuiz[]>) {
+            quizAdapter.setAll(state, action.payload)
             state.status = EStatus.FINISHED
         },
         question(state, action: PayloadAction<IQuestionRequest>) {

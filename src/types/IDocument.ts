@@ -1,4 +1,4 @@
-import { EStatus, EType } from '.'
+import { EStatus } from '.'
 import { IDocumentInfo } from './IDocumentInfo'
 import { IDocumentPoint } from './IDocumentPoint'
 import { IDocumentTaskUser } from './IDocumentTaskUser'
@@ -17,7 +17,6 @@ export interface IDocument {
     id: string
     type: 'document'
     status?: EStatus
-    path: EType
     uid: string
     parentId: string
     name: string

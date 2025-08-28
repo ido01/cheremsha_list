@@ -1,4 +1,5 @@
 import { AdminList } from 'app/modules/Admin/templates/AdminList'
+import { DocumentsCategoriesList } from 'app/modules/Documents/templates/DocumentsCategoriesList'
 import { DocumentsList } from 'app/modules/Documents/templates/DocumentsList'
 import { GameList } from 'app/modules/Game/templates/GameList'
 import { HomeList } from 'app/modules/Home/HomeList'
@@ -14,18 +15,14 @@ import { PeoplesList } from 'app/modules/Users/templates/PeoplesList'
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-import { ActionsPages } from './ActionsPages'
 import { AuthPages } from './AuthPages'
 import { ContactsPage } from './ContactsPage'
 import { EventsPages } from './EventsPage'
-import { FaqPages } from './FaqPages'
 import { GamePage } from './GamePages'
 import { MainPage } from './MainPage'
-import { MotivationPages } from './MotivationPages'
 import { PollsPages } from './PollsPages'
 import { ProfilePages } from './ProfilePages'
 import { QuizPages } from './QuizPages'
-import { SchoolPages } from './SchoolPages'
 import { TasksPages } from './TasksPages'
 import { UsersPages } from './UsersPages'
 
@@ -57,17 +54,14 @@ export const Pages: React.FC = () => (
                     <Route exact path={['/positions']} component={PositionsList} />
                     <Route exact path={['/locations']} component={LocationsList} />
                     <Route exact path={['/tables']} component={TablesList} />
-                    <Route exact path={['/faq', '/faq/*']} component={FaqPages} />
                     <Route exact path={['/tasks', '/tasks/*']} component={TasksPages} />
-                    <Route exact path={['/school', '/school/*']} component={SchoolPages} />
-                    <Route exact path={['/motivation', '/motivation/*']} component={MotivationPages} />
                     <Route exact path={['/quiz', '/quiz/*']} component={QuizPages} />
-                    <Route exact path={['/actions', '/actions/*']} component={ActionsPages} />
                     <Route exact path={['/contacts']} component={ContactsPage} />
                     <Route exact path={['/users', '/users/*']} component={UsersPages} />
                     <Route exact path={['/events', '/events/*']} component={EventsPages} />
                     <Route exact path={['/polls', '/polls/*']} component={PollsPages} />
                     <Route exact path={['/doc']} component={DocumentsList} />
+                    <Route exact path={['/doc/:id']} component={DocumentsCategoriesList} />
                     <Route exact path={['/peoples']} component={PeoplesList} />
                     <Route exact path={['/game']} component={GameList} />
 

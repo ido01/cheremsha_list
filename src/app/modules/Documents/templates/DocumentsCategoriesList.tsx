@@ -6,15 +6,15 @@ import { CategoryAdminSettings } from 'app/modules/Categories/components/Categor
 import { categoriesActions } from 'app/modules/Categories/slice'
 import { selectCategoryById } from 'app/modules/Categories/slice/selectors'
 import { CategoriesList } from 'app/modules/Categories/templates/CategoriesList'
-import { documentsActions } from 'app/modules/Documents/slice'
 import { DocumentModal } from 'app/modules/Documents/templates/DocumentModal'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
+import { QuizModal } from 'app/modules/Quiz/templates/QuizModal'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { ERole } from 'types'
 
-export const MotivationList: React.FC = () => {
+export const DocumentsCategoriesList: React.FC = () => {
     const dispatch = useDispatch()
 
     const { id } = useParams<{ id?: string }>()
@@ -29,26 +29,26 @@ export const MotivationList: React.FC = () => {
 
     const breadcrumbsItems: BreadcrumbItem[] = [
         {
-            text: 'Мотивация',
-            link: '/motivation',
+            text: 'Документы',
+            link: '/doc',
         },
     ]
 
     const breadcrumbsItemsMobile: BreadcrumbItem[] = [
         {
-            text: 'Мотивация',
-            link: '/motivation',
+            text: 'Документы',
+            link: '/doc',
         },
     ]
 
     if (parentCategory) {
         breadcrumbsItems.push({
             text: parentCategory.name || '',
-            link: `/motivation/${parentCategory.id}`,
+            link: `/doc/${parentCategory.id}`,
         })
         breadcrumbsItemsMobile.push({
             text: parentCategory.name || '',
-            link: `/motivation/${parentCategory.id}`,
+            link: `/doc/${parentCategory.id}`,
         })
     }
 
@@ -62,9 +62,9 @@ export const MotivationList: React.FC = () => {
     }
 
     useEffect(() => {
-        dispatch(categoriesActions.loadCategories('motivation'))
-        dispatch(documentsActions.loadDocuments('motivation'))
-    }, [])
+        dispatch(categoriesActions.loadCategories(id || '0'))
+        // dispatch(documentsActions.loadDocuments('faq'))
+    }, [id])
 
     const handleSettingOpen = () => {
         setOpen(true)
@@ -74,14 +74,14 @@ export const MotivationList: React.FC = () => {
         setOpen(false)
     }
 
-    const handleSearchChange = (query: string) => {
-        setSearch(query)
+    const handleSearchChange = (e: string) => {
+        setSearch(e)
     }
 
     return (
         <>
             <TitleBlock
-                title={category?.name || 'Мотивация'}
+                title={category?.name || 'Документы'}
                 breadcrumbs={breadcrumbsItems}
                 breadcrumbsItemsMobile={breadcrumbsItemsMobile}
                 endNode={
@@ -102,19 +102,15 @@ export const MotivationList: React.FC = () => {
             />
 
             <Box pt={4} flex="1 0 100%" sx={{ overflow: 'auto', maxHeight: { md: 'calc( 100vh - 90px )' } }}>
-                <CategoriesList type={'motivation'} search={search} />
+                <CategoriesList id={id || '0'} search={search} />
             </Box>
 
             <DocumentModal />
 
+            <QuizModal />
+
             {profileRole === ERole.ADMIN && (
-                <CategoryAdminSettings
-                    type={'motivation'}
-                    open={open}
-                    id={id}
-                    category={category}
-                    handleClose={handleClose}
-                />
+                <CategoryAdminSettings open={open} id={id} category={category} handleClose={handleClose} />
             )}
         </>
     )

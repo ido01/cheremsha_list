@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { IPasteDocument } from 'app/modules/Documents/slice/types'
-import { EStatus, EType } from 'types'
+import { EStatus } from 'types'
 import { ICategoriesResponse, ICategory } from 'types/ICategory'
 import { TTableOrder } from 'types/ITableDisplay'
 
@@ -25,10 +25,10 @@ const slice = createSlice({
             data: {
                 id: '',
                 type: 'category',
-                path: 'faq',
                 parentId: '0',
                 name: '',
                 createdAt: '',
+                icon: '',
             },
         },
     }),
@@ -36,12 +36,12 @@ const slice = createSlice({
         cleanCategories(state) {
             categoriesAdapter.setAll(state, [])
         },
-        loadCategories(state, action: PayloadAction<EType>) {
+        loadCategories(state, action: PayloadAction<string>) {
             state.status = EStatus.PENDING
             action.payload
         },
         categoriesLoaded(state, action: PayloadAction<ICategoriesResponse>) {
-            categoriesAdapter.setAll(state, action.payload.data)
+            categoriesAdapter.setMany(state, action.payload.data)
             state.status = EStatus.FINISHED
         },
         openModal(state, action: PayloadAction<ICategory>) {
