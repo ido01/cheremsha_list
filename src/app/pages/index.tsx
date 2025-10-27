@@ -6,14 +6,11 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { AuthPages } from './AuthPages'
-import { GamePage } from './GamePages'
 import { LayoutPages } from './LayoutPages'
 
 export const Pages: React.FC = () => (
     <Routes>
         <Route path="/auth/*" element={<AuthPages />} />
-
-        <Route path={'/game/*'} element={<GamePage />} />
 
         <Route
             path={'/list'}

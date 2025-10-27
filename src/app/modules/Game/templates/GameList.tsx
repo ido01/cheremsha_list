@@ -20,25 +20,30 @@ export const GameList: React.FC = () => {
         {
             icon: <BorderStyleIcon fontSize="large" />,
             title: 'Escape',
-            path: '/game/escape',
+            onClick: () => {
+                location.href = '/game/escape'
+            },
         },
         {
             icon: <RocketIcon fontSize="large" />,
             title: 'Space',
-            // path: '/game/space',
             onClick: () => {
-                location.href = '/pddtf/space'
+                location.href = '/game/space'
             },
         },
         {
             icon: <WidgetsIcon fontSize="large" />,
             title: 'Собери белый свет',
-            path: '/game/do_white',
+            onClick: () => {
+                location.href = '/game/do_white'
+            },
         },
         {
             icon: <SportsEsportsIcon fontSize="large" />,
             title: 'Лишний цвет',
-            path: '/game/find_color',
+            onClick: () => {
+                location.href = '/game/find_color'
+            },
         },
     ]
 

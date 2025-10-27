@@ -34,7 +34,7 @@ export const LayoutPages: React.FC = () => (
             <Route path={'/tables'} element={<TablesList />} />
             <Route path={'/tasks/*'} element={<TasksPages />} />
             <Route path={'/quiz/*'} element={<QuizPages />} />
-            <Route path={'/contacts'} element={<ContactsPage />} />
+            <Route path={'/contacts/*'} element={<ContactsPage />} />
             <Route path={'/users/*'} element={<UsersPages />} />
             <Route path={'/events/*'} element={<EventsPages />} />
             <Route path={'/doc'} element={<DocumentsList />} />
