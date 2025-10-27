@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EStatus } from 'types'
 import { IPosition } from 'types/IPosition'
 import { TTableRowData } from 'types/ITableDisplay'
-import { checkAdminAccess } from 'utils/roles'
+import { checkSudoAccess } from 'utils/roles'
 
 import { DeleteModal } from '../components/DeleteModal'
 import { FormModal } from '../components/FormModal'
@@ -66,12 +66,16 @@ export const PositionsList: React.FC = () => {
                         gap: 1,
                     }}
                 >
-                    <IconButton color="info" aria-haspopup="true" onClick={() => handleUpdateOpen(position)}>
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton color="error" aria-haspopup="true" onClick={() => handleDeleteOpen(position)}>
-                        <DeleteIcon />
-                    </IconButton>
+                    {checkSudoAccess(profileRole) && (
+                        <>
+                            <IconButton color="info" aria-haspopup="true" onClick={() => handleUpdateOpen(position)}>
+                                <EditIcon />
+                            </IconButton>
+                            <IconButton color="error" aria-haspopup="true" onClick={() => handleDeleteOpen(position)}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </>
+                    )}
                 </Box>
             ),
         },
@@ -85,7 +89,7 @@ export const PositionsList: React.FC = () => {
             count={positions.length}
             searchDisabled
             endNode={
-                checkAdminAccess(profileRole) ? (
+                checkSudoAccess(profileRole) ? (
                     <IconButton
                         sx={{ ml: 2 }}
                         aria-label="more"
@@ -106,7 +110,7 @@ export const PositionsList: React.FC = () => {
                 // handleClickRow={handleClickRow}
             />
 
-            {checkAdminAccess(profileRole) && (
+            {checkSudoAccess(profileRole) && (
                 <>
                     <Settings open={open} handleClose={handleClose} />
                     <DeleteModal />

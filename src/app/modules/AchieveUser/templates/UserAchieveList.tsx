@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EStatus } from 'types'
 import { IAchieve } from 'types/IAchieve'
 import { TTableRowData } from 'types/ITableDisplay'
-import { checkAdminAccess } from 'utils/roles'
+import { checkSudoAccess } from 'utils/roles'
 
 import { DeleteModal } from '../components/DeleteModal'
 import { FormModal } from '../components/FormModal'
@@ -58,13 +58,17 @@ export const UserAchieveList: React.FC<UserAchieveListProps> = ({ id }) => {
                         <Box
                             sx={{
                                 borderRadius: 8,
-                                p: 1,
+                                p: achieve.image ? 0 : 1,
                                 display: 'flex',
                                 color: '#fff',
+                                overflow: 'hidden',
                                 backgroundColor: achieve.color,
                             }}
                         >
-                            {Icon && <Icon />}
+                            {achieve.image && (
+                                <img src={achieve.image.thumb} style={{ width: '44px', height: '44px' }} />
+                            )}
+                            {!achieve.image && Icon && <Icon />}
                         </Box>
                         <Typography variant="body1" fontWeight={600}>
                             {achieve.label}
@@ -90,7 +94,7 @@ export const UserAchieveList: React.FC<UserAchieveListProps> = ({ id }) => {
                         gap: 1,
                     }}
                 >
-                    {checkAdminAccess(profileRole) && (
+                    {checkSudoAccess(profileRole) && (
                         <IconButton color="error" aria-haspopup="true" onClick={() => handleDeleteOpen(achieve)}>
                             <DeleteIcon />
                         </IconButton>
@@ -119,7 +123,7 @@ export const UserAchieveList: React.FC<UserAchieveListProps> = ({ id }) => {
                 // handleClickRow={handleClickRow}
             />
 
-            {checkAdminAccess(profileRole) && (
+            {checkSudoAccess(profileRole) && (
                 <>
                     <DeleteModal />
                     <FormModal />

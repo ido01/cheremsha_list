@@ -4,6 +4,7 @@ import {
     Contacts as ContactsIcon,
     Group as GroupIcon,
     ListAlt as ListAltIcon,
+    LiveHelp as LiveHelpIcon,
     Menu as MenuIcon,
     School as SchoolIcon,
     SportsEsports as SportsEsportsIcon,
@@ -57,6 +58,11 @@ export const LeftMenu: React.FC = () => {
             title: 'Игры',
             path: '/game',
         },
+        {
+            icon: <LiveHelpIcon />,
+            title: 'Обратная связь',
+            path: '/reviews',
+        },
     ]
 
     if (settings.project === 'hrzn') {
@@ -105,6 +111,7 @@ export const LeftMenu: React.FC = () => {
                         borderRadius: 8,
                         boxShadow: '0px 4px 4px #3332',
                         p: 1,
+                        pr: 2,
                         m: 1,
                     }}
                 >

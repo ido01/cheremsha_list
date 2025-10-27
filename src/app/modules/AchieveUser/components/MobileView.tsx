@@ -5,7 +5,7 @@ import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IAchieve } from 'types/IAchieve'
-import { checkAdminAccess } from 'utils/roles'
+import { checkSudoAccess } from 'utils/roles'
 
 import { achieveUserActions } from '../slice'
 
@@ -32,18 +32,21 @@ export const MobileView: React.FC<MobileViewProps> = ({ achieve }) => {
                     display: 'flex',
                     alignItems: 'flex-start',
                     gap: 2,
+                    pr: 1,
                 }}
             >
                 <Box
                     sx={{
                         borderRadius: 8,
-                        p: 1,
+                        p: achieve.image ? 0 : 1,
                         display: 'flex',
                         color: '#fff',
                         backgroundColor: achieve.color,
+                        overflow: 'hidden',
                     }}
                 >
-                    {Icon && <Icon />}
+                    {achieve.image && <img src={achieve.image.thumb} style={{ width: '44px', height: '44px' }} />}
+                    {!achieve.image && Icon && <Icon />}
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography variant="body1" fontWeight={600}>
@@ -55,7 +58,7 @@ export const MobileView: React.FC<MobileViewProps> = ({ achieve }) => {
                 </Box>
             </Box>
 
-            {checkAdminAccess(profileRole) && (
+            {checkSudoAccess(profileRole) && (
                 <IconButton color="error" onClick={handleDeleteOpen}>
                     <DeleteIcon />
                 </IconButton>

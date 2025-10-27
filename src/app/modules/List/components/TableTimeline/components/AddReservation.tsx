@@ -1,8 +1,7 @@
 import { Add as AddIcon } from '@mui/icons-material'
 import { Box, Typography } from '@mui/material'
 import { listsActions } from 'app/modules/List/slice'
-import dayjs from 'dayjs'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { IReservationStatus, ITable, ITime } from 'types/ITable'
 
@@ -13,7 +12,11 @@ export const AddReservation: React.FC<{
     time: ITime
     table: ITable
     currentTime: number
-}> = ({ width, heightItem, left, time, table, currentTime }) => {
+    date: string
+    dateInt: number
+    curDate: string
+    curDateInt: number
+}> = ({ width, heightItem, left, time, table, currentTime, date, dateInt, curDateInt }) => {
     const dispatch = useDispatch()
 
     const itemHeight = heightItem - 10
@@ -25,13 +28,16 @@ export const AddReservation: React.FC<{
 
     const handleClick = () => {
         let status: IReservationStatus = 'init'
-        const date = dayjs().subtract(6, 'hour').format('YYYY-MM-DD')
+        let start = Object.assign({}, time)
+
         if (currentTime > addTime && currentTime < addTime + 30) {
             const now = new Date()
             const currentMinute = now.getMinutes()
             const currentHour = now.getHours()
-            start.hour = currentHour
-            start.minute = currentMinute
+            start = {
+                hour: currentHour,
+                minute: currentMinute,
+            }
             status = 'active'
         }
         dispatch(
@@ -45,7 +51,7 @@ export const AddReservation: React.FC<{
                 status,
                 start,
                 end: {
-                    hour: start.hour + 2,
+                    hour: start.hour > 21 ? start.hour - 22 : start.hour + 2,
                     minute: start.minute,
                 },
                 close: {
@@ -58,7 +64,7 @@ export const AddReservation: React.FC<{
         )
     }
 
-    if (addTime - currentTime < -90) {
+    if ((curDateInt === dateInt && addTime - currentTime < -90) || dateInt < curDateInt) {
         return null
     }
 

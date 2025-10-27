@@ -17,6 +17,8 @@ export const selectModal = createSelector([selectDomain], (state) => state.modal
 
 export const selectMoveId = createSelector([selectDomain], (state) => state.moveId)
 
+export const selectCopyId = createSelector([selectDomain], (state) => state.copyId)
+
 export const selectDocuments = createSelector(
     [selectDomain],
     (state) => (id: string) => selectAll(state).filter((document) => document.parentId === id)

@@ -1,4 +1,9 @@
-import { ContentCut as ContentCutIcon, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
+import {
+    ContentCopy as ContentCopyIcon,
+    ContentCut as ContentCutIcon,
+    Delete as DeleteIcon,
+    Edit as EditIcon,
+} from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import {
     Box,
@@ -56,6 +61,12 @@ export const DocumentModal: React.FC = () => {
     const handleCutDocument = () => {
         if (document) {
             dispatch(documentsActions.cutDocument(document.id))
+        }
+    }
+
+    const handleCopyDocument = () => {
+        if (document) {
+            dispatch(documentsActions.copyDocument(document))
         }
     }
 
@@ -462,6 +473,10 @@ export const DocumentModal: React.FC = () => {
 
                             <IconButton color="secondary" onClick={handleCutDocument} sx={{ bgcolor: '#FDFDFD90' }}>
                                 <ContentCutIcon />
+                            </IconButton>
+
+                            <IconButton color="success" onClick={handleCopyDocument} sx={{ bgcolor: '#FDFDFD90' }}>
+                                <ContentCopyIcon />
                             </IconButton>
                         </Box>
                     </Box>

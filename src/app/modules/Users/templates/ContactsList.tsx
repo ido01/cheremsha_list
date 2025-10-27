@@ -124,20 +124,26 @@ export const ContactsList: React.FC = () => {
                 )
             }}
         >
-            <Table
-                items={users}
-                rows={tableRows}
-                order={order}
-                pagination={pagination}
-                isLoading={status === EStatus.PENDING}
-                mobileView={mobileView}
-                handleOrderChange={handleOrderChange}
-                handleLimitChange={handleLimitChange}
-                handlePageChange={handlePageChange}
-                handleClickRow={handleClickRow}
-            />
+            <Box
+                sx={{
+                    pb: 8,
+                }}
+            >
+                <Table
+                    items={users}
+                    rows={tableRows}
+                    order={order}
+                    pagination={pagination}
+                    isLoading={status === EStatus.PENDING}
+                    mobileView={mobileView}
+                    handleOrderChange={handleOrderChange}
+                    handleLimitChange={handleLimitChange}
+                    handlePageChange={handlePageChange}
+                    handleClickRow={handleClickRow}
+                />
 
-            <UserModal />
+                <UserModal />
+            </Box>
         </Main>
     )
 }

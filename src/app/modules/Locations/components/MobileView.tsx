@@ -1,7 +1,9 @@
 import { Box, Switch, Typography } from '@mui/material'
+import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React, { ChangeEvent } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ILocation } from 'types/ILocation'
+import { checkSudoAccess } from 'utils/roles'
 
 import { locationsActions } from '../slice'
 
@@ -11,6 +13,8 @@ interface MobileViewProps {
 
 export const MobileView: React.FC<MobileViewProps> = ({ location }) => {
     const dispatch = useDispatch()
+
+    const profileRole = useSelector(selectProfileRole)
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         dispatch(
@@ -27,7 +31,7 @@ export const MobileView: React.FC<MobileViewProps> = ({ location }) => {
                 {location.name}
             </Typography>
 
-            <Switch checked={location.visible} onChange={handleChange} />
+            <Switch disabled={!checkSudoAccess(profileRole)} checked={location.visible} onChange={handleChange} />
         </Box>
     )
 }

@@ -1,8 +1,10 @@
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
 import { Box, Button, Typography } from '@mui/material'
+import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IPosition } from 'types/IPosition'
+import { checkSudoAccess } from 'utils/roles'
 
 import { positionsActions } from '../slice'
 
@@ -12,6 +14,8 @@ interface MobileViewProps {
 
 export const MobileView: React.FC<MobileViewProps> = ({ position }) => {
     const dispatch = useDispatch()
+
+    const profileRole = useSelector(selectProfileRole)
 
     const handleDeleteOpen = () => {
         dispatch(positionsActions.showDeleteModal(position))
@@ -27,14 +31,16 @@ export const MobileView: React.FC<MobileViewProps> = ({ position }) => {
                 {position.label}
             </Typography>
 
-            <Box width="100%" display="flex" gap={2} justifyContent="space-between">
-                <Button color="info" startIcon={<EditIcon />} onClick={handleUpdateOpen}>
-                    Редактировать
-                </Button>
-                <Button color="error" startIcon={<DeleteIcon />} onClick={handleDeleteOpen}>
-                    Удалить
-                </Button>
-            </Box>
+            {checkSudoAccess(profileRole) && (
+                <Box width="100%" display="flex" gap={2} justifyContent="space-between">
+                    <Button color="info" startIcon={<EditIcon />} onClick={handleUpdateOpen}>
+                        Редактировать
+                    </Button>
+                    <Button color="error" startIcon={<DeleteIcon />} onClick={handleDeleteOpen}>
+                        Удалить
+                    </Button>
+                </Box>
+            )}
         </Box>
     )
 }

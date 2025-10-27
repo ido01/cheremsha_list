@@ -1,7 +1,10 @@
 import { Box } from '@mui/material'
+import dayjs from 'dayjs'
 import React, { useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import { IReservationMapping, ITable, ITime } from 'types/ITable'
 
+import { selectDate } from '../../slice/selectors'
 import { curretnTime } from '../../utils'
 import { AddReservation } from './components/AddReservation'
 import { ReservationItem } from './components/ReservationItem'
@@ -16,6 +19,12 @@ export const TableTimeline: React.FC<{
 }> = ({ table, heightItem, width, timeLines, count, currentTime }) => {
     const minWidth = width / 30
     const countItems = count * 2
+    const date = useSelector(selectDate)
+    const dateArr = date.split('-')
+    const dateInt = 10000 * parseInt(dateArr[0]) + 100 * parseInt(dateArr[1]) + parseInt(dateArr[2])
+    const curDate = dayjs().subtract(6, 'hour').format('YYYY-MM-DD')
+    const curDateArr = curDate.split('-')
+    const curDateInt = 10000 * parseInt(curDateArr[0]) + 100 * parseInt(curDateArr[1]) + parseInt(curDateArr[2])
 
     const times: { left: number; time: ITime }[] = []
 
@@ -39,10 +48,16 @@ export const TableTimeline: React.FC<{
             .map((reservation) => {
                 let status = reservation.status
                 let crossDelay = 0
-                const end = {
-                    hour: reservation.end.hour,
-                    minute: reservation.end.minute,
-                }
+                const end =
+                    status === 'close'
+                        ? {
+                              hour: reservation.close.hour,
+                              minute: reservation.close.minute,
+                          }
+                        : {
+                              hour: reservation.end.hour,
+                              minute: reservation.end.minute,
+                          }
                 const tEmin = curretnTime(reservation.end)
                 const cEmin = curretnTime({
                     hour: currentHour,
@@ -169,6 +184,10 @@ export const TableTimeline: React.FC<{
                     time={time.time}
                     table={table}
                     currentTime={currentTime}
+                    dateInt={dateInt}
+                    curDateInt={curDateInt}
+                    curDate={curDate}
+                    date={date}
                 />
             ))}
 

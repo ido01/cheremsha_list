@@ -25,7 +25,7 @@ import { SettingsModal } from 'app/components/SettingsModal'
 import { categoriesActions } from 'app/modules/Categories/slice'
 import { CategoryForm } from 'app/modules/Categories/templates/CategoryForm'
 import { documentsActions } from 'app/modules/Documents/slice'
-import { selectForm, selectMoveId } from 'app/modules/Documents/slice/selectors'
+import { selectCopyId, selectForm, selectMoveId } from 'app/modules/Documents/slice/selectors'
 import { DocumentForm } from 'app/modules/Documents/templates/DocumentForm'
 import { quizActions } from 'app/modules/Quiz/slice'
 import { selectMoveQuizId } from 'app/modules/Quiz/slice/selectors'
@@ -50,9 +50,10 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({ id
     const dispatch = useDispatch()
     const history = useHistory()
 
-    const { open: openDocumentForm } = useSelector(selectForm)
+    const { open: openDocumentForm, copy } = useSelector(selectForm)
     const moveCategoryId = useSelector(selectmoveCategoryId)
     const moveId = useSelector(selectMoveId)
+    const copyId = useSelector(selectCopyId)
     const quizMoveId = useSelector(selectMoveQuizId)
     const [openDelete, setOpenDelete] = useState<boolean>(false)
 
@@ -79,6 +80,17 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({ id
             quizActions.moveQuiz({
                 id: quizMoveId,
                 parentId: id || '0',
+            })
+        )
+    }
+
+    const handleCopyDocument = () => {
+        dispatch(
+            documentsActions.createDocument({
+                ...copy,
+                id: '',
+                parentId: id || '0',
+                name: `Копия ${copy.name}`,
             })
         )
     }
@@ -296,7 +308,28 @@ export const CategoryAdminSettings: React.FC<CategoryAdminSettingsProps> = ({ id
                                         <ContentPasteGoIcon />
                                     </ListItemIcon>
 
-                                    <ListItemText primary={'Вставить документ'} />
+                                    <ListItemText primary={'Вставить вырезанный документ'} />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                    </>
+                )}
+
+                {!!copyId && (
+                    <>
+                        <Divider />
+                        <List>
+                            <ListItem
+                                // disabled={!id || id === '0'}
+                                disablePadding
+                                onClick={handleCopyDocument}
+                            >
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        <ContentPasteGoIcon />
+                                    </ListItemIcon>
+
+                                    <ListItemText primary={'Вставить cкопированный документ'} />
                                 </ListItemButton>
                             </ListItem>
                         </List>

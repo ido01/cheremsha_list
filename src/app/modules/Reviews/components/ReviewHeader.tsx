@@ -1,5 +1,5 @@
 import { EmojiObjects as EmojiObjectsIcon, ErrorOutline as ErrorOutlineIcon } from '@mui/icons-material'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { AvatarImage } from 'app/modules/Profile/components/AvatarImage'
 import React from 'react'
 import { EState } from 'types'
@@ -68,6 +68,9 @@ interface ReviewHeaderProps {
 }
 
 export const ReviewHeader: React.FC<ReviewHeaderProps> = ({ review }) => {
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.between('xs', 'md'))
+
     return (
         <Box
             sx={{
@@ -84,13 +87,17 @@ export const ReviewHeader: React.FC<ReviewHeaderProps> = ({ review }) => {
                     alignItems: 'center',
                 }}
             >
-                {review.type === 'error' ? <ErrorOutlineIcon color="warning" /> : <EmojiObjectsIcon color="success" />}
+                {review.type === 'error' ? (
+                    <ErrorOutlineIcon color="warning" fontSize={isMobile ? 'small' : 'medium'} />
+                ) : (
+                    <EmojiObjectsIcon color="success" fontSize={isMobile ? 'small' : 'medium'} />
+                )}
 
                 {review.user ? (
                     <AvatarImage
                         name={`${review.user.last_name} ${review.user.name}`}
                         image={review.user.avatar?.thumb}
-                        size={42}
+                        size={isMobile ? 40 : 42}
                         achieve={review.user.achieve}
                     />
                 ) : (
@@ -112,7 +119,7 @@ export const ReviewHeader: React.FC<ReviewHeaderProps> = ({ review }) => {
                     ) : (
                         <Typography variant="body3" fontWeight={600}>{`Аноним`}</Typography>
                     )}
-                    <Typography variant="body1" color="grey.900">
+                    <Typography variant={isMobile ? 'body3' : 'body1'} color="grey.900">
                         {review.title}
                     </Typography>
                 </Box>
@@ -120,10 +127,11 @@ export const ReviewHeader: React.FC<ReviewHeaderProps> = ({ review }) => {
 
             <Box
                 sx={{
-                    p: 1,
-                    px: 2,
+                    p: isMobile ? 0.5 : 1,
+                    px: isMobile ? 1 : 2,
                     borderRadius: 8,
-                    mr: 2,
+                    mr: isMobile ? 1 : 2,
+                    fontSize: isMobile ? '11px' : '16px',
                     ...getColor(review.status),
                 }}
             >

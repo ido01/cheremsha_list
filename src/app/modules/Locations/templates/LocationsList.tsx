@@ -1,11 +1,13 @@
 import { Box, Switch, Typography } from '@mui/material'
 import Table from 'app/components/Table'
 import { Main } from 'app/modules/Layout/templates/Main'
+import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React, { ChangeEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EStatus } from 'types'
 import { ILocation } from 'types/ILocation'
 import { TTableRowData } from 'types/ITableDisplay'
+import { checkSudoAccess } from 'utils/roles'
 
 import { MobileView } from '../components/MobileView'
 import { locationsActions } from '../slice'
@@ -13,6 +15,8 @@ import { selectLocations, selectStatus } from '../slice/selectors'
 
 export const LocationsList: React.FC = () => {
     const dispatch = useDispatch()
+
+    const profileRole = useSelector(selectProfileRole)
     const locations = useSelector(selectLocations)
     const status = useSelector(selectStatus)
 
@@ -49,7 +53,11 @@ export const LocationsList: React.FC = () => {
                         gap: 1,
                     }}
                 >
-                    <Switch checked={location.visible} onChange={(e) => handleChange(location, e)} />
+                    <Switch
+                        disabled={!checkSudoAccess(profileRole)}
+                        checked={location.visible}
+                        onChange={(e) => handleChange(location, e)}
+                    />
                 </Box>
             ),
         },

@@ -12,6 +12,7 @@ export interface IDocumentsState extends EntityState<IDocument> {
     status: EStatus
     order: TTableOrder
     moveId: string
+    copyId: string
     modal: {
         isOpen: boolean
         activeId: string
@@ -20,5 +21,6 @@ export interface IDocumentsState extends EntityState<IDocument> {
         status: EStatus
         open: boolean
         data: IDocument
+        copy: IDocument
     }
 }

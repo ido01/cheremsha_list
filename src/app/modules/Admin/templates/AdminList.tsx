@@ -2,7 +2,6 @@ import {
     Agriculture as AgricultureIcon,
     Apartment as ApartmentIcon,
     Grade as GradeIcon,
-    Poll as PollIcon,
     TableRestaurant as TableRestaurantIcon,
 } from '@mui/icons-material'
 import { Box, Grid, useMediaQuery, useTheme } from '@mui/material'
@@ -25,11 +24,11 @@ export const AdminList: React.FC = () => {
 
     const links: ITile[] = []
     if (checkAdminAccess(profileRole)) {
-        links.push({
-            icon: <PollIcon fontSize="large" />,
-            title: 'Опрос',
-            path: '/polls',
-        })
+        // links.push({
+        //     icon: <PollIcon fontSize="large" />,
+        //     title: 'Опрос',
+        //     path: '/polls',
+        // })
 
         links.push({
             icon: <AgricultureIcon fontSize="large" />,

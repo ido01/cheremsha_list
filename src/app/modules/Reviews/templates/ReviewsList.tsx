@@ -18,6 +18,8 @@ import {
     Select,
     Tab,
     Typography,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material'
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion'
 import { styled } from '@mui/material/styles'
@@ -27,7 +29,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EState, EStatus } from 'types'
 import { IReview } from 'types/IReview'
-import { checkAdminAccess } from 'utils/roles'
+import { checkSudoAccess } from 'utils/roles'
 
 import { Comment } from '../components/Comment'
 import { CommentView } from '../components/CommentView'
@@ -48,6 +50,8 @@ const Accordion = styled((props: AccordionProps) => <MuiAccordion square {...pro
 })
 
 export const ReviewsList: React.FC = () => {
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.between('xs', 'md'))
     const dispatch = useDispatch()
 
     const profileRole = useSelector(selectProfileRole)
@@ -125,64 +129,66 @@ export const ReviewsList: React.FC = () => {
                     </TabList>
                 </TabContext>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        gap: 1,
-                    }}
-                >
-                    <FormControl sx={{ width: '200px' }} variant="standard">
-                        <Select
-                            value={filter.status}
-                            label="Статус"
-                            onChange={(e) => {
-                                const { value } = e.target
+                {!isMobile && (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 1,
+                        }}
+                    >
+                        <FormControl sx={{ width: '200px' }} variant="standard">
+                            <Select
+                                value={filter.status}
+                                label="Статус"
+                                onChange={(e) => {
+                                    const { value } = e.target
 
-                                dispatch(
-                                    reviewsActions.setFilter({
-                                        ...filter,
-                                        status: value as EStatus | 'all',
-                                    })
-                                )
-                            }}
-                        >
-                            {[
-                                {
-                                    label: 'Все',
-                                    value: 'all',
-                                },
-                                {
-                                    label: getStatusLabel(EState.INITIAL),
-                                    value: EState.INITIAL,
-                                },
-                                {
-                                    label: getStatusLabel(EState.OPEN),
-                                    value: EState.OPEN,
-                                },
-                                {
-                                    label: getStatusLabel(EState.PENDING),
-                                    value: EState.PENDING,
-                                },
-                                {
-                                    label: getStatusLabel(EState.COMPLETED),
-                                    value: EState.COMPLETED,
-                                },
-                                {
-                                    label: getStatusLabel(EState.CLOSED),
-                                    value: EState.CLOSED,
-                                },
-                                {
-                                    label: getStatusLabel(EState.REJECTED),
-                                    value: EState.REJECTED,
-                                },
-                            ].map((item, index) => (
-                                <MenuItem key={index} value={item.value}>
-                                    {item.label}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Box>
+                                    dispatch(
+                                        reviewsActions.setFilter({
+                                            ...filter,
+                                            status: value as EStatus | 'all',
+                                        })
+                                    )
+                                }}
+                            >
+                                {[
+                                    {
+                                        label: 'Все',
+                                        value: 'all',
+                                    },
+                                    {
+                                        label: getStatusLabel(EState.INITIAL),
+                                        value: EState.INITIAL,
+                                    },
+                                    {
+                                        label: getStatusLabel(EState.OPEN),
+                                        value: EState.OPEN,
+                                    },
+                                    {
+                                        label: getStatusLabel(EState.PENDING),
+                                        value: EState.PENDING,
+                                    },
+                                    {
+                                        label: getStatusLabel(EState.COMPLETED),
+                                        value: EState.COMPLETED,
+                                    },
+                                    {
+                                        label: getStatusLabel(EState.CLOSED),
+                                        value: EState.CLOSED,
+                                    },
+                                    {
+                                        label: getStatusLabel(EState.REJECTED),
+                                        value: EState.REJECTED,
+                                    },
+                                ].map((item, index) => (
+                                    <MenuItem key={index} value={item.value}>
+                                        {item.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                )}
             </Box>
 
             <Box
@@ -228,8 +234,8 @@ export const ReviewsList: React.FC = () => {
                                         minHeight: '96px',
                                     }}
                                 >
-                                    {checkAdminAccess(profileRole) && <Control review={review} />}
-                                    {!checkAdminAccess(profileRole) && review.uid === propfile.id && (
+                                    {checkSudoAccess(profileRole) && <Control review={review} />}
+                                    {!checkSudoAccess(profileRole) && review.uid === propfile.id && (
                                         <MyControl review={review} />
                                     )}
                                     <Box
@@ -237,7 +243,7 @@ export const ReviewsList: React.FC = () => {
                                             display: 'flex',
                                             flexDirection: 'column',
                                             gap: 2,
-                                            ml: '86px',
+                                            ml: isMobile ? '54px' : '86px',
                                         }}
                                     >
                                         <Box
@@ -292,7 +298,7 @@ export const ReviewsList: React.FC = () => {
                                             </Box>
                                         )}
 
-                                        {checkAdminAccess(profileRole) && (
+                                        {checkSudoAccess(profileRole) && (
                                             <Comment
                                                 review={{
                                                     ...review,
@@ -303,7 +309,7 @@ export const ReviewsList: React.FC = () => {
                                                 }}
                                             />
                                         )}
-                                        {!checkAdminAccess(profileRole) &&
+                                        {!checkSudoAccess(profileRole) &&
                                             review.uid === propfile.id &&
                                             review.status !== EState.REJECTED &&
                                             review.status !== EState.COMPLETED &&

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { EStatus } from 'types'
 import { IAchieve } from 'types/IAchieve'
 import { TTableRowData } from 'types/ITableDisplay'
-import { checkAdminAccess } from 'utils/roles'
+import { checkSudoAccess } from 'utils/roles'
 
 import { DeleteModal } from '../components/DeleteModal'
 import { FormModal } from '../components/FormModal'
@@ -67,13 +67,17 @@ export const AchieveList: React.FC = () => {
                         <Box
                             sx={{
                                 borderRadius: 8,
-                                p: 1,
+                                p: achieve.image ? 0 : 1,
                                 display: 'flex',
                                 color: '#fff',
+                                overflow: 'hidden',
                                 backgroundColor: achieve.color,
                             }}
                         >
-                            {Icon && <Icon />}
+                            {achieve.image && (
+                                <img src={achieve.image.thumb} style={{ width: '44px', height: '44px' }} />
+                            )}
+                            {!achieve.image && Icon && <Icon />}
                         </Box>
                         <Typography variant="body1" fontWeight={600}>
                             {achieve.label}
@@ -99,12 +103,16 @@ export const AchieveList: React.FC = () => {
                         gap: 1,
                     }}
                 >
-                    <IconButton color="info" aria-haspopup="true" onClick={() => handleUpdateOpen(achieve)}>
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton color="error" aria-haspopup="true" onClick={() => handleDeleteOpen(achieve)}>
-                        <DeleteIcon />
-                    </IconButton>
+                    {checkSudoAccess(profileRole) && (
+                        <>
+                            <IconButton color="info" aria-haspopup="true" onClick={() => handleUpdateOpen(achieve)}>
+                                <EditIcon />
+                            </IconButton>
+                            <IconButton color="error" aria-haspopup="true" onClick={() => handleDeleteOpen(achieve)}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </>
+                    )}
                 </Box>
             ),
         },
@@ -118,7 +126,7 @@ export const AchieveList: React.FC = () => {
             count={achieves.length}
             searchDisabled
             endNode={
-                checkAdminAccess(profileRole) ? (
+                checkSudoAccess(profileRole) ? (
                     <IconButton
                         sx={{ ml: 2 }}
                         aria-label="more"
@@ -139,7 +147,7 @@ export const AchieveList: React.FC = () => {
                 // handleClickRow={handleClickRow}
             />
 
-            {checkAdminAccess(profileRole) && (
+            {checkSudoAccess(profileRole) && (
                 <>
                     <Settings open={open} handleClose={handleClose} />
                     <DeleteModal />

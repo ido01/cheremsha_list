@@ -9,6 +9,8 @@ import {
     DialogContentText,
     DialogTitle,
     IconButton,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,6 +25,8 @@ interface ControlProps {
 }
 
 export const MyControl: React.FC<ControlProps> = ({ review }) => {
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.between('xs', 'md'))
     const dispatch = useDispatch()
 
     const [openDelete, setOpenDelete] = useState(false)
@@ -49,14 +53,14 @@ export const MyControl: React.FC<ControlProps> = ({ review }) => {
         <Box
             sx={{
                 position: 'absolute',
-                width: '86px',
+                width: isMobile ? '54px' : '86px',
                 justifyContent: 'center',
                 alignItems: 'center',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 1,
                 top: 0,
-                left: 0,
+                left: '10px',
             }}
         >
             {review.status === EState.INITIAL && (

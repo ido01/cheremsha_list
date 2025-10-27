@@ -21,6 +21,7 @@ const slice = createSlice({
         entities: {},
         status: EStatus.INITIAL,
         moveId: '',
+        copyId: '',
         order: {
             row: 'createdAt',
             order: 'desc',
@@ -33,6 +34,28 @@ const slice = createSlice({
             status: EStatus.INITIAL,
             open: false,
             data: {
+                id: '',
+                type: 'document',
+                task_status: EStatus.INITIAL,
+                uid: '',
+                parentId: '',
+                name: '',
+                end_date: '',
+                end_date_unix: 0,
+                deadTime: '',
+                info: [],
+                points: [],
+                users: [],
+                state: {
+                    id: '',
+                    state: EState.INITIAL,
+                    uid: '',
+                    createdAt: '',
+                    updatedAt: '',
+                },
+                createdAt: '',
+            },
+            copy: {
                 id: '',
                 type: 'document',
                 task_status: EStatus.INITIAL,
@@ -118,6 +141,14 @@ const slice = createSlice({
         },
         cutDocument(state, action: PayloadAction<string>) {
             state.moveId = action.payload
+            state.copyId = ''
+            state.form.open = false
+            state.modal.isOpen = false
+        },
+        copyDocument(state, action: PayloadAction<IDocument>) {
+            state.copyId = action.payload.id
+            state.form.copy = action.payload
+            state.moveId = ''
             state.form.open = false
             state.modal.isOpen = false
         },

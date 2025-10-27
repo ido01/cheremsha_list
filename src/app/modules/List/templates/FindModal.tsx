@@ -119,46 +119,48 @@ export const FindModal: React.FC = () => {
 
     return (
         <Modal open={open} title={'Найти стол'} handleClose={handleClose}>
-            <Container>
-                {step === 0 && <StepOne filter={filter} onChange={changeFilter} />}
-                {step === 1 && <StepTwo tables={tables} filter={filter} onChange={handleFilterReset} />}
-            </Container>
-            {step === 0 && (
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        width: '100%',
-                        bottom: 0,
-                        py: 2,
-                        bgcolor: 'white',
-                        zIndex: 1,
-                    }}
-                >
-                    <Container>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: 1,
-                            }}
-                        >
-                            <LoadingButton
-                                loading={status}
-                                fullWidth
-                                color="primary"
-                                variant="contained"
-                                disabled={filter.hour === -1}
+            <Box py={11}>
+                <Container>
+                    {step === 0 && <StepOne filter={filter} onChange={changeFilter} />}
+                    {step === 1 && <StepTwo tables={tables} filter={filter} onChange={handleFilterReset} />}
+                </Container>
+                {step === 0 && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            width: '100%',
+                            bottom: 0,
+                            py: 2,
+                            bgcolor: 'white',
+                            zIndex: 1,
+                        }}
+                    >
+                        <Container>
+                            <Box
                                 sx={{
-                                    height: '64px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 1,
                                 }}
-                                onClick={() => handleSearch()}
                             >
-                                Найти
-                            </LoadingButton>
-                        </Box>
-                    </Container>
-                </Box>
-            )}
+                                <LoadingButton
+                                    loading={status}
+                                    fullWidth
+                                    color="primary"
+                                    variant="contained"
+                                    disabled={filter.hour === -1}
+                                    sx={{
+                                        height: '64px',
+                                    }}
+                                    onClick={() => handleSearch()}
+                                >
+                                    Найти
+                                </LoadingButton>
+                            </Box>
+                        </Container>
+                    </Box>
+                )}
+            </Box>
         </Modal>
     )
 }

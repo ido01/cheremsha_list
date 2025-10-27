@@ -26,52 +26,54 @@ export const DayModal: React.FC = () => {
 
     return (
         <Modal open={open} title={'Показан день'} handleClose={handleClose}>
-            <Container>
-                <Box>
-                    <Typography variant="body1">Выбрать день</Typography>
-                    <MobileDatePicker
-                        sx={{ width: '100%', backgroundColor: 'white' }}
-                        value={date}
-                        format="YYYY-MM-DD"
-                        onChange={(day) => {
-                            if (day) {
-                                setDate(day)
-                            }
-                        }}
-                    />
-                </Box>
-            </Container>
-            <Box
-                sx={{
-                    position: 'absolute',
-                    width: '100%',
-                    bottom: 0,
-                    py: 2,
-                    bgcolor: 'white',
-                    zIndex: 1,
-                }}
-            >
+            <Box py={11}>
                 <Container>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 1,
-                        }}
-                    >
-                        <LoadingButton
-                            fullWidth
-                            color="primary"
-                            variant="contained"
-                            sx={{
-                                height: '64px',
+                    <Box>
+                        <Typography variant="body1">Выбрать день</Typography>
+                        <MobileDatePicker
+                            sx={{ width: '100%', backgroundColor: 'white' }}
+                            value={date}
+                            format="YYYY-MM-DD"
+                            onChange={(day) => {
+                                if (day) {
+                                    setDate(day)
+                                }
                             }}
-                            onClick={() => handleShow()}
-                        >
-                            Показать
-                        </LoadingButton>
+                        />
                     </Box>
                 </Container>
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        width: '100%',
+                        bottom: 0,
+                        py: 2,
+                        bgcolor: 'white',
+                        zIndex: 1,
+                    }}
+                >
+                    <Container>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                            }}
+                        >
+                            <LoadingButton
+                                fullWidth
+                                color="primary"
+                                variant="contained"
+                                sx={{
+                                    height: '64px',
+                                }}
+                                onClick={() => handleShow()}
+                            >
+                                Показать
+                            </LoadingButton>
+                        </Box>
+                    </Container>
+                </Box>
             </Box>
         </Modal>
     )

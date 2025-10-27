@@ -4,11 +4,10 @@ import {
     Contacts as ContactsIcon,
     ListAlt as ListAltIcon,
     LiveHelp as LiveHelpIcon,
-    Poll as PollIcon,
     School as SchoolIcon,
     SportsEsports as SportsEsportsIcon,
 } from '@mui/icons-material'
-import { Grid, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Grid, useMediaQuery, useTheme } from '@mui/material'
 import { ITile, Tile } from 'app/components/Tile'
 import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import { selectSettings } from 'app/modules/Settings/slice/selectors'
@@ -73,11 +72,11 @@ export const HomeList: React.FC = () => {
     }
 
     if (checkAdminAccess(profileRole)) {
-        links.push({
-            icon: <PollIcon fontSize="large" />,
-            title: 'Опрос',
-            path: '/polls',
-        })
+        // links.push({
+        //     icon: <PollIcon fontSize="large" />,
+        //     title: 'Опрос',
+        //     path: '/polls',
+        // })
 
         links.push({
             icon: <AssistWalkerIcon fontSize="large" />,
@@ -92,13 +91,19 @@ export const HomeList: React.FC = () => {
 
     return (
         <Main title={'Главная'} searchDisabled>
-            <Grid container spacing={2}>
-                {links.map((link, index) => (
-                    <Grid item key={index} xs={isMobile ? 6 : 3}>
-                        <Tile data={link} onClick={handleClickRow} />
-                    </Grid>
-                ))}
-            </Grid>
+            <Box
+                sx={{
+                    pb: 11,
+                }}
+            >
+                <Grid container spacing={2}>
+                    {links.map((link, index) => (
+                        <Grid item key={index} xs={isMobile ? 6 : 3}>
+                            <Tile data={link} onClick={handleClickRow} />
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
         </Main>
     )
 }

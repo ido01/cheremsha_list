@@ -164,22 +164,28 @@ export const UsersList: React.FC = () => {
                 )
             }}
         >
-            <FilterBlock open={isFilterOpen} onClose={() => setFilterOpen(false)} />
+            <Box
+                sx={{
+                    pb: 8,
+                }}
+            >
+                <FilterBlock open={isFilterOpen} onClose={() => setFilterOpen(false)} />
 
-            <Table
-                items={users}
-                rows={tableRows}
-                order={order}
-                pagination={pagination}
-                isLoading={status === EStatus.PENDING}
-                mobileView={mobileView}
-                handleOrderChange={handleOrderChange}
-                handleLimitChange={handleLimitChange}
-                handlePageChange={handlePageChange}
-                handleClickRow={handleClickRow}
-            />
+                <Table
+                    items={users}
+                    rows={tableRows}
+                    order={order}
+                    pagination={pagination}
+                    isLoading={status === EStatus.PENDING}
+                    mobileView={mobileView}
+                    handleOrderChange={handleOrderChange}
+                    handleLimitChange={handleLimitChange}
+                    handlePageChange={handlePageChange}
+                    handleClickRow={handleClickRow}
+                />
 
-            <UserModal />
+                <UserModal />
+            </Box>
         </Main>
     )
 }

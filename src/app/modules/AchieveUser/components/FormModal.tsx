@@ -98,14 +98,21 @@ export const FormModal: React.FC = () => {
                                             <Box
                                                 sx={{
                                                     borderRadius: 8,
-                                                    p: 1,
+                                                    p: achieve.image ? 0 : 1,
+                                                    overflow: 'hidden',
                                                     mr: 1,
                                                     display: 'inline-flex',
                                                     color: '#fff',
                                                     backgroundColor: achieve.color,
                                                 }}
                                             >
-                                                {Icon && <Icon />}
+                                                {achieve.image && (
+                                                    <img
+                                                        src={achieve.image.thumb}
+                                                        style={{ width: '44px', height: '44px' }}
+                                                    />
+                                                )}
+                                                {!achieve.image && Icon && <Icon />}
                                             </Box>
                                             {achieve.label}
                                         </MenuItem>

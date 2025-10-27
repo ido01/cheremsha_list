@@ -102,105 +102,8 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
 
     return (
         <Modal open={open} title={`${reservation.name}(${table?.name}) ${reservation.phone}`} handleClose={handleClose}>
-            <Container>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 1,
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gap: 1,
-                            gridTemplateColumns: '1fr 1fr',
-                        }}
-                    >
-                        <Box>
-                            <Typography variant="caption" color="grey.600">
-                                Стол
-                            </Typography>
-                            <Typography variant="h6" color="grey.900" lineHeight="1.4">
-                                {table?.full_name}
-                            </Typography>
-                        </Box>
-
-                        <Box>
-                            <Typography variant="caption" color="grey.600">
-                                Статус
-                            </Typography>
-                            <Typography variant="h6" color={Colors[reservationStatus]} lineHeight="1.4">
-                                {StatusText[reservationStatus]}
-                            </Typography>
-                        </Box>
-                    </Box>
-
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gap: 1,
-                            gridTemplateColumns: '1fr 1fr',
-                        }}
-                    >
-                        <Box>
-                            <Typography variant="caption" color="grey.600">
-                                Пришли
-                            </Typography>
-                            <Typography variant="h6" color="grey.900" lineHeight="1.4">
-                                {convertTimeToText(reservation.start)}
-                            </Typography>
-                        </Box>
-
-                        <Box>
-                            <Typography variant="caption" color="grey.600">
-                                Ушли
-                            </Typography>
-                            <Typography variant="h6" color="grey.900" lineHeight="1.4">
-                                {convertTimeToText(reservation.end)}
-                            </Typography>
-                        </Box>
-                    </Box>
-
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gap: 1,
-                            gridTemplateColumns: '1fr 1fr',
-                        }}
-                    >
-                        <Box>
-                            <Typography variant="caption" color="grey.600">
-                                Гостей
-                            </Typography>
-                            <Typography variant="h6" color="grey.900" lineHeight="1.4">
-                                {reservation.guests}
-                            </Typography>
-                        </Box>
-
-                        {currentTableTimestamp >= 0 && (
-                            <Box>
-                                <Typography variant="caption" color="grey.600">
-                                    Уже сидят
-                                </Typography>
-                                <Typography variant="h6" color="grey.900" lineHeight="1.4">
-                                    {currentTableTime}
-                                </Typography>
-                            </Box>
-                        )}
-                    </Box>
-
-                    {reservation.comment && (
-                        <Box>
-                            <Typography variant="caption" color="grey.600">
-                                Комментарий
-                            </Typography>
-                            <Typography variant="h6" color="grey.900" lineHeight="1.4">
-                                {reservation.comment}
-                            </Typography>
-                        </Box>
-                    )}
-
+            <Box py={11}>
+                <Container>
                     <Box
                         sx={{
                             display: 'flex',
@@ -208,16 +111,115 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                             gap: 1,
                         }}
                     >
-                        <Typography variant="caption" color="grey.600">
-                            Что за столом
-                        </Typography>
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gap: 1,
+                                gridTemplateColumns: '1fr 1fr',
+                            }}
+                        >
+                            <Box>
+                                <Typography variant="caption" color="grey.600">
+                                    Стол
+                                </Typography>
+                                <Typography variant="h6" color="grey.900" lineHeight="1.4">
+                                    {table?.full_name}
+                                </Typography>
+                            </Box>
 
-                        {reservation.items.map((item, index) => (
-                            <Reservation key={index} item={item} currentTime={currentTime} />
-                        ))}
+                            <Box>
+                                <Typography variant="caption" color="grey.600">
+                                    Статус
+                                </Typography>
+                                <Typography variant="h6" color={Colors[reservationStatus]} lineHeight="1.4">
+                                    {StatusText[reservationStatus]}
+                                </Typography>
+                            </Box>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gap: 1,
+                                gridTemplateColumns: '1fr 1fr',
+                            }}
+                        >
+                            <Box>
+                                <Typography variant="caption" color="grey.600">
+                                    Пришли
+                                </Typography>
+                                <Typography variant="h6" color="grey.900" lineHeight="1.4">
+                                    {convertTimeToText(reservation.start)}
+                                </Typography>
+                            </Box>
+
+                            <Box>
+                                <Typography variant="caption" color="grey.600">
+                                    Ушли
+                                </Typography>
+                                <Typography variant="h6" color="grey.900" lineHeight="1.4">
+                                    {convertTimeToText(reservation.end)}
+                                </Typography>
+                            </Box>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gap: 1,
+                                gridTemplateColumns: '1fr 1fr',
+                            }}
+                        >
+                            <Box>
+                                <Typography variant="caption" color="grey.600">
+                                    Гостей
+                                </Typography>
+                                <Typography variant="h6" color="grey.900" lineHeight="1.4">
+                                    {reservation.guests}
+                                </Typography>
+                            </Box>
+
+                            {currentTableTimestamp >= 0 && (
+                                <Box>
+                                    <Typography variant="caption" color="grey.600">
+                                        Уже сидят
+                                    </Typography>
+                                    <Typography variant="h6" color="grey.900" lineHeight="1.4">
+                                        {currentTableTime}
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
+
+                        {reservation.comment && (
+                            <Box>
+                                <Typography variant="caption" color="grey.600">
+                                    Комментарий
+                                </Typography>
+                                <Typography variant="h6" color="grey.900" lineHeight="1.4">
+                                    {reservation.comment}
+                                </Typography>
+                            </Box>
+                        )}
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                            }}
+                        >
+                            <Typography variant="caption" color="grey.600">
+                                Что за столом
+                            </Typography>
+
+                            {reservation.items.map((item, index) => (
+                                <Reservation key={index} item={item} currentTime={currentTime} />
+                            ))}
+                        </Box>
                     </Box>
-                </Box>
-            </Container>
+                </Container>
+            </Box>
 
             <Box
                 sx={{

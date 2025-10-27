@@ -70,12 +70,19 @@ const AchieveBox: React.FC<AchieveBoxProps> = ({ achieve, size, children }) => {
                     borderRadius: 8,
                     backgroundColor: achieve.color,
                     color: '#fff',
-                    p: 0.25,
+                    p: achieve.image ? 0 : 0.25,
+                    overflow: 'hidden',
                     left: `${size * 0.65}px`,
                     bottom: 0,
                 }}
             >
-                {Icon && <Icon sx={{ width: `${size / 2}px`, height: `${size / 2}px` }} />}
+                {achieve.image && (
+                    <img
+                        src={achieve.image.thumb}
+                        style={{ width: `${size / 2 + 1}px`, height: `${size / 2 + 1}px` }}
+                    />
+                )}
+                {!achieve.image && Icon && <Icon sx={{ width: `${size / 2}px`, height: `${size / 2}px` }} />}
             </Box>
         </Box>
     )

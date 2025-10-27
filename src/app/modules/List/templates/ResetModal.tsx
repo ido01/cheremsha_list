@@ -21,70 +21,8 @@ export const ResetModal: React.FC = () => {
 
     return (
         <Modal open={open} title={'Пересадить'} handleClose={handleClose}>
-            <Container>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 1,
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gap: 1,
-                            gridTemplateColumns: '1fr 1fr',
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                            }}
-                        >
-                            <Typography variant="caption">Гость</Typography>
-                            <Typography variant="body1">{reservation.name}</Typography>
-                        </Box>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                            }}
-                        >
-                            <Typography variant="caption">Стол</Typography>
-                            <Typography variant="body1">{table?.full_name}</Typography>
-                        </Box>
-                    </Box>
-
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gap: 1,
-                            gridTemplateColumns: '1fr 1fr',
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                            }}
-                        >
-                            <Typography variant="caption">Гостей</Typography>
-                            <Typography variant="body1">{reservation.guests}</Typography>
-                        </Box>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                            }}
-                        >
-                            <Typography variant="caption">Комментарий</Typography>
-                            <Typography variant="body1">{reservation.comment || '-'}</Typography>
-                        </Box>
-                    </Box>
-
+            <Box py={11}>
+                <Container>
                     <Box
                         sx={{
                             display: 'flex',
@@ -92,23 +30,87 @@ export const ResetModal: React.FC = () => {
                             gap: 1,
                         }}
                     >
-                        <Typography variant="caption">Столы</Typography>
                         <Box
                             sx={{
                                 display: 'grid',
-                                gridTemplateColumns: '1fr 1fr 1fr',
+                                gap: 1,
+                                gridTemplateColumns: '1fr 1fr',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}
+                            >
+                                <Typography variant="caption">Гость</Typography>
+                                <Typography variant="body1">{reservation.name}</Typography>
+                            </Box>
+
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}
+                            >
+                                <Typography variant="caption">Стол</Typography>
+                                <Typography variant="body1">{table?.full_name}</Typography>
+                            </Box>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gap: 1,
+                                gridTemplateColumns: '1fr 1fr',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}
+                            >
+                                <Typography variant="caption">Гостей</Typography>
+                                <Typography variant="body1">{reservation.guests}</Typography>
+                            </Box>
+
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}
+                            >
+                                <Typography variant="caption">Комментарий</Typography>
+                                <Typography variant="body1">{reservation.comment || '-'}</Typography>
+                            </Box>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
                                 gap: 1,
                             }}
                         >
-                            {data
-                                .filter((table) => table.id !== reservation.tid)
-                                .map((table, index) => (
-                                    <ResetItem key={index} table={table} reservation={reservation} />
-                                ))}
+                            <Typography variant="caption">Столы</Typography>
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    gridTemplateColumns: '1fr 1fr 1fr',
+                                    gap: 1,
+                                }}
+                            >
+                                {data
+                                    .filter((table) => table.id !== reservation.tid)
+                                    .map((table, index) => (
+                                        <ResetItem key={index} table={table} reservation={reservation} />
+                                    ))}
+                            </Box>
                         </Box>
                     </Box>
-                </Box>
-            </Container>
+                </Container>
+            </Box>
         </Modal>
     )
 }

@@ -1,6 +1,6 @@
 import { MoreVert as MoreVertIcon } from '@mui/icons-material'
 import * as Icons from '@mui/icons-material'
-import { Grid, IconButton, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Grid, IconButton, useMediaQuery, useTheme } from '@mui/material'
 import { ITile, Tile } from 'app/components/Tile'
 import { CategoryMainAdminSettings } from 'app/modules/Categories/components/CategoryMainAdminSettings'
 import { categoriesActions } from 'app/modules/Categories/slice'
@@ -59,25 +59,31 @@ export const DocumentsList: React.FC = () => {
                 ) : undefined
             }
         >
-            <Grid container spacing={2}>
-                {categories.map((category, index) => {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    const Icon = Icons[category.icon]
-                    return (
-                        <Grid item key={index} xs={isMobile ? 6 : 3}>
-                            <Tile
-                                data={{
-                                    title: category.name,
-                                    icon: Icon ? <Icon fontSize="large" /> : <></>,
-                                    path: `/doc/${category.id}`,
-                                }}
-                                onClick={handleClickRow}
-                            />
-                        </Grid>
-                    )
-                })}
-            </Grid>
+            <Box
+                sx={{
+                    pb: 11,
+                }}
+            >
+                <Grid container spacing={2}>
+                    {categories.map((category, index) => {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        const Icon = Icons[category.icon]
+                        return (
+                            <Grid item key={index} xs={isMobile ? 6 : 3}>
+                                <Tile
+                                    data={{
+                                        title: category.name,
+                                        icon: Icon ? <Icon fontSize="large" /> : <></>,
+                                        path: `/doc/${category.id}`,
+                                    }}
+                                    onClick={handleClickRow}
+                                />
+                            </Grid>
+                        )
+                    })}
+                </Grid>
+            </Box>
 
             {checkAdminAccess(profileRole) && <CategoryMainAdminSettings open={open} handleClose={handleClose} />}
         </Main>

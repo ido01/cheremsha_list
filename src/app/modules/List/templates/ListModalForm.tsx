@@ -6,7 +6,7 @@ import { useFormik } from 'formik'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EStatus } from 'types'
-import { ISelect, ITable, ITableItemResponse, ITime } from 'types/ITable'
+import { IReservationStatus, ISelect, ITable, ITableItemResponse, ITime } from 'types/ITable'
 import { request } from 'utils/request'
 import * as yup from 'yup'
 
@@ -203,6 +203,18 @@ export const ListModalForm: React.FC = () => {
         dispatch(listsActions.hideEditModal())
     }
 
+    const handleSubmitStatus = (status: IReservationStatus) => {
+        formik.setFieldValue('status', status)
+        formik.handleSubmit()
+    }
+
+    const handleSubmitCheck = () => {
+        if (data.status === 'delay') {
+            formik.setFieldValue('status', 'active')
+        }
+        formik.handleSubmit()
+    }
+
     return (
         <Modal
             open={open}
@@ -211,7 +223,7 @@ export const ListModalForm: React.FC = () => {
         >
             <Box
                 mt={1}
-                pt={1}
+                py={11}
                 noValidate
                 component="form"
                 onSubmit={(e: React.FormEvent) => {
@@ -488,17 +500,68 @@ export const ListModalForm: React.FC = () => {
                 }}
             >
                 <Container>
-                    <LoadingButton
-                        loading={status === EStatus.PENDING}
-                        fullWidth
-                        variant="contained"
-                        sx={{
-                            height: '64px',
-                        }}
-                        onClick={() => formik.handleSubmit()}
-                    >
-                        Сохранить
-                    </LoadingButton>
+                    {!data.id && data.status === 'active' && (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                gap: 1,
+                            }}
+                        >
+                            <LoadingButton
+                                loading={status === EStatus.PENDING}
+                                color="success"
+                                fullWidth
+                                variant="contained"
+                                sx={{
+                                    height: '64px',
+                                }}
+                                onClick={() => formik.handleSubmit()}
+                            >
+                                Посадить сразу
+                            </LoadingButton>
+
+                            <LoadingButton
+                                loading={status === EStatus.PENDING}
+                                color="info"
+                                fullWidth
+                                variant="contained"
+                                sx={{
+                                    height: '64px',
+                                }}
+                                onClick={() => handleSubmitStatus('init')}
+                            >
+                                Забронировать
+                            </LoadingButton>
+                        </Box>
+                    )}
+                    {!data.id && data.status === 'init' && (
+                        <LoadingButton
+                            loading={status === EStatus.PENDING}
+                            color="info"
+                            fullWidth
+                            variant="contained"
+                            sx={{
+                                height: '64px',
+                            }}
+                            onClick={() => formik.handleSubmit()}
+                        >
+                            Забронировать
+                        </LoadingButton>
+                    )}
+                    {data.id && (
+                        <LoadingButton
+                            loading={status === EStatus.PENDING}
+                            color="info"
+                            fullWidth
+                            variant="contained"
+                            sx={{
+                                height: '64px',
+                            }}
+                            onClick={() => handleSubmitCheck()}
+                        >
+                            Cохранить
+                        </LoadingButton>
+                    )}
                 </Container>
             </Box>
         </Modal>

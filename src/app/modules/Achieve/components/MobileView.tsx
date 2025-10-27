@@ -1,9 +1,11 @@
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
 import * as Icons from '@mui/icons-material'
 import { Box, Button, Typography } from '@mui/material'
+import { selectProfileRole } from 'app/modules/Profile/slice/selectors'
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IAchieve } from 'types/IAchieve'
+import { checkSudoAccess } from 'utils/roles'
 
 import { achieveActions } from '../slice'
 
@@ -16,6 +18,8 @@ export const MobileView: React.FC<MobileViewProps> = ({ achieve }) => {
     // @ts-ignore
     const Icon = Icons[achieve.icon]
     const dispatch = useDispatch()
+
+    const profileRole = useSelector(selectProfileRole)
 
     const handleDeleteOpen = () => {
         dispatch(achieveActions.showDeleteModal(achieve))
@@ -37,13 +41,15 @@ export const MobileView: React.FC<MobileViewProps> = ({ achieve }) => {
                 <Box
                     sx={{
                         borderRadius: 8,
-                        p: 1,
+                        p: achieve.image ? 0 : 1,
                         display: 'flex',
                         color: '#fff',
+                        overflow: 'hidden',
                         backgroundColor: achieve.color,
                     }}
                 >
-                    {Icon && <Icon />}
+                    {achieve.image && <img src={achieve.image.thumb} style={{ width: '44px', height: '44px' }} />}
+                    {!achieve.image && Icon && <Icon />}
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography variant="body1" fontWeight={600}>
@@ -55,14 +61,16 @@ export const MobileView: React.FC<MobileViewProps> = ({ achieve }) => {
                 </Box>
             </Box>
 
-            <Box width="100%" display="flex" gap={2} justifyContent="space-between">
-                <Button color="info" startIcon={<EditIcon />} onClick={handleUpdateOpen}>
-                    Редактировать
-                </Button>
-                <Button color="error" startIcon={<DeleteIcon />} onClick={handleDeleteOpen}>
-                    Удалить
-                </Button>
-            </Box>
+            {checkSudoAccess(profileRole) && (
+                <Box width="100%" display="flex" gap={2} justifyContent="space-between">
+                    <Button color="info" startIcon={<EditIcon />} onClick={handleUpdateOpen}>
+                        Редактировать
+                    </Button>
+                    <Button color="error" startIcon={<DeleteIcon />} onClick={handleDeleteOpen}>
+                        Удалить
+                    </Button>
+                </Box>
+            )}
         </Box>
     )
 }

@@ -36,7 +36,7 @@ import { ERole, EStatus } from 'types'
 import { IUser } from 'types/IUser'
 import { convertGenderName, convertRoleName } from 'utils/convertUtils'
 import { getNoun } from 'utils/getNoun'
-import { checkAdminAccess } from 'utils/roles'
+import { checkAdminAccess, checkSudoAccess } from 'utils/roles'
 
 import { usersActions } from '../slice'
 import { selectForm, selectUrl } from '../slice/selectors'
@@ -292,9 +292,11 @@ export const UserModalContent: React.FC<UserModalContentProps> = ({ profileRole,
                             <EditIcon />
                         </IconButton>
 
-                        <IconButton color="success" onClick={handleAddAchive} sx={{ bgcolor: '#FDFDFD90' }}>
-                            <AddCircleIcon />
-                        </IconButton>
+                        {checkSudoAccess(profileRole) && (
+                            <IconButton color="success" onClick={handleAddAchive} sx={{ bgcolor: '#FDFDFD90' }}>
+                                <AddCircleIcon />
+                            </IconButton>
+                        )}
                     </Box>
                 </Box>
             )}
