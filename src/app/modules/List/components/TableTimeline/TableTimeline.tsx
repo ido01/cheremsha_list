@@ -1,9 +1,10 @@
 import { Box } from '@mui/material'
 import dayjs from 'dayjs'
 import React, { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IReservationMapping, ITable, ITime } from 'types/ITable'
 
+import { listsActions } from '../../slice'
 import { selectDate } from '../../slice/selectors'
 import { curretnTime } from '../../utils'
 import { AddReservation } from './components/AddReservation'
@@ -16,7 +17,11 @@ export const TableTimeline: React.FC<{
     table: ITable
     timeLines: number[]
     currentTime: number
-}> = ({ table, heightItem, width, timeLines, count, currentTime }) => {
+    isChairVisible?: boolean
+    chair?: number
+}> = ({ table, heightItem, width, timeLines, count, currentTime, isChairVisible = false, chair = 1 }) => {
+    const dispatch = useDispatch()
+
     const minWidth = width / 30
     const countItems = count * 2
     const date = useSelector(selectDate)
@@ -40,16 +45,22 @@ export const TableTimeline: React.FC<{
         })
     }
 
+    const handleFreeOpen = () => {
+        dispatch(listsActions.showFree(table.id))
+    }
+
     const reservations: IReservationMapping[] = useMemo(() => {
         const now = new Date()
         const currentMinute = now.getMinutes()
         const currentHour = now.getHours()
-        return table.reservations
+        const reservationsFiltered = table.reservations
+        return reservationsFiltered
             .map((reservation) => {
                 let status = reservation.status
                 let crossDelay = 0
+
                 const end =
-                    status === 'close'
+                    status === 'close' || status === 'delete'
                         ? {
                               hour: reservation.close.hour,
                               minute: reservation.close.minute,
@@ -74,14 +85,13 @@ export const TableTimeline: React.FC<{
                     end,
                     status,
                     crossDelay,
+                    endDB: reservation.end,
                 }
             })
             .map((reservation, index, rs) => {
                 let crossDelay = reservation.crossDelay || 0
                 let startCrossMinutes = 0
                 let endCrossMinutes = 0
-                let cross = 0
-                let stepsLeft = 0
 
                 const rSmin = curretnTime(reservation.start)
                 const rEmin = curretnTime(reservation.end)
@@ -91,20 +101,8 @@ export const TableTimeline: React.FC<{
                     if (startCrossMinutes < 0) {
                         startCrossMinutes = 0
                     }
-
-                    for (let i = 1; i <= index; i++) {
-                        const cEmin = curretnTime(rs[index - i].end)
-                        const cSmin = curretnTime(rs[index - i].start)
-                        if (cEmin - rSmin > 0) {
-                            cross += rs[index - i].guests
-
-                            if (rSmin - cSmin < 60) {
-                                stepsLeft++
-                            }
-                        }
-                    }
                 }
-                if (index < table.reservations.length - 1) {
+                if (index < reservationsFiltered.length - 1) {
                     const nSmin = curretnTime(rs[index + 1].start)
                     endCrossMinutes = rEmin - nSmin
                     if (endCrossMinutes < 0) {
@@ -122,8 +120,6 @@ export const TableTimeline: React.FC<{
                     crossDelay,
                     startCrossMinutes,
                     endCrossMinutes,
-                    cross,
-                    stepsLeft,
                 } as IReservationMapping
             })
     }, [table, currentTime])
@@ -188,8 +184,28 @@ export const TableTimeline: React.FC<{
                     curDateInt={curDateInt}
                     curDate={curDate}
                     date={date}
+                    chair={chair}
                 />
             ))}
+
+            {table.free && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 4,
+                        left: `${width + 4}px`,
+                        width: `calc( 100% - ${width * 2 + 8}px )`,
+                        height: `${heightItem - 8}px`,
+                        border: '1px solid #ccc',
+                        borderRadius: 1,
+                        cursor: 'pointer',
+                        ':hover': {
+                            border: '1px solid #bbb',
+                        },
+                    }}
+                    onClick={handleFreeOpen}
+                ></Box>
+            )}
 
             {reservations.map((reservation, index) => (
                 <ReservationItem
@@ -200,6 +216,7 @@ export const TableTimeline: React.FC<{
                     heightItem={heightItem}
                     places={table.places}
                     free={table.free}
+                    isChairVisible={isChairVisible}
                 />
             ))}
         </Box>

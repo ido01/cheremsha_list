@@ -38,7 +38,7 @@ export const CurrentTime: React.FC<{ width: number; changeScroll: (value: number
 
     useEffect(() => {
         triggerScroll()
-    }, [])
+    }, [width])
 
     useEffect(() => {
         changeScroll(currentTime)
@@ -53,6 +53,7 @@ export const CurrentTime: React.FC<{ width: number; changeScroll: (value: number
                 top: 0,
                 left: `${currentTime}px`,
                 backgroundColor: '#f00',
+                zIndex: 2,
             }}
         ></Box>
     )

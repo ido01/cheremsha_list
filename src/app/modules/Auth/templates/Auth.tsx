@@ -1,9 +1,8 @@
-import { positionsActions } from 'app/modules/Positions/slice'
 import { profileActions } from 'app/modules/Profile/slice'
 import { selectProfile } from 'app/modules/Profile/slice/selectors'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { EAuthStatus } from 'types'
 import { EQuizState } from 'types/IQuizState'
 
@@ -15,7 +14,6 @@ interface AuthProps {
 
 export const Auth: React.FC<AuthProps> = ({ children }) => {
     const dispatch = useDispatch()
-    const history = useNavigate()
     const { pathname: url } = useLocation()
 
     const authStatus = useSelector(selectAuthStatus)
@@ -26,12 +24,12 @@ export const Auth: React.FC<AuthProps> = ({ children }) => {
             authStatus === EAuthStatus.NOT_AUTHORIZED &&
             (url.indexOf('/auth') !== 0 || url === '/auth/questionnaire')
         ) {
-            history('/auth')
+            location.href = '/auth'
         } else if (authStatus === EAuthStatus.AUTHORIZED && url.indexOf('/auth') === 0) {
-            history('/')
+            location.href = '/'
         } else if (authStatus === EAuthStatus.NEW && url !== '/auth/questionnaire') {
             dispatch(profileActions.loadProfile())
-            history('/auth/questionnaire')
+            location.href = '/auth/questionnaire'
         }
         if (authStatus === EAuthStatus.AUTHORIZED) {
             dispatch(profileActions.loadProfile())
@@ -41,16 +39,12 @@ export const Auth: React.FC<AuthProps> = ({ children }) => {
     useEffect(() => {
         if (authStatus === EAuthStatus.AUTHORIZED) {
             if (profile.state?.state === EQuizState.PENDING && url !== '/test') {
-                history('/test')
+                location.href = '/test'
             } else if (profile.state?.state !== EQuizState.PENDING && url === '/test') {
-                history('/')
+                location.href = '/'
             }
         }
     }, [profile])
-
-    useEffect(() => {
-        dispatch(positionsActions.loadPositions())
-    }, [])
 
     return <React.Fragment>{children}</React.Fragment>
 }

@@ -14,23 +14,16 @@ export const ReservationItem: React.FC<{
     currentTime: number
     places: number
     free: boolean
-}> = ({ reservation, minWidth, heightItem, currentTime, places, free }) => {
+    isChairVisible: boolean
+}> = ({ reservation, minWidth, heightItem, currentTime, places, free, isChairVisible = false }) => {
     const dispatch = useDispatch()
 
     const top = useMemo(() => {
         if (!free) {
             return 4
         }
-        return 4 + (reservation.cross * (heightItem - 8)) / places
+        return 4 + ((reservation.start_table - 1) * (heightItem - 8)) / places
     }, [reservation, free])
-
-    const leftTable = useMemo(() => {
-        return reservation.stepsLeft * minWidth * 30 + 4
-    }, [reservation, minWidth])
-
-    const widthCard = useMemo(() => {
-        return minWidth * 28
-    }, [minWidth])
 
     const itemHeightDefault = heightItem - 8
 
@@ -49,7 +42,6 @@ export const ReservationItem: React.FC<{
         return free ? 0 : reservation.endCrossMinutes * minWidth
     }, [reservation, minWidth])
 
-    // const start = (startPosition * 60 + reservation.start.minute + 30) * minWidth + 4
     const start = useMemo(() => {
         return (curretnTime(reservation.start, 0, 12) + 30) * minWidth + 4 + dangerStart
     }, [reservation, dangerStart, minWidth])
@@ -110,6 +102,24 @@ export const ReservationItem: React.FC<{
         return reservation.items.filter((item) => item.position !== 'tea')
     }, [reservation])
 
+    const nameSize = useMemo(() => {
+        return reservation.name.length * 10 + 8
+    }, [reservation])
+
+    const rightPositionStatus = useMemo(() => {
+        let size = 236
+        reservation.items
+            .filter((item) => item.position !== 'tea')
+            .forEach((item) => {
+                if (item.position === 'hookah') {
+                    size += 10
+                } else {
+                    size += 20
+                }
+            })
+        return size
+    }, [reservation])
+
     const currentHookahTimestamp = useMemo(() => {
         if (reservationStatus !== 'active' && reservationStatus !== 'delay') return -1
         if (!filterHookah.length) return -1
@@ -133,7 +143,11 @@ export const ReservationItem: React.FC<{
     }, [currentHookahTimestamp])
 
     const handleClick = () => {
-        dispatch(listsActions.showModal(reservation))
+        if (!free) {
+            dispatch(listsActions.showModal(reservation))
+        } else {
+            dispatch(listsActions.showFree(reservation.tid))
+        }
     }
 
     const getScheme = (position: IReservationItemStatus) => {
@@ -196,15 +210,47 @@ export const ReservationItem: React.FC<{
                 borderTopRightRadius: '8px',
                 borderBottomLeftRadius: '8px',
                 borderBottomRightRadius: !free && reservation.endCrossMinutes > 0 ? 0 : '8px',
-                backgroundColor: currentColor,
+                background: currentColor,
                 border: '1px solid #fff',
+                // height: `${isChairVisible ? heightItem * reservation.guests - 8 : itemHeight}px`,
                 height: `${itemHeight}px`,
                 left: `${start}px`,
                 // overflow: 'hidden',
                 boxSizing: 'border-box',
+                zIndex: 2,
             }}
             onClick={handleClick}
         >
+            {isChairVisible &&
+                reservation.position &&
+                reservation.position < reservation.start_table + reservation.guests - 1 &&
+                reservation.position >= reservation.start_table && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            left: '8px',
+                            top: '100%',
+                            background: currentColor,
+                            width: 'calc( 100% - 16px )',
+                            height: '6px',
+                        }}
+                    ></Box>
+                )}
+            {isChairVisible &&
+                reservation.position &&
+                reservation.position < reservation.start_table + reservation.guests &&
+                reservation.position > reservation.start_table && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            left: '8px',
+                            bottom: '100%',
+                            background: currentColor,
+                            width: 'calc( 100% - 16px )',
+                            height: '5px',
+                        }}
+                    ></Box>
+                )}
             {!!reservation.crossDelay && reservation.crossDelay > 0 && (
                 <Box
                     sx={{
@@ -220,89 +266,99 @@ export const ReservationItem: React.FC<{
                     }}
                 ></Box>
             )}
-            {!free && (reservationStatus === 'active' || reservationStatus === 'delay') && (
-                <Box
-                    sx={{
-                        color: '#fff',
-                        zIndex: 2,
-                        position: 'absolute',
-                        left:
-                            statusPosition < 50 ? '50px' : end - statusPosition < 210 ? 'auto' : `${statusPosition}px`,
-                        right: end - statusPosition < 210 ? `0px` : 'auto',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: `${itemHeight}px`,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pr: 1,
-                    }}
-                >
+            {!free &&
+                (reservation.position === reservation.start_table || !isChairVisible) &&
+                reservationStatus !== 'init' &&
+                reservationStatus !== 'late' &&
+                reservationStatus !== 'delete' && (
                     <Box
                         sx={{
+                            color: '#fff',
+                            zIndex: end - statusPosition,
+                            position: 'absolute',
+                            left:
+                                reservationStatus === 'close'
+                                    ? 'auto'
+                                    : statusPosition < nameSize
+                                    ? `${nameSize}px`
+                                    : end - statusPosition < rightPositionStatus
+                                    ? 'auto'
+                                    : `${statusPosition}px`,
+                            right:
+                                reservationStatus === 'close'
+                                    ? '0px'
+                                    : end - statusPosition < rightPositionStatus
+                                    ? `0px`
+                                    : 'auto',
                             display: 'flex',
-                            gap: 1,
+                            flexDirection: 'column',
+                            height: `${itemHeight}px`,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            pr: 1,
                         }}
                     >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'flex-end',
-                                width: '100px',
-                            }}
-                        >
-                            <Typography>{currentTableTime || '--:--'}</Typography>
-                            <TableBarIcon fontSize="small" />
-                        </Box>
-
                         <Box
                             sx={{
                                 display: 'flex',
                                 gap: 1,
-                                minWidth: '100px',
-                                justifyContent: 'space-between',
                             }}
                         >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'flex-start',
-                                }}
-                            >
-                                <AirIcon fontSize="small" />
-                                <Typography>{currentHookahTime || '--:--'}</Typography>
-                            </Box>
+                            {(reservationStatus === 'active' || reservationStatus === 'delay') && (
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'flex-end',
+                                        width: '100px',
+                                    }}
+                                >
+                                    <Typography>{currentTableTime || '--:--'}</Typography>
+                                    <TableBarIcon fontSize="small" />
+                                </Box>
+                            )}
 
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    // flexDirection: 'column',
                                     gap: 1,
+                                    minWidth:
+                                        reservationStatus === 'active' || reservationStatus === 'delay'
+                                            ? '100px'
+                                            : undefined,
+                                    justifyContent: 'space-between',
                                 }}
                             >
-                                {filterHookah.map((h, i) => (
-                                    <Box key={i} sx={getScheme(h.position)}></Box>
-                                ))}
+                                {(reservationStatus === 'active' || reservationStatus === 'delay') && (
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'flex-start',
+                                        }}
+                                    >
+                                        <AirIcon fontSize="small" />
+                                        <Typography>{currentHookahTime || '--:--'}</Typography>
+                                    </Box>
+                                )}
+
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        gap: 1,
+                                    }}
+                                >
+                                    {filterHookah.map((h, i) => (
+                                        <Box key={i} sx={getScheme(h.position)}></Box>
+                                    ))}
+                                </Box>
                             </Box>
                         </Box>
                     </Box>
-                    {/* <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            gap: 1,
-                            width: '100%',
-                        }}
-                    >
-                        {filterHookah.map((h, i) => (
-                            <Box key={i} sx={{ backgroundColor: '#fff', width: '2px', height: '20px' }}></Box>
-                        ))}
-                    </Box> */}
-                </Box>
-            )}
+                )}
+
             {reservation.startCrossMinutes > 0 && (
                 <Box
                     sx={{
@@ -337,83 +393,22 @@ export const ReservationItem: React.FC<{
                 ></Box>
             )}
 
-            {!free ? (
-                <Typography
-                    variant="body1"
-                    sx={{
-                        color: '#FFF',
-                        lineHeight: `${itemHeight}px`,
-                        pl: 1,
-                        position: 'relative',
-                        left: 0,
-                        zIndex: 2,
-                    }}
-                >
-                    {reservation.name}
-                </Typography>
-            ) : (
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        height: `${itemHeightDefault}px`,
-                        borderTopLeftRadius: !free && reservation.startCrossMinutes > 0 ? 0 : '8px',
-                        borderTopRightRadius: '8px',
-                        borderBottomLeftRadius: '8px',
-                        borderBottomRightRadius: !free && reservation.endCrossMinutes > 0 ? 0 : '8px',
-                        backgroundColor: currentColor,
-                        border: '1px solid #fff',
-                        boxSizing: 'border-box',
-                        top: `-${top - 4}px`,
-                        left: `${leftTable}px`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        width: `${widthCard}px`,
-                        zIndex: 1,
-                    }}
-                >
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            width: `${widthCard + 4}px`,
-                            top: `${top - 5}px`,
-                            left: '-2px',
-                            backgroundColor: currentColor,
-                            height: `${itemHeight - 2}px`,
-                        }}
-                    ></Box>
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            color: '#FFF',
-                            lineHeight: `${itemHeight}px`,
-                            pl: 1,
-                            position: 'relative',
-                            left: 0,
-                            zIndex: 2,
-                        }}
-                    >
-                        {reservation.name}
-                    </Typography>
-
-                    {(reservationStatus === 'active' || reservationStatus === 'delay') && (
-                        <Box
-                            sx={{
-                                ml: 1,
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                // flexDirection: 'column',
-                                gap: 1,
-                                zIndex: 2,
-                            }}
-                        >
-                            {filterHookah.map((h, i) => (
-                                <Box key={i} sx={getScheme(h.position)}></Box>
-                            ))}
-                        </Box>
-                    )}
-                </Box>
-            )}
+            <Typography
+                variant="body1"
+                sx={{
+                    color: '#FFF',
+                    lineHeight: `${itemHeight}px`,
+                    pl: 1,
+                    position: 'relative',
+                    left: 0,
+                    zIndex: 2,
+                    display: 'block',
+                    maxHeight: '100%',
+                    overflow: 'hidden',
+                }}
+            >
+                {reservation.name}
+            </Typography>
         </Box>
     )
 }

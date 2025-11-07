@@ -1,8 +1,9 @@
 import { Add as AddIcon } from '@mui/icons-material'
 import { Box, Typography } from '@mui/material'
 import { listsActions } from 'app/modules/List/slice'
+import { selectFilterStatus } from 'app/modules/List/slice/selectors'
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { IReservationStatus, ITable, ITime } from 'types/ITable'
 
 export const AddReservation: React.FC<{
@@ -16,14 +17,17 @@ export const AddReservation: React.FC<{
     dateInt: number
     curDate: string
     curDateInt: number
-}> = ({ width, heightItem, left, time, table, currentTime, date, dateInt, curDateInt }) => {
+    chair?: number
+}> = ({ width, heightItem, left, time, table, currentTime, date, dateInt, curDateInt, chair = 1 }) => {
     const dispatch = useDispatch()
+
+    const filterStatus = useSelector(selectFilterStatus)
 
     const itemHeight = heightItem - 10
     const leftItem = left + 5
 
     const start = Object.assign({}, time)
-    const h = start.hour > 10 ? start.hour : start.hour + 24
+    const h = start.hour > 7 ? start.hour : start.hour + 24
     const addTime = h * 60 + start.minute
 
     const handleClick = () => {
@@ -48,12 +52,16 @@ export const AddReservation: React.FC<{
                 phone: '',
                 comment: '',
                 guests: 2,
+                start_table: chair,
                 status,
+                close_status: 'none',
                 start,
                 end: {
                     hour: start.hour > 21 ? start.hour - 22 : start.hour + 2,
                     minute: start.minute,
                 },
+                end_hour: 0,
+                end_minute: 0,
                 close: {
                     hour: 0,
                     minute: 0,
@@ -64,7 +72,7 @@ export const AddReservation: React.FC<{
         )
     }
 
-    if ((curDateInt === dateInt && addTime - currentTime < -90) || dateInt < curDateInt) {
+    if (filterStatus === 'deleted' || (curDateInt === dateInt && addTime - currentTime < -90) || dateInt < curDateInt) {
         return null
     }
 

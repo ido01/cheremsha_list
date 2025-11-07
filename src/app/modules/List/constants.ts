@@ -1,4 +1,4 @@
-import { IColorStatus, ISelect, ITime } from 'types/ITable'
+import { IColorStatus, IReservationCloseStatus, ISelect, ITime } from 'types/ITable'
 
 export const Colors: IColorStatus = {
     init: '#00BCD4',
@@ -6,7 +6,7 @@ export const Colors: IColorStatus = {
     active: '#8BC34A',
     delay: '#FF9800',
     close: '#546E7A',
-    delete: '#546E7A',
+    delete: 'linear-gradient(45deg, #f00 10%, #000000 10%, #000000 50%, #f00 50%, #f00 60%, #000000 60%, #000000)',
 }
 
 export const StatusText: IColorStatus = {
@@ -15,7 +15,14 @@ export const StatusText: IColorStatus = {
     active: 'Сидит',
     delay: 'Пересиживает',
     close: 'Ушли',
-    delete: 'Удалили',
+    delete: 'Отменён',
+}
+
+export const CloseStatusText: { [key in IReservationCloseStatus]: string } = {
+    none: 'Удалили',
+    passport: 'Без документов',
+    late: 'Опоздали',
+    close: 'Гость отказался',
 }
 
 export const Reserv: ISelect[] = [

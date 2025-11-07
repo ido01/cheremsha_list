@@ -13,7 +13,9 @@ export const selectItemStatus = createSelector([selectDomain], (state) => state.
 
 export const selectCount = createSelector([selectDomain], (state) => state.count)
 
-export const selectDate = createSelector([selectDomain], (state) => state.date)
+export const selectDate = createSelector([selectDomain], (state) => state.filter.date)
+
+export const selectFilterStatus = createSelector([selectDomain], (state) => state.filter.status)
 
 export const selectDateSetting = createSelector([selectDomain], (state) => state.dateSettings)
 
@@ -24,6 +26,8 @@ export const selectReset = createSelector([selectDomain], (state) => state.reset
 export const selectForm = createSelector([selectDomain], (state) => state.form)
 
 export const selectModal = createSelector([selectDomain], (state) => state.modal)
+
+export const selectFree = createSelector([selectDomain], (state) => state.free)
 
 export const selectTables = createSelector([selectDomain], (state) => selectAll(state))
 

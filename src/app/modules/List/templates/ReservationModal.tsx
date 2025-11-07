@@ -1,22 +1,24 @@
-import { Autorenew as AutorenewIcon, Edit as EditIcon } from '@mui/icons-material'
+import { Autorenew as AutorenewIcon, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Box, Container, Typography } from '@mui/material'
 import { Modal } from 'app/components/Modal'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { EStatus } from 'types'
 import { IReservationStatus } from 'types/ITable'
 
 import { AddButton } from '../components/Buttons/AddButton'
 import { Reservation } from '../components/Reservation'
-import { Colors, StatusText } from '../constants'
+import { CloseStatusText, Colors, StatusText } from '../constants'
 import { listsActions } from '../slice'
 import { selectModal, selectTableById } from '../slice/selectors'
 import { convertTimeToText } from '../utils'
+import { DeleteControl } from './DeleteControl'
 
 export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTime }) => {
     const dispatch = useDispatch()
 
+    const [isDelete, setDelete] = useState(false)
     const { status, open, reservation } = useSelector(selectModal)
     const getTable = useSelector(selectTableById)
     const table = getTable(reservation.tid)
@@ -88,6 +90,10 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                         minute,
                     },
                 }),
+                end: {
+                    hour: reservation.end_hour,
+                    minute: reservation.end_minute,
+                },
             })
         )
     }
@@ -100,9 +106,19 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
         dispatch(listsActions.openReset(reservation))
     }
 
+    useEffect(() => {
+        setDelete(false)
+    }, [reservation])
+
     return (
         <Modal open={open} title={`${reservation.name}(${table?.name}) ${reservation.phone}`} handleClose={handleClose}>
-            <Box py={11}>
+            <Box
+                pt={11}
+                pb={30}
+                sx={{
+                    overflow: 'auto',
+                }}
+            >
                 <Container>
                     <Box
                         sx={{
@@ -132,7 +148,11 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                                     Статус
                                 </Typography>
                                 <Typography variant="h6" color={Colors[reservationStatus]} lineHeight="1.4">
-                                    {StatusText[reservationStatus]}
+                                    {StatusText[reservationStatus]}{' '}
+                                    {reservationStatus === 'delete' &&
+                                        reservation.close_status &&
+                                        reservation.close_status !== 'none' &&
+                                        `(${CloseStatusText[reservation.close_status]})`}
                                 </Typography>
                             </Box>
                         </Box>
@@ -146,7 +166,11 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                         >
                             <Box>
                                 <Typography variant="caption" color="grey.600">
-                                    Пришли
+                                    {reservationStatus === 'init'
+                                        ? 'Придут'
+                                        : reservationStatus === 'delete' || reservationStatus === 'late'
+                                        ? 'Должны были придти'
+                                        : 'Пришли'}
                                 </Typography>
                                 <Typography variant="h6" color="grey.900" lineHeight="1.4">
                                     {convertTimeToText(reservation.start)}
@@ -155,10 +179,19 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
 
                             <Box>
                                 <Typography variant="caption" color="grey.600">
-                                    Ушли
+                                    {reservationStatus === 'close'
+                                        ? 'Ушли'
+                                        : reservationStatus === 'delete' || reservationStatus === 'delay'
+                                        ? 'Должны были уйти'
+                                        : 'Уйдут'}
                                 </Typography>
                                 <Typography variant="h6" color="grey.900" lineHeight="1.4">
-                                    {convertTimeToText(reservation.end)}
+                                    {reservationStatus === 'delete'
+                                        ? convertTimeToText({
+                                              hour: reservation.end_hour,
+                                              minute: reservation.end_minute,
+                                          })
+                                        : convertTimeToText(reservation.end)}
                                 </Typography>
                             </Box>
                         </Box>
@@ -269,12 +302,11 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                                 <AddButton color="info" label="+ Церемония" position="tea" />
                             </Box>
                         )}
-                        {(reservationStatus === 'init' || reservationStatus === 'late') && (
+                        {(reservationStatus === 'init' || reservationStatus === 'late') && !isDelete && (
                             <Box
                                 sx={{
-                                    display: 'grid',
+                                    display: 'flex',
                                     gap: 1,
-                                    gridTemplateColumns: '1fr 1fr',
                                 }}
                             >
                                 <LoadingButton
@@ -290,51 +322,71 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                                     Стол пришел
                                 </LoadingButton>
 
+                                <LoadingButton
+                                    loading={status === EStatus.PENDING}
+                                    color="error"
+                                    variant="contained"
+                                    sx={{
+                                        height: '64px',
+                                    }}
+                                    onClick={() => setDelete(true)}
+                                >
+                                    <DeleteIcon />
+                                </LoadingButton>
+
+                                <LoadingButton
+                                    loading={status === EStatus.PENDING}
+                                    color="primary"
+                                    variant="contained"
+                                    sx={{
+                                        height: '64px',
+                                    }}
+                                    onClick={handleEdit}
+                                >
+                                    <EditIcon />
+                                </LoadingButton>
+
+                                <LoadingButton
+                                    loading={status === EStatus.PENDING}
+                                    color="info"
+                                    variant="contained"
+                                    sx={{
+                                        height: '64px',
+                                    }}
+                                    onClick={handleReset}
+                                >
+                                    <AutorenewIcon />
+                                </LoadingButton>
+                            </Box>
+                        )}
+
+                        {(reservationStatus === 'init' ||
+                            reservationStatus === 'late' ||
+                            reservationStatus === 'close') &&
+                            isDelete && (
                                 <Box
                                     sx={{
                                         display: 'flex',
+                                        flexDirection: 'column',
                                         gap: 1,
                                     }}
                                 >
+                                    <DeleteControl reservation={reservation} />
+
                                     <LoadingButton
                                         loading={status === EStatus.PENDING}
                                         fullWidth
-                                        color="error"
+                                        color="warning"
                                         variant="contained"
                                         sx={{
                                             height: '64px',
                                         }}
-                                        onClick={() => handleStatus('delete')}
+                                        onClick={() => setDelete(false)}
                                     >
-                                        Удалить бронь
-                                    </LoadingButton>
-
-                                    <LoadingButton
-                                        loading={status === EStatus.PENDING}
-                                        color="primary"
-                                        variant="contained"
-                                        sx={{
-                                            height: '64px',
-                                        }}
-                                        onClick={handleEdit}
-                                    >
-                                        <EditIcon />
-                                    </LoadingButton>
-
-                                    <LoadingButton
-                                        loading={status === EStatus.PENDING}
-                                        color="info"
-                                        variant="contained"
-                                        sx={{
-                                            height: '64px',
-                                        }}
-                                        onClick={handleReset}
-                                    >
-                                        <AutorenewIcon />
+                                        Назад
                                     </LoadingButton>
                                 </Box>
-                            </Box>
-                        )}
+                            )}
 
                         {(reservation.status === 'active' || reservation.status === 'delay') && (
                             <Box
@@ -382,7 +434,7 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                             </Box>
                         )}
 
-                        {reservation.status === 'close' && (
+                        {reservation.status === 'close' && !isDelete && (
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -392,7 +444,7 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                                 <LoadingButton
                                     loading={status === EStatus.PENDING}
                                     fullWidth
-                                    color="error"
+                                    color="warning"
                                     variant="contained"
                                     sx={{
                                         height: '64px',
@@ -412,6 +464,18 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                                     onClick={handleEdit}
                                 >
                                     <EditIcon />
+                                </LoadingButton>
+
+                                <LoadingButton
+                                    loading={status === EStatus.PENDING}
+                                    color="error"
+                                    variant="contained"
+                                    sx={{
+                                        height: '64px',
+                                    }}
+                                    onClick={() => setDelete(true)}
+                                >
+                                    <DeleteIcon />
                                 </LoadingButton>
                             </Box>
                         )}

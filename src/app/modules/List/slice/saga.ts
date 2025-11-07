@@ -5,13 +5,17 @@ import { request } from 'utils/request'
 
 import { listsActions } from '.'
 
-export function* loadTables(action: PayloadAction<string>) {
+export function* loadTables(action: PayloadAction<{ date: string; status: 'active' | 'deleted' }>) {
     try {
-        const response: ITablesResponse = yield call(request, `tables?date=${action.payload}`, {
-            data: {
-                date: '2222-22',
-            },
-        })
+        const response: ITablesResponse = yield call(
+            request,
+            `tables?date=${action.payload.date}&status=${action.payload.status}`,
+            {
+                data: {
+                    date: '2222-22',
+                },
+            }
+        )
 
         yield put(listsActions.tablesLoaded(response))
     } catch (error: any) {

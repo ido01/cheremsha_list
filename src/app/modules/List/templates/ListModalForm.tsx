@@ -30,6 +30,7 @@ export const ListModalForm: React.FC = () => {
 
     const { data, status, open } = useSelector(selectForm)
 
+    const [isLoading, setLoading] = useState(false)
     const [table, setTable] = useState<ITable>()
 
     const fetchTables = (date: string) => {
@@ -39,6 +40,7 @@ export const ListModalForm: React.FC = () => {
     }
 
     useEffect(() => {
+        setLoading(false)
         if (open && data.tid) {
             fetchTables(data.date)
         }
@@ -141,6 +143,7 @@ export const ListModalForm: React.FC = () => {
         validateOnChange: true,
         enableReinitialize: true,
         onSubmit: (values) => {
+            setLoading(true)
             if (values.id) {
                 dispatch(
                     listsActions.updateReservation({
@@ -516,7 +519,7 @@ export const ListModalForm: React.FC = () => {
                             }}
                         >
                             <LoadingButton
-                                loading={status === EStatus.PENDING}
+                                loading={isLoading || status === EStatus.PENDING}
                                 color="success"
                                 fullWidth
                                 variant="contained"
@@ -529,7 +532,7 @@ export const ListModalForm: React.FC = () => {
                             </LoadingButton>
 
                             <LoadingButton
-                                loading={status === EStatus.PENDING}
+                                loading={isLoading || status === EStatus.PENDING}
                                 color="info"
                                 fullWidth
                                 variant="contained"
@@ -544,7 +547,7 @@ export const ListModalForm: React.FC = () => {
                     )}
                     {!data.id && data.status === 'init' && (
                         <LoadingButton
-                            loading={status === EStatus.PENDING}
+                            loading={isLoading || status === EStatus.PENDING}
                             color="info"
                             fullWidth
                             variant="contained"
@@ -558,7 +561,7 @@ export const ListModalForm: React.FC = () => {
                     )}
                     {data.id && (
                         <LoadingButton
-                            loading={status === EStatus.PENDING}
+                            loading={isLoading || status === EStatus.PENDING}
                             color="info"
                             fullWidth
                             variant="contained"

@@ -18,7 +18,9 @@ export const EmptyTable: React.FC<{ table: ITableFree; filter: IFilter }> = ({ t
                 phone: '',
                 comment: '',
                 guests: filter.guests,
+                start_table: 1,
                 status: 'init',
+                close_status: 'none',
                 start: {
                     hour: filter.hour,
                     minute: filter.minute,
@@ -27,6 +29,8 @@ export const EmptyTable: React.FC<{ table: ITableFree; filter: IFilter }> = ({ t
                     hour: filter.hour + 1,
                     minute: filter.minute,
                 },
+                end_hour: 0,
+                end_minute: 0,
                 close: {
                     hour: 0,
                     minute: 0,

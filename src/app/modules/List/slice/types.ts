@@ -13,10 +13,17 @@ export interface IListState extends EntityState<ITable> {
     status: EStatus
     itemStatus: IReservationItemStatus | 'init'
     count: ICount
-    date: string
+    filter: {
+        date: string
+        status: 'deleted' | 'active'
+    }
     dateSettings: boolean
     find: {
         open: boolean
+    }
+    free: {
+        open: boolean
+        id: string
     }
     reset: {
         open: boolean

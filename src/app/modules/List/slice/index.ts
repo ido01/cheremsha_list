@@ -14,10 +14,17 @@ const slice = createSlice({
         entities: {},
         status: EStatus.INITIAL,
         itemStatus: 'init',
-        date: dayjs().subtract(6, 'hour').format('YYYY-MM-DD'),
+        filter: {
+            date: dayjs().subtract(6, 'hour').format('YYYY-MM-DD'),
+            status: 'active',
+        },
         dateSettings: false,
         find: {
             open: false,
+        },
+        free: {
+            open: false,
+            id: '',
         },
         reset: {
             open: false,
@@ -35,12 +42,16 @@ const slice = createSlice({
                     hour: 13,
                     minute: 0,
                 },
+                end_hour: 0,
+                end_minute: 0,
                 close: {
                     hour: 0,
                     minute: 0,
                 },
                 guests: 2,
+                start_table: 1,
                 status: 'init',
+                close_status: 'none',
                 date: '',
                 items: [],
             },
@@ -69,12 +80,16 @@ const slice = createSlice({
                     hour: 13,
                     minute: 0,
                 },
+                end_hour: 0,
+                end_minute: 0,
                 close: {
                     hour: 0,
                     minute: 0,
                 },
                 guests: 2,
+                start_table: 1,
                 status: 'init',
+                close_status: 'none',
                 date: '',
                 items: [],
             },
@@ -96,12 +111,16 @@ const slice = createSlice({
                     hour: 13,
                     minute: 0,
                 },
+                end_hour: 0,
+                end_minute: 0,
                 close: {
                     hour: 0,
                     minute: 0,
                 },
                 guests: 2,
+                start_table: 1,
                 status: 'init',
+                close_status: 'none',
                 date: '',
                 items: [],
             },
@@ -111,11 +130,14 @@ const slice = createSlice({
         setCount(state, action: PayloadAction<ICount>) {
             state.count = action.payload
         },
-        loadTables(state, action: PayloadAction<string>) {
+        loadTables(state, action: PayloadAction<{ date: string; status: 'active' | 'deleted' }>) {
             action
             state.status = EStatus.PENDING
         },
         tablesLoaded(state, action: PayloadAction<ITablesResponse>) {
+            // action.payload.data.forEach((table) => {
+            //     listAdapter.setOne(state, table)
+            // })
             listAdapter.setAll(state, action.payload.data)
             state.status = EStatus.FINISHED
         },
@@ -195,14 +217,25 @@ const slice = createSlice({
             state.reset.open = false
         },
         setDate(state, action: PayloadAction<string>) {
-            state.date = action.payload
+            state.filter.date = action.payload
             state.dateSettings = false
+        },
+        setFilterStatus(state, action: PayloadAction<'active' | 'deleted'>) {
+            state.filter.status = action.payload
         },
         openSettings(state) {
             state.dateSettings = true
         },
         hideSettings(state) {
             state.dateSettings = false
+        },
+        showFree(state, action: PayloadAction<string>) {
+            state.free.id = action.payload
+            state.free.open = true
+        },
+        hideFree(state) {
+            state.free.id = ''
+            state.free.open = false
         },
     },
 })

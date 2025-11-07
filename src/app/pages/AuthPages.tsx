@@ -1,6 +1,5 @@
 import { ActiveToken } from 'app/modules/Auth/templates/ActiveToken'
 import { ConfirmRecovery } from 'app/modules/Auth/templates/ConfirmRecovery'
-import { Questionnaire } from 'app/modules/Auth/templates/Questionnaire'
 import { Recovery } from 'app/modules/Auth/templates/Recovery'
 import { SignIn } from 'app/modules/Auth/templates/SignIn'
 import { Signup } from 'app/modules/Auth/templates/Signup'
@@ -23,14 +22,6 @@ export const AuthPages: React.FC = () => (
                 element={
                     <Empty>
                         <Signup />
-                    </Empty>
-                }
-            />
-            <Route
-                path={'/questionnaire'}
-                element={
-                    <Empty>
-                        <Questionnaire />
                     </Empty>
                 }
             />

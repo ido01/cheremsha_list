@@ -6,8 +6,8 @@ import {
     Filter2 as Filter2Icon,
     Redeem as RedeemIcon,
 } from '@mui/icons-material'
-import { Box, IconButton, Typography } from '@mui/material'
-import React from 'react'
+import { Box, CircularProgress, IconButton, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { IReservationItem, IReservationItemStatus } from 'types/ITable'
 
@@ -47,6 +47,8 @@ const convertStatusToIcon = (status: IReservationItemStatus) => {
 export const Reservation: React.FC<{ item: IReservationItem; currentTime: number }> = ({ item, currentTime }) => {
     const dispatch = useDispatch()
 
+    const [isLoading, setLoading] = useState(false)
+
     const startTimeHour = item.time.hour > 10 ? item.time.hour : item.time.hour + 24
     const startTime = startTimeHour * 60 + item.time.minute
 
@@ -54,6 +56,7 @@ export const Reservation: React.FC<{ item: IReservationItem; currentTime: number
     const minute = (currentTime - startTime) % 60
 
     const handleDelete = () => {
+        setLoading(true)
         dispatch(listsActions.deleteItem(item.id))
     }
 
@@ -100,9 +103,15 @@ export const Reservation: React.FC<{ item: IReservationItem; currentTime: number
                     width: '100%',
                 }}
             >
-                <IconButton color="error" onClick={handleDelete}>
-                    <DeleteIcon />
-                </IconButton>
+                {isLoading ? (
+                    <Box p={1}>
+                        <CircularProgress size={24} />
+                    </Box>
+                ) : (
+                    <IconButton color="error" onClick={handleDelete}>
+                        <DeleteIcon />
+                    </IconButton>
+                )}
             </Box>
         </Box>
     )

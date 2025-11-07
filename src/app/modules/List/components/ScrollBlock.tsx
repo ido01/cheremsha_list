@@ -17,7 +17,7 @@ export const ScrollBlock: React.FC<{
         canScroll.current = true
     }
 
-    const halfWidth = window.innerWidth / 2
+    const halfWidth = window.innerWidth / 3
 
     const scrollEvent = () => {
         canScroll.current = false
@@ -57,6 +57,7 @@ export const ScrollBlock: React.FC<{
                 overflowX: 'scroll',
                 overflowY: 'hidden',
                 position: 'relative',
+                height: '100%',
             }}
         >
             {children}

@@ -4,12 +4,12 @@ import { ITable } from 'types/ITable'
 
 import { TableListItem } from './components/TableListItem'
 
-export const TablesList: React.FC<{ data: ITable[]; height: number }> = ({ data, height }) => {
+export const TablesList: React.FC<{ top?: number; data: ITable[]; height: number }> = ({ top = 92, data, height }) => {
     return (
         <Box
             sx={{
                 position: 'absolute',
-                top: '92px',
+                top: `${top}px`,
                 left: 0,
                 width: '50px',
                 background: 'linear-gradient(to right, #fff 25%, transparent)',

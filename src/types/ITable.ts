@@ -10,6 +10,8 @@ export interface ISelect {
 
 export type IReservationStatus = 'init' | 'late' | 'active' | 'close' | 'delay' | 'delete'
 
+export type IReservationCloseStatus = 'none' | 'late' | 'close' | 'passport'
+
 export type IReservationItemStatus = 'hookah' | 'tea' | 'author' | 'express' | 'double'
 
 export type IColorStatus = { [key in IReservationStatus]: string }
@@ -38,19 +40,23 @@ export interface IReservation {
     comment: string
     start: ITime
     end: ITime
+    end_hour: number
+    end_minute: number
     close: ITime
     guests: number
+    start_table: number
     date: string
     status: IReservationStatus
+    close_status: IReservationCloseStatus
     items: IReservationItem[]
     crossDelay?: number
+    position?: number
 }
 
 export interface IReservationMapping extends IReservation {
+    endDB: ITime
     endCrossMinutes: number
     startCrossMinutes: number
-    cross: number
-    stepsLeft: number
 }
 
 export interface ITable {
@@ -60,6 +66,7 @@ export interface ITable {
     full_name: string
     places: number
     free: boolean
+    position?: number
     reservations: IReservation[]
 }
 
