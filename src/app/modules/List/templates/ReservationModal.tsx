@@ -1,24 +1,21 @@
-import { Autorenew as AutorenewIcon, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
 import { Box, Container, Typography } from '@mui/material'
 import { Modal } from 'app/components/Modal'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { EStatus } from 'types'
 import { IReservationStatus } from 'types/ITable'
 
-import { AddButton } from '../components/Buttons/AddButton'
+import { ActiveControl } from '../components/Control/ActiveControl'
+import { CloseControl } from '../components/Control/CloseControl'
+import { InitControl } from '../components/Control/InitControl'
 import { Reservation } from '../components/Reservation'
 import { CloseStatusText, Colors, StatusText } from '../constants'
 import { listsActions } from '../slice'
 import { selectModal, selectTableById } from '../slice/selectors'
 import { convertTimeToText } from '../utils'
-import { DeleteControl } from './DeleteControl'
 
 export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTime }) => {
     const dispatch = useDispatch()
 
-    const [isDelete, setDelete] = useState(false)
     const { status, open, reservation } = useSelector(selectModal)
     const getTable = useSelector(selectTableById)
     const table = getTable(reservation.tid)
@@ -35,18 +32,6 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
             return 'delay' as IReservationStatus
         }
         return reservation.status
-    }, [reservation])
-
-    const hasExpress = useMemo(() => {
-        return reservation.items.findIndex((i) => i.position === 'express') !== -1
-    }, [reservation])
-
-    const hasHookah = useMemo(() => {
-        return (
-            reservation.items.findIndex(
-                (i) => i.position === 'author' || i.position === 'double' || i.position === 'hookah'
-            ) !== -1
-        )
     }, [reservation])
 
     const currentTableTimestamp = useMemo(() => {
@@ -77,6 +62,7 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
             listsActions.updateReservation({
                 ...reservation,
                 status,
+                start: reservation.main_start,
                 ...(status === 'active' &&
                     reservation.status !== 'close' && {
                         start: {
@@ -89,6 +75,7 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                         hour,
                         minute,
                     },
+                    start: reservation.main_start,
                 }),
                 end: {
                     hour: reservation.end_hour,
@@ -97,18 +84,6 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
             })
         )
     }
-
-    const handleEdit = () => {
-        dispatch(listsActions.showEditModal(reservation))
-    }
-
-    const handleReset = () => {
-        dispatch(listsActions.openReset(reservation))
-    }
-
-    useEffect(() => {
-        setDelete(false)
-    }, [reservation])
 
     return (
         <Modal open={open} title={`${reservation.name}(${table?.name}) ${reservation.phone}`} handleClose={handleClose}>
@@ -173,7 +148,7 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                                         : 'Пришли'}
                                 </Typography>
                                 <Typography variant="h6" color="grey.900" lineHeight="1.4">
-                                    {convertTimeToText(reservation.start)}
+                                    {convertTimeToText(reservation.main_start)}
                                 </Typography>
                             </Box>
 
@@ -186,11 +161,13 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                                         : 'Уйдут'}
                                 </Typography>
                                 <Typography variant="h6" color="grey.900" lineHeight="1.4">
-                                    {reservationStatus === 'delete'
+                                    {reservationStatus === 'delete' || reservationStatus === 'delay'
                                         ? convertTimeToText({
                                               hour: reservation.end_hour,
                                               minute: reservation.end_minute,
                                           })
+                                        : reservationStatus === 'close'
+                                        ? convertTimeToText(reservation.close)
                                         : convertTimeToText(reservation.end)}
                                 </Typography>
                             </Box>
@@ -273,211 +250,14 @@ export const ReservationModal: React.FC<{ currentTime: number }> = ({ currentTim
                         }}
                     >
                         {(reservationStatus === 'active' || reservationStatus === 'delay') && (
-                            <Box
-                                sx={{
-                                    display: 'grid',
-                                    gap: 1,
-                                    gridTemplateColumns: '1fr 1fr 1fr',
-                                }}
-                            >
-                                <AddButton disabled={hasHookah} color="success" label="+ Экспресс" position="express" />
-                                <AddButton disabled={hasExpress} color="info" label="+ Авторский" position="author" />
-                                <AddButton
-                                    disabled={hasExpress}
-                                    color="primary"
-                                    label="+ Два сразу"
-                                    position="double"
-                                />
-                            </Box>
+                            <ActiveControl reservation={reservation} status={status} handleStatus={handleStatus} />
                         )}
-                        {(reservationStatus === 'active' || reservationStatus === 'delay') && (
-                            <Box
-                                sx={{
-                                    display: 'grid',
-                                    gap: 1,
-                                    gridTemplateColumns: '1fr 1fr',
-                                }}
-                            >
-                                <AddButton disabled={hasExpress} color="success" label="+ Кальян" position="hookah" />
-                                <AddButton color="info" label="+ Церемония" position="tea" />
-                            </Box>
-                        )}
-                        {(reservationStatus === 'init' || reservationStatus === 'late') && !isDelete && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                }}
-                            >
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    fullWidth
-                                    color="success"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={() => handleStatus('active')}
-                                >
-                                    Стол пришел
-                                </LoadingButton>
-
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    color="error"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={() => setDelete(true)}
-                                >
-                                    <DeleteIcon />
-                                </LoadingButton>
-
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    color="primary"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={handleEdit}
-                                >
-                                    <EditIcon />
-                                </LoadingButton>
-
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    color="info"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={handleReset}
-                                >
-                                    <AutorenewIcon />
-                                </LoadingButton>
-                            </Box>
+                        {(reservationStatus === 'init' || reservationStatus === 'late') && (
+                            <InitControl reservation={reservation} status={status} handleStatus={handleStatus} />
                         )}
 
-                        {(reservationStatus === 'init' ||
-                            reservationStatus === 'late' ||
-                            reservationStatus === 'close') &&
-                            isDelete && (
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: 1,
-                                    }}
-                                >
-                                    <DeleteControl reservation={reservation} />
-
-                                    <LoadingButton
-                                        loading={status === EStatus.PENDING}
-                                        fullWidth
-                                        color="warning"
-                                        variant="contained"
-                                        sx={{
-                                            height: '64px',
-                                        }}
-                                        onClick={() => setDelete(false)}
-                                    >
-                                        Назад
-                                    </LoadingButton>
-                                </Box>
-                            )}
-
-                        {(reservation.status === 'active' || reservation.status === 'delay') && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                }}
-                            >
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    fullWidth
-                                    color="error"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={() => handleStatus('close')}
-                                >
-                                    Закрыть бронь
-                                </LoadingButton>
-
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    color="primary"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={handleEdit}
-                                >
-                                    <EditIcon />
-                                </LoadingButton>
-
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    color="info"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={handleReset}
-                                >
-                                    <AutorenewIcon />
-                                </LoadingButton>
-                            </Box>
-                        )}
-
-                        {reservation.status === 'close' && !isDelete && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                }}
-                            >
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    fullWidth
-                                    color="warning"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={() => handleStatus('active')}
-                                >
-                                    Ой, открыть
-                                </LoadingButton>
-
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    color="primary"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={handleEdit}
-                                >
-                                    <EditIcon />
-                                </LoadingButton>
-
-                                <LoadingButton
-                                    loading={status === EStatus.PENDING}
-                                    color="error"
-                                    variant="contained"
-                                    sx={{
-                                        height: '64px',
-                                    }}
-                                    onClick={() => setDelete(true)}
-                                >
-                                    <DeleteIcon />
-                                </LoadingButton>
-                            </Box>
+                        {reservationStatus === 'close' && (
+                            <CloseControl reservation={reservation} status={status} handleStatus={handleStatus} />
                         )}
                     </Box>
                 </Container>

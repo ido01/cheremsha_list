@@ -1,11 +1,12 @@
 import { Air as AirIcon, TableBar as TableBarIcon } from '@mui/icons-material'
 import { Box, Typography } from '@mui/material'
-import { Colors } from 'app/modules/List/constants'
+import { Colors, DottedColors } from 'app/modules/List/constants'
 import { listsActions } from 'app/modules/List/slice'
 import { convertTimeToText, curretnTime } from 'app/modules/List/utils'
+import { selectLastReservationById } from 'app/modules/Reservation/slice/selectors'
 import React, { useMemo } from 'react'
-import { useDispatch } from 'react-redux'
-import { IReservationItemStatus, IReservationMapping, IReservationStatus } from 'types/ITable'
+import { useDispatch, useSelector } from 'react-redux'
+import { IReservationItemStatus, IReservationMapping, IReservationStatus, ITableIndex } from 'types/ITable'
 
 export const ReservationItem: React.FC<{
     reservation: IReservationMapping
@@ -15,27 +16,39 @@ export const ReservationItem: React.FC<{
     places: number
     free: boolean
     isChairVisible: boolean
-}> = ({ reservation, minWidth, heightItem, currentTime, places, free, isChairVisible = false }) => {
+    tableIndex: ITableIndex
+}> = ({ reservation, minWidth, heightItem, currentTime, places, free, tableIndex, isChairVisible = false }) => {
     const dispatch = useDispatch()
+    const getLastReservation = useSelector(selectLastReservationById)
+    const lastReservation = getLastReservation(reservation.id)
 
     const top = useMemo(() => {
         if (!free) {
             return 4
         }
-        return 4 + ((reservation.start_table - 1) * (heightItem - 8)) / places
+        let calcTop = 4 + ((reservation.start_table - 1) * (heightItem - 8)) / places
+        if (heightItem - calcTop < 22) {
+            calcTop = heightItem - 22
+        }
+        return calcTop
     }, [reservation, free])
 
     const itemHeightDefault = heightItem - 8
 
     const itemHeight = useMemo(() => {
         if (free) {
-            return (reservation.guests * (heightItem - 8)) / places
+            const calcHeight = (reservation.guests * (heightItem - 8)) / places
+            return calcHeight < 18 ? 18 : calcHeight
         }
         return itemHeightDefault
     }, [reservation, heightItem, free, places, itemHeightDefault])
 
     const dangerStart = useMemo(() => {
         return free ? 0 : reservation.startCrossMinutes * minWidth
+    }, [reservation, minWidth])
+
+    const crossWidth = useMemo(() => {
+        return reservation.crossDelay ? reservation.crossDelay * minWidth : 0
     }, [reservation, minWidth])
 
     const dangerEnd = useMemo(() => {
@@ -59,6 +72,10 @@ export const ReservationItem: React.FC<{
         return curretnTime(reservation.start)
     }, [reservation])
 
+    const mainStartTime = useMemo(() => {
+        return curretnTime(reservation.main_start)
+    }, [reservation])
+
     const endTime = useMemo(() => {
         return curretnTime(reservation.end)
     }, [reservation])
@@ -70,7 +87,11 @@ export const ReservationItem: React.FC<{
     const reservationStatus = useMemo(() => {
         if (reservation.status === 'init' && currentTime > startTime) {
             return 'late' as IReservationStatus
-        } else if (reservation.status === 'active' && currentTime > endTime) {
+        } else if (
+            reservation.status === 'active' &&
+            currentTime > endTime &&
+            (!reservation.cid || reservation.cid === '0')
+        ) {
             return 'delay' as IReservationStatus
         }
         return reservation.status
@@ -80,12 +101,16 @@ export const ReservationItem: React.FC<{
         return Colors[reservationStatus]
     }, [reservationStatus])
 
+    const currentDottedColor = useMemo(() => {
+        return DottedColors[reservationStatus]
+    }, [reservationStatus])
+
     const currentTableTimestamp = useMemo(() => {
         if (reservationStatus !== 'active' && reservationStatus !== 'delay') {
             return -1
         }
-        return currentTime - startTime
-    }, [currentTime, reservationStatus])
+        return currentTime - mainStartTime
+    }, [currentTime, reservationStatus, mainStartTime])
 
     const currentTableTime = useMemo(() => {
         if (currentTableTimestamp < 0) return ''
@@ -120,6 +145,56 @@ export const ReservationItem: React.FC<{
         return size
     }, [reservation])
 
+    const currentHookahPosition = useMemo(() => {
+        if (reservationStatus !== 'active' && reservationStatus !== 'delay') return -1
+        if (!filterHookah.length) return -1
+
+        const hookah = filterHookah[filterHookah.length - 1]
+
+        const hookahTimeHour = hookah.time.hour > 10 ? hookah.time.hour : hookah.time.hour + 24
+        const startTime = hookahTimeHour * 60 + hookah.time.minute
+
+        const tableTimeHour = reservation.start.hour > 10 ? reservation.start.hour : reservation.start.hour + 24
+        const startTableTime = tableTimeHour * 60 + reservation.start.minute
+        return (startTime - startTableTime) * minWidth
+    }, [filterHookah, reservationStatus, reservation, minWidth])
+
+    const firstCoalPosition = useMemo(() => {
+        if (currentHookahPosition < 0) return -1
+
+        const hookah = filterHookah[filterHookah.length - 1]
+
+        const hookahTimeHour = hookah.time.hour > 10 ? hookah.time.hour : hookah.time.hour + 24
+        const startTime = hookahTimeHour * 60 + hookah.time.minute + 25
+
+        if (startTime - currentTime < -10) return -1
+
+        const tableTimeHour = reservation.end.hour > 10 ? reservation.end.hour : reservation.end.hour + 24
+        const endTableTime = tableTimeHour * 60 + reservation.end.minute
+
+        if (startTime > endTableTime) return -1
+
+        return currentHookahPosition + 25 * minWidth
+    }, [currentHookahPosition, minWidth, currentTime, filterHookah, reservation])
+
+    const secondCoalPosition = useMemo(() => {
+        if (currentHookahPosition < 0) return -1
+
+        const hookah = filterHookah[filterHookah.length - 1]
+
+        const hookahTimeHour = hookah.time.hour > 10 ? hookah.time.hour : hookah.time.hour + 24
+        const startTime = hookahTimeHour * 60 + hookah.time.minute + 40
+
+        if (startTime - currentTime < -10) return -1
+
+        const tableTimeHour = reservation.end.hour > 10 ? reservation.end.hour : reservation.end.hour + 24
+        const endTableTime = tableTimeHour * 60 + reservation.end.minute
+
+        if (startTime > endTableTime) return -1
+
+        return currentHookahPosition + 40 * minWidth
+    }, [currentHookahPosition, minWidth, currentTime, filterHookah])
+
     const currentHookahTimestamp = useMemo(() => {
         if (reservationStatus !== 'active' && reservationStatus !== 'delay') return -1
         if (!filterHookah.length) return -1
@@ -144,11 +219,23 @@ export const ReservationItem: React.FC<{
 
     const handleClick = () => {
         if (!free) {
-            dispatch(listsActions.showModal(reservation))
+            dispatch(listsActions.showModal(lastReservation || reservation))
         } else {
             dispatch(listsActions.showFree(reservation.tid))
         }
     }
+
+    const heightReplaceDown = useMemo(() => {
+        return (tableIndex[reservation.tid] - tableIndex[reservation.ptid]) * heightItem
+    }, [heightItem, reservation])
+
+    const heightReplaceUp = useMemo(() => {
+        return (tableIndex[reservation.tid] - tableIndex[reservation.ctid]) * heightItem
+    }, [heightItem, reservation])
+
+    const bottomPosition = useMemo(() => {
+        return itemHeight / 2 - 1
+    }, [itemHeight])
 
     const getScheme = (position: IReservationItemStatus) => {
         if (position === 'hookah') {
@@ -156,12 +243,14 @@ export const ReservationItem: React.FC<{
                 width: '2px',
                 height: '12px',
                 backgroundColor: '#fff',
+                borderRadius: '2px',
             }
         } else if (position === 'author') {
             return {
                 width: '12px',
                 height: '12px',
                 backgroundColor: '#fff',
+                borderRadius: '2px',
             }
         } else if (position === 'double') {
             return {
@@ -218,6 +307,9 @@ export const ReservationItem: React.FC<{
                 // overflow: 'hidden',
                 boxSizing: 'border-box',
                 zIndex: 2,
+                backgroundImage: `radial-gradient(${currentDottedColor} 20%, transparent 20%), radial-gradient(${currentDottedColor} 20%, transparent 20%)`,
+                backgroundSize: '10px 10px',
+                backgroundPosition: '0 0, 5px 5px',
             }}
             onClick={handleClick}
         >
@@ -258,15 +350,16 @@ export const ReservationItem: React.FC<{
                         right: 0,
                         top: 0,
                         height: `100%`,
-                        width: `${reservation.crossDelay}px`,
+                        width: `${crossWidth}px`,
                         borderRadius: 2,
-                        background: `linear-gradient(45deg, #f00 10%, ${currentColor} 10%, ${currentColor} 50%, #f00 50%, #f00 60%, ${currentColor} 60%, ${currentColor})`,
+                        background: `linear-gradient(45deg, #f00 10%, transparent 10%, transparent 50%, #f00 50%, #f00 60%, transparent 60%, transparent)`,
                         zIndex: 2,
                         backgroundSize: '10px 10px',
                     }}
                 ></Box>
             )}
             {!free &&
+                (!reservation.cid || reservation.cid === '0') &&
                 (reservation.position === reservation.start_table || !isChairVisible) &&
                 reservationStatus !== 'init' &&
                 reservationStatus !== 'late' &&
@@ -274,7 +367,7 @@ export const ReservationItem: React.FC<{
                     <Box
                         sx={{
                             color: '#fff',
-                            zIndex: end - statusPosition,
+                            zIndex: 2,
                             position: 'absolute',
                             left:
                                 reservationStatus === 'close'
@@ -359,6 +452,36 @@ export const ReservationItem: React.FC<{
                     </Box>
                 )}
 
+            {(reservationStatus === 'active' || reservationStatus === 'delay') && (
+                <>
+                    {firstCoalPosition > -1 && (
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                width: '2px',
+                                height: '100%',
+                                background: '#795548',
+                                top: 0,
+                                left: `${firstCoalPosition}px`,
+                            }}
+                        ></Box>
+                    )}
+                    {secondCoalPosition > -1 && (
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                width: '6px',
+                                height: '100%',
+                                borderLeft: '2px solid #795548',
+                                borderRight: '2px solid #795548',
+                                top: 0,
+                                left: `${secondCoalPosition}px`,
+                            }}
+                        ></Box>
+                    )}
+                </>
+            )}
+
             {reservation.startCrossMinutes > 0 && (
                 <Box
                     sx={{
@@ -398,7 +521,7 @@ export const ReservationItem: React.FC<{
                 sx={{
                     color: '#FFF',
                     lineHeight: `${itemHeight}px`,
-                    pl: 1,
+                    pl: reservation.pid !== '0' ? '30px' : '8px',
                     position: 'relative',
                     left: 0,
                     zIndex: 2,
@@ -409,6 +532,122 @@ export const ReservationItem: React.FC<{
             >
                 {reservation.name}
             </Typography>
+
+            {reservation.cid !== '0' && (
+                <>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            right:
+                                tableIndex[reservation.tid] === tableIndex[reservation.ctid]
+                                    ? '-6px'
+                                    : reservation.endCrossMinutes > 0
+                                    ? `-${dangerEnd}px`
+                                    : 0,
+                            bottom: 0,
+                            height: reservation.endCrossMinutes > 0 ? `calc(50% - 2px)` : `100%`,
+                            width: `40px`,
+                            borderTopRightRadius: '8px',
+                            borderBottomRightRadius: '8px',
+                            background:
+                                tableIndex[reservation.tid] === tableIndex[reservation.ctid]
+                                    ? currentColor
+                                    : `linear-gradient(90deg in oklab, transparent, #D50000)`,
+                            zIndex: 1,
+                            backgroundSize: '40px 40px',
+                        }}
+                    ></Box>
+                    {tableIndex[reservation.tid] !== tableIndex[reservation.ctid] && (
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                right: reservation.endCrossMinutes > 0 ? `-${dangerEnd + 2}px` : '-3px',
+                                bottom: 'calc( 50% - 4px )',
+                                height: '8px',
+                                width: `8px`,
+                                borderRadius: '100%',
+                                background: '#D50000',
+                                zIndex: 1,
+                            }}
+                        ></Box>
+                    )}
+                </>
+            )}
+
+            {reservation.pid !== '0' && (
+                <>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            left:
+                                tableIndex[reservation.tid] === tableIndex[reservation.ptid]
+                                    ? '-6px'
+                                    : reservation.startCrossMinutes > 0
+                                    ? `-${dangerStart + 6}px`
+                                    : 0,
+                            top: reservation.startCrossMinutes > 0 ? '-4px' : 0,
+                            height: reservation.startCrossMinutes > 0 ? `calc(50% + 6px)` : `100%`,
+                            width: `40px`,
+                            borderTopLeftRadius: '8px',
+                            borderBottomLeftRadius: '8px',
+                            background:
+                                tableIndex[reservation.tid] === tableIndex[reservation.ptid]
+                                    ? currentColor
+                                    : `linear-gradient(90deg in oklab, #D50000, transparent)`,
+                            zIndex: 1,
+                            backgroundSize: '40px 40px',
+                            borderTop: reservation.startCrossMinutes > 0 ? '4px solid #fff' : undefined,
+                            borderLeft: reservation.startCrossMinutes > 0 ? '4px solid #fff' : undefined,
+                            borderBottom: reservation.startCrossMinutes > 0 ? '4px solid #fff' : undefined,
+                        }}
+                    ></Box>
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            left: reservation.startCrossMinutes > 0 ? `-${dangerStart + 6}px` : '-3px',
+                            bottom: 'calc( 50% - 4px )',
+                            height: '8px',
+                            width: `8px`,
+                            borderRadius: '100%',
+                            background: '#D50000',
+                            zIndex: 1,
+                        }}
+                    ></Box>
+                </>
+            )}
+            {reservation.pid !== '0' &&
+                tableIndex[reservation.tid] !== undefined &&
+                tableIndex[reservation.ptid] !== undefined &&
+                tableIndex[reservation.tid] > tableIndex[reservation.ptid] && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            left: reservation.startCrossMinutes > 0 ? `-${dangerStart + 9}px` : '-2px',
+                            bottom: `${bottomPosition}px`,
+                            width: '2px',
+                            zIndex: 4,
+                            background: `#D50000`,
+                            height: `${heightReplaceDown}px`,
+                        }}
+                    ></Box>
+                )}
+
+            {reservation.cid !== '0' &&
+                tableIndex[reservation.tid] !== undefined &&
+                tableIndex[reservation.ctid] !== undefined &&
+                tableIndex[reservation.tid] > tableIndex[reservation.ctid] && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            right: reservation.endCrossMinutes > 0 ? `-${dangerEnd}px` : '-2px',
+                            bottom: `${bottomPosition}px`,
+                            width: '2px',
+                            zIndex: 4,
+                            background: `#D50000`,
+                            height: `${heightReplaceUp}px`,
+                        }}
+                    ></Box>
+                )}
         </Box>
     )
 }

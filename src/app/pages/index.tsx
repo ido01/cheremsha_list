@@ -17,5 +17,13 @@ export const Pages: React.FC = () => (
                 </Game>
             }
         />
+        <Route
+            path={'/list/:place'}
+            element={
+                <Game>
+                    <List />
+                </Game>
+            }
+        />
     </Routes>
 )

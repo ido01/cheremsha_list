@@ -6,7 +6,16 @@ export const Colors: IColorStatus = {
     active: '#8BC34A',
     delay: '#FF9800',
     close: '#546E7A',
-    delete: 'linear-gradient(45deg, #f00 10%, #000000 10%, #000000 50%, #f00 50%, #f00 60%, #000000 60%, #000000)',
+    delete: '#000000',
+}
+
+export const DottedColors: IColorStatus = {
+    init: '#00ACC190',
+    late: '#00897B90',
+    active: '#7CB34290',
+    delay: '#FB8C0090',
+    close: '#455A6490',
+    delete: '#ff000090',
 }
 
 export const StatusText: IColorStatus = {

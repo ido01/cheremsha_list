@@ -2,6 +2,8 @@ import { Add as AddIcon } from '@mui/icons-material'
 import { Box, Typography } from '@mui/material'
 import { listsActions } from 'app/modules/List/slice'
 import { selectFilterStatus } from 'app/modules/List/slice/selectors'
+import dayjs from 'dayjs'
+import md5 from 'md5'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { IReservationStatus, ITable, ITime } from 'types/ITable'
@@ -48,6 +50,12 @@ export const AddReservation: React.FC<{
             listsActions.showEditModal({
                 id: '',
                 tid: table.id,
+                pid: '',
+                cid: '',
+                ptid: '',
+                ctid: '',
+                uniq: md5(`${table.id}_${dayjs().unix()}`),
+                main_id: '',
                 name: '',
                 phone: '',
                 comment: '',
@@ -56,6 +64,10 @@ export const AddReservation: React.FC<{
                 status,
                 close_status: 'none',
                 start,
+                main_start: {
+                    hour: 12,
+                    minute: 0,
+                },
                 end: {
                     hour: start.hour > 21 ? start.hour - 22 : start.hour + 2,
                     minute: start.minute,

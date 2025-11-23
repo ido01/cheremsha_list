@@ -30,15 +30,23 @@ export interface IReservationReset {
     old_tid: string
     tid: string
     replace_id: string
+    currentTime: ITime
 }
 
 export interface IReservation {
     id: string
     tid: string
+    pid: string
+    cid: string
+    ptid: string
+    ctid: string
+    main_id: string
+    uniq: string
     name: string
     phone: string
     comment: string
     start: ITime
+    main_start: ITime
     end: ITime
     end_hour: number
     end_minute: number
@@ -81,4 +89,8 @@ export interface ITablesResponse {
 
 export interface ITableItemResponse {
     data: ITable
+}
+
+export interface ITableIndex {
+    [key: string]: number
 }

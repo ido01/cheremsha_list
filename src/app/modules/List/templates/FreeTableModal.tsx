@@ -35,6 +35,8 @@ export const FreeTableModal: React.FC<FreeTableModalProps> = ({
 }) => {
     const dispatch = useDispatch()
 
+    const tableIndex = {}
+
     const { open, id } = useSelector(selectFree)
     const selectTable = useSelector(selectTableById)
     const table = selectTable(id)
@@ -90,6 +92,7 @@ export const FreeTableModal: React.FC<FreeTableModalProps> = ({
                                 count={COUNT_HOURS}
                                 isChairVisible={true}
                                 chair={table.position}
+                                tableIndex={tableIndex}
                             />
                         ))}
                     </ScrollList>

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { EStatus } from 'types'
 import { IReservation, IReservationCloseStatus } from 'types/ITable'
 
-import { listsActions } from '../slice'
+import { listsActions } from '../../slice'
 
 export const DeleteControl: React.FC<{ reservation: IReservation }> = ({ reservation }) => {
     const dispatch = useDispatch()

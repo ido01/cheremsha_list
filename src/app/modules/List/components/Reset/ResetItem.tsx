@@ -13,13 +13,20 @@ type IColorTableStatus = { [key in TableStatus]: string }
 const Colors: IColorTableStatus = {
     empty: '#8BC34A',
     close: '#E53935',
-    reverse: '#039BE5',
+    reverse: '#E53935',
 }
 
 export const ResetItem: React.FC<{ table: ITable; reservation: IReservation }> = ({ table, reservation }) => {
     const dispatch = useDispatch()
 
-    const startTime = curretnTime(reservation.start)
+    const now = new Date()
+    const currentMinute = now.getMinutes()
+    const currentHour = now.getHours()
+
+    const startTime = curretnTime({
+        hour: currentHour,
+        minute: currentMinute,
+    })
     const endTime = curretnTime(reservation.end)
     const [rid, setRid] = useState('')
 
@@ -47,19 +54,28 @@ export const ResetItem: React.FC<{ table: ITable; reservation: IReservation }> =
         if (status === 'empty') {
             return 'Свободен'
         } else if (status === 'reverse') {
-            return 'Можно поменять местами'
+            return 'Может быть занят'
         } else {
-            return 'Есть пересечения'
+            return 'Может быть занят'
         }
     }, [status])
 
     const handleClick = () => {
+        const now = new Date()
+        const currentMinute = now.getMinutes()
+        const currentHour = now.getHours()
+
+        const currentTime = {
+            hour: currentHour,
+            minute: currentMinute,
+        }
         dispatch(
             listsActions.resetReservation({
                 id: reservation.id,
                 old_tid: reservation.tid,
                 tid: table.id,
                 replace_id: rid,
+                currentTime,
             })
         )
 

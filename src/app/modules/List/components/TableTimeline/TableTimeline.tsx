@@ -1,8 +1,9 @@
 import { Box } from '@mui/material'
+import { selectLastReservationById } from 'app/modules/Reservation/slice/selectors'
 import dayjs from 'dayjs'
 import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { IReservationMapping, ITable, ITime } from 'types/ITable'
+import { IReservationMapping, ITable, ITableIndex, ITime } from 'types/ITable'
 
 import { listsActions } from '../../slice'
 import { selectDate } from '../../slice/selectors'
@@ -19,8 +20,11 @@ export const TableTimeline: React.FC<{
     currentTime: number
     isChairVisible?: boolean
     chair?: number
-}> = ({ table, heightItem, width, timeLines, count, currentTime, isChairVisible = false, chair = 1 }) => {
+    tableIndex: ITableIndex
+}> = ({ table, heightItem, width, timeLines, count, currentTime, tableIndex, isChairVisible = false, chair = 1 }) => {
     const dispatch = useDispatch()
+
+    const getLastReservation = useSelector(selectLastReservationById)
 
     const minWidth = width / 30
     const countItems = count * 2
@@ -69,17 +73,32 @@ export const TableTimeline: React.FC<{
                               hour: reservation.end.hour,
                               minute: reservation.end.minute,
                           }
-                const tEmin = curretnTime(reservation.end)
+
+                let tEmin = curretnTime(reservation.end)
+
+                if (reservation.cid !== '0') {
+                    const lastReservation = getLastReservation(reservation.cid)
+                    if (lastReservation) {
+                        tEmin = curretnTime(lastReservation.end)
+                    }
+                }
+
                 const cEmin = curretnTime({
                     hour: currentHour,
                     minute: currentMinute,
                 })
+
                 if (reservation.status === 'active' && tEmin < cEmin) {
-                    end.hour = currentHour
-                    end.minute = currentMinute
                     status = 'delay'
-                    crossDelay = cEmin - tEmin
+
+                    console.log('PDDTF reservation', reservation)
+                    if (!reservation.cid || reservation.cid === '0') {
+                        end.hour = currentHour
+                        end.minute = currentMinute
+                        crossDelay = cEmin - tEmin
+                    }
                 }
+
                 return {
                     ...reservation,
                     end,
@@ -117,9 +136,9 @@ export const TableTimeline: React.FC<{
 
                 return {
                     ...reservation,
-                    crossDelay,
-                    startCrossMinutes,
-                    endCrossMinutes,
+                    crossDelay: reservation.cid && reservation.cid !== '0' ? 0 : crossDelay,
+                    startCrossMinutes: startCrossMinutes,
+                    endCrossMinutes: endCrossMinutes,
                 } as IReservationMapping
             })
     }, [table, currentTime])
@@ -217,6 +236,7 @@ export const TableTimeline: React.FC<{
                     places={table.places}
                     free={table.free}
                     isChairVisible={isChairVisible}
+                    tableIndex={tableIndex}
                 />
             ))}
         </Box>

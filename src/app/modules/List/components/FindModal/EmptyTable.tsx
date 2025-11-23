@@ -1,4 +1,6 @@
 import { Box, Typography } from '@mui/material'
+import dayjs from 'dayjs'
+import md5 from 'md5'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -14,6 +16,12 @@ export const EmptyTable: React.FC<{ table: ITableFree; filter: IFilter }> = ({ t
             listsActions.showEditModal({
                 id: '',
                 tid: table.id,
+                pid: '',
+                cid: '',
+                ptid: '',
+                ctid: '',
+                main_id: '',
+                uniq: md5(`${table.id}_${dayjs().unix()}`),
                 name: '',
                 phone: '',
                 comment: '',
@@ -24,6 +32,10 @@ export const EmptyTable: React.FC<{ table: ITableFree; filter: IFilter }> = ({ t
                 start: {
                     hour: filter.hour,
                     minute: filter.minute,
+                },
+                main_start: {
+                    hour: 12,
+                    minute: 0,
                 },
                 end: {
                     hour: filter.hour + 1,

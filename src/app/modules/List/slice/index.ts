@@ -31,10 +31,20 @@ const slice = createSlice({
             reservation: {
                 id: '',
                 tid: '',
+                pid: '',
+                cid: '',
+                ptid: '',
+                ctid: '',
+                main_id: '',
+                uniq: '',
                 name: '',
                 phone: '',
                 comment: '',
                 start: {
+                    hour: 12,
+                    minute: 0,
+                },
+                main_start: {
                     hour: 12,
                     minute: 0,
                 },
@@ -69,10 +79,20 @@ const slice = createSlice({
             reservation: {
                 id: '',
                 tid: '',
+                pid: '',
+                cid: '',
+                ptid: '',
+                ctid: '',
+                main_id: '',
+                uniq: '',
                 name: '',
                 phone: '',
                 comment: '',
                 start: {
+                    hour: 12,
+                    minute: 0,
+                },
+                main_start: {
                     hour: 12,
                     minute: 0,
                 },
@@ -100,10 +120,20 @@ const slice = createSlice({
             data: {
                 id: '',
                 tid: '',
+                pid: '',
+                cid: '',
+                ptid: '',
+                ctid: '',
+                main_id: '',
+                uniq: '',
                 name: '',
                 phone: '',
                 comment: '',
                 start: {
+                    hour: 12,
+                    minute: 0,
+                },
+                main_start: {
                     hour: 12,
                     minute: 0,
                 },
@@ -130,14 +160,11 @@ const slice = createSlice({
         setCount(state, action: PayloadAction<ICount>) {
             state.count = action.payload
         },
-        loadTables(state, action: PayloadAction<{ date: string; status: 'active' | 'deleted' }>) {
+        loadTables(state, action: PayloadAction<{ date: string; place?: string; status: 'active' | 'deleted' }>) {
             action
             state.status = EStatus.PENDING
         },
         tablesLoaded(state, action: PayloadAction<ITablesResponse>) {
-            // action.payload.data.forEach((table) => {
-            //     listAdapter.setOne(state, table)
-            // })
             listAdapter.setAll(state, action.payload.data)
             state.status = EStatus.FINISHED
         },
@@ -148,10 +175,17 @@ const slice = createSlice({
             state
             action
         },
-        reservationItemSave(state, action: PayloadAction<ITable>) {
+        reservationItemSave(state, action: PayloadAction<ITablesResponse>) {
             state.itemStatus = 'init'
-            listAdapter.setOne(state, action.payload)
-            const reservation = action.payload.reservations.find((res) => res.id === state.modal.activeId)
+            listAdapter.setMany(state, action.payload.data)
+            let reservation
+            action.payload.data.forEach((table) => {
+                table.reservations.forEach((res) => {
+                    if (res.id === state.modal.activeId) {
+                        reservation = res
+                    }
+                })
+            })
             if (reservation) {
                 state.modal.reservation = reservation
             }
@@ -160,14 +194,14 @@ const slice = createSlice({
             action
             state.form.status = EStatus.PENDING
         },
-        reservationSave(state, action: PayloadAction<ITable>) {
+        reservationSave(state, action: PayloadAction<ITablesResponse>) {
             state.itemStatus = 'init'
             state.form.status = EStatus.FINISHED
             state.form.open = false
             state.modal.status = EStatus.FINISHED
             state.modal.open = false
             state.find.open = false
-            listAdapter.setOne(state, action.payload)
+            listAdapter.setMany(state, action.payload.data)
         },
         showModal(state, action: PayloadAction<IReservation>) {
             state.modal.status = EStatus.INITIAL
@@ -182,6 +216,17 @@ const slice = createSlice({
         reservationReset(state, action: PayloadAction<ITablesResponse>) {
             listAdapter.setMany(state, action.payload.data)
             state.modal.status = EStatus.FINISHED
+            let reservation
+            action.payload.data.forEach((table) => {
+                table.reservations.forEach((res) => {
+                    if (res.id === state.modal.activeId) {
+                        reservation = res
+                    }
+                })
+            })
+            if (reservation) {
+                state.modal.reservation = reservation
+            }
         },
         updateReservation(state, action: PayloadAction<IReservation>) {
             action

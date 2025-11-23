@@ -24,7 +24,7 @@ export const AddButton: React.FC<{
             listsActions.createItem({
                 id: '',
                 tid: reservation.tid,
-                rid: reservation.id,
+                rid: reservation.main_id !== '0' ? reservation.main_id : reservation.id,
                 position: status,
                 time: {
                     hour,

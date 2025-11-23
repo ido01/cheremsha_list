@@ -5,8 +5,9 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
 import ZoomOutIcon from '@mui/icons-material/ZoomOut'
 import { Backdrop, SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import { ControlBlock } from '../components/ControlBlock'
 import { CurrentTime } from '../components/CurrentTime'
@@ -27,6 +28,7 @@ import { ReservationModal } from './ReservationModal'
 import { ResetModal } from './ResetModal'
 
 export const List: React.FC = () => {
+    const { place } = useParams<{ place?: string }>()
     const dispatch = useDispatch()
     const date = useSelector(selectDate)
     const filterStatus = useSelector(selectFilterStatus)
@@ -130,6 +132,7 @@ export const List: React.FC = () => {
                 listsActions.loadTables({
                     date,
                     status: filterStatus,
+                    place,
                 })
             )
 
@@ -140,6 +143,15 @@ export const List: React.FC = () => {
             )
         }
     }
+
+    const tableIndex = useMemo(() => {
+        return data.reduce((acc, table, index) => {
+            return {
+                ...acc,
+                [table.id]: index,
+            }
+        }, {})
+    }, [data])
 
     const triggerCurrentTime = () => {
         if (timer) {
@@ -189,23 +201,25 @@ export const List: React.FC = () => {
         }
         data.forEach((table) => {
             table.reservations.forEach((reservation) => {
-                reservation.items.forEach((item) => {
-                    if (item.position !== 'tea') {
-                        count.hookah++
-                    }
-                    if (item.position === 'double') {
-                        count.hookah++
-                    }
-                    if (item.position === 'tea') {
-                        count.tea++
-                    }
-                    if (item.position === 'express') {
-                        count.express++
-                    }
-                    if (item.position === 'author') {
-                        count.author++
-                    }
-                })
+                if (!reservation.cid || reservation.cid === '0') {
+                    reservation.items.forEach((item) => {
+                        if (item.position !== 'tea') {
+                            count.hookah++
+                        }
+                        if (item.position === 'double') {
+                            count.hookah++
+                        }
+                        if (item.position === 'tea') {
+                            count.tea++
+                        }
+                        if (item.position === 'express') {
+                            count.express++
+                        }
+                        if (item.position === 'author') {
+                            count.author++
+                        }
+                    })
+                }
             })
         })
         dispatch(listsActions.setCount(count))
@@ -238,6 +252,7 @@ export const List: React.FC = () => {
                             table={table}
                             timeLines={tl}
                             count={COUNT_HOURS}
+                            tableIndex={tableIndex}
                         />
                     ))}
                 </ScrollList>
